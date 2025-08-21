@@ -78,8 +78,6 @@ $ anvil
 # Deploy to 0G testnet
 $ forge script script/Deploy.s.sol:DeployScript --rpc-url 0g_testnet --broadcast --private-key <your_private_key>
 
-# Example deployment (already completed)
-$ forge script script/Deploy.s.sol:DeployScript --rpc-url 0g_testnet --broadcast --private-key 73456a197074a8a7d3cb069745cc6c58fd750604aba0a9d89d54ebbb9865cb08
 ```
 
 ### Frontend Development
