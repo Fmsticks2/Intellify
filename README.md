@@ -40,7 +40,7 @@ Intellify is a privacy-first, decentralized AI knowledge companion that allows u
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/Intellify.git
+git clone https://github.com/Fmsticks2/Intellify.git
 cd Intellify
 
 # Install dependencies
@@ -297,7 +297,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 - **Documentation**: [docs.intellify.ai](https://docs.intellify.ai)
 - **Discord**: [discord.gg/intellify](https://discord.gg/intellify)
-- **Issues**: [GitHub Issues](https://github.com/your-username/Intellify/issues)
+- **Issues**: [GitHub Issues](https://github.com/Fmsticks2/Intellify/issues)
 - **Email**: support@intellify.ai
 
 ---
