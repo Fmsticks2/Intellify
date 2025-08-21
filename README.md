@@ -1,16 +1,17 @@
-# Intellify Wave 2 - Prototype & MVP Development
+# Intellify - Decentralized AI Knowledge Companion
 
-> **Decentralized AI Knowledge Companion built on 0G Network**
+> **Privacy-first AI companion built on 0G Network with Reown wallet integration**
 
 Intellify is a privacy-first, decentralized AI knowledge companion that allows users to upload documents, interact with AI, and wrap their AI state in NFTs (INFTs) for true ownership and portability.
 
-## 🚀 Wave 2 Features
+## 🚀 Features
 
-- **Wallet Connection**: MetaMask integration with 0G Network
+- **Wallet Connection**: Reown (WalletConnect) integration with 0G Network support
 - **Encrypted File Upload**: Secure document storage using 0G Storage API
 - **AI Interactions**: Document summaries and Q&A using 0G Compute API
-- **Mock INFT Creation**: ERC-7857 compliant NFTs wrapping AI state
+- **INFT Creation**: ERC-7857 compliant NFTs wrapping AI state
 - **Privacy-First**: All data encrypted before storage
+- **Multi-Wallet Support**: Connect with various wallets through Reown
 
 ## 🏗️ Architecture Overview
 
@@ -39,8 +40,8 @@ Intellify is a privacy-first, decentralized AI knowledge companion that allows u
 
 ```bash
 # Clone the repository
-git clone https://github.com/intellify/wave2-prototype.git
-cd intellify-wave2
+git clone https://github.com/your-username/Intellify.git
+cd Intellify
 
 # Install dependencies
 npm install
@@ -296,7 +297,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 - **Documentation**: [docs.intellify.ai](https://docs.intellify.ai)
 - **Discord**: [discord.gg/intellify](https://discord.gg/intellify)
-- **Issues**: [GitHub Issues](https://github.com/intellify/wave2-prototype/issues)
+- **Issues**: [GitHub Issues](https://github.com/your-username/Intellify/issues)
 - **Email**: support@intellify.ai
 
 ---
