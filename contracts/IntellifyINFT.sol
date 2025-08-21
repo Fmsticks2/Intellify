@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.19;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /**
  * @title IntellifyINFT
@@ -13,9 +12,7 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
  * @notice This contract represents AI knowledge companions as NFTs with embedded AI state
  */
 contract IntellifyINFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
-    using Counters for Counters.Counter;
-    
-    Counters.Counter private _tokenIdCounter;
+    uint256 private _tokenIdCounter;
     
     // INFT-specific structures
     struct AIState {
@@ -54,11 +51,11 @@ contract IntellifyINFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
     }
     
     modifier validTokenId(uint256 tokenId) {
-        require(_exists(tokenId), "Token does not exist");
+        require(_ownerOf(tokenId) != address(0), "Token does not exist");
         _;
     }
     
-    constructor() ERC721("Intellify INFT", "IINFT") {}
+    constructor() ERC721("Intellify INFT", "IINFT") Ownable(msg.sender) {}
     
     /**
      * @dev Mint a new INFT with initial AI state
@@ -77,8 +74,8 @@ contract IntellifyINFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
         require(bytes(knowledgeHash).length > 0, "Knowledge hash required");
         require(!usedKnowledgeHashes[knowledgeHash], "Knowledge hash already used");
         
-        uint256 tokenId = _tokenIdCounter.current();
-        _tokenIdCounter.increment();
+        uint256 tokenId = _tokenIdCounter;
+        _tokenIdCounter++;
         
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, metadataURI);
@@ -227,7 +224,7 @@ contract IntellifyINFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
      * @return Total supply
      */
     function totalSupply() public view returns (uint256) {
-        return _tokenIdCounter.current();
+        return _tokenIdCounter;
     }
     
     /**
@@ -241,13 +238,9 @@ contract IntellifyINFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
     
     // Override functions
     
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId,
-        uint256 batchSize
-    ) internal override {
-        super._beforeTokenTransfer(from, to, tokenId, batchSize);
+    function _update(address to, uint256 tokenId, address auth) internal override returns (address) {
+        address from = _ownerOf(tokenId);
+        address previousOwner = super._update(to, tokenId, auth);
         
         // Update owner in AI state when transferring
         if (from != address(0) && to != address(0)) {
@@ -266,17 +259,23 @@ contract IntellifyINFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard {
             // Add to new owner's list
             userINFTs[to].push(tokenId);
         }
+        
+        return previousOwner;
     }
     
-    function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
-        super._burn(tokenId);
+    function burn(uint256 tokenId) public {
+        require(_isAuthorized(_ownerOf(tokenId), msg.sender, tokenId), "Not authorized to burn");
+        
+        // Store hashes before burning
+        string[] memory hashes = aiStates[tokenId].knowledgeHashes;
+        
+        _burn(tokenId);
         
         // Clean up AI state
         delete aiStates[tokenId];
         delete knowledgeMetadata[tokenId];
         
         // Mark knowledge hashes as unused (for potential reuse)
-        string[] memory hashes = aiStates[tokenId].knowledgeHashes;
         for (uint256 i = 0; i < hashes.length; i++) {
             usedKnowledgeHashes[hashes[i]] = false;
         }
