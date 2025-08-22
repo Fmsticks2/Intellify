@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import { useWallet } from '../components/WalletProvider';
+import { useWallet } from '../components/WalletProvider.js';
 
 // Contract ABI - only the functions we need
 const INTELLIFY_ABI = [
@@ -52,7 +52,7 @@ export function useIntellifyContract() {
   const initializeContract = async () => {
     if (typeof window !== 'undefined' && window.ethereum && wallet.isConnected) {
       try {
-        const browserProvider = new ethers.BrowserProvider(window.ethereum);
+        const browserProvider = new ethers.BrowserProvider(window.ethereum as any);
         const signer = await browserProvider.getSigner();
         
         setProvider(browserProvider);

@@ -1,9 +1,12 @@
+import React from 'react';
 import './globals.css';
-import { Inter } from 'next/font/google';
+// import { Inter } from 'next/font/google';
+import { Metadata } from 'next';
+import { WalletProvider } from '../components/WalletProvider.js';
 
-const inter = Inter({ subsets: ['latin'] });
+// const inter = Inter({ subsets: ['latin'] });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Intellify Wave 2',
   description: 'Decentralized AI Knowledge Companion',
 };
@@ -15,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className="">
         <div className="min-h-screen">
           {/* Header */}
           <header className="bg-white/80 backdrop-blur-md shadow-sm border-b border-white/20 sticky top-0 z-40">
@@ -64,10 +67,3 @@ export default function RootLayout({
 }
 
 // Extend Window interface for TypeScript
-declare global {
-  interface Window {
-    ethereum?: any;
-  }
-}
-
-export {};

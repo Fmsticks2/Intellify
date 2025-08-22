@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { IntellifyDashboard } from '../components/IntellifyDashboard';
-import { WalletProvider } from '../components/WalletProvider';
+import React, { useState, useEffect } from 'react';
+import { IntellifyDashboard } from '../components/IntellifyDashboard.js';
+import { WalletProvider } from '../components/WalletProvider.js';
 
 export default function HomePage() {
   const [isClient, setIsClient] = useState(false);

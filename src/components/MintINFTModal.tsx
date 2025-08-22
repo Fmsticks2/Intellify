@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useWallet } from './WalletProvider';
-import { useIntellifyContract } from '../hooks/useIntellifyContract';
+import { useWallet } from './WalletProvider.js';
+import { useIntellifyContract } from '../hooks/useIntellifyContract.js';
 
 interface MintINFTModalProps {
   onClose: () => void;
@@ -31,7 +31,9 @@ export function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps) {
   const [txHash, setTxHash] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
+    const target = e.target as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
+    const name = (target as any).name || '';
+    const value = (target as any).value || '';
     setFormData(prev => ({ ...prev, [name]: value }));
     setError(null);
   };

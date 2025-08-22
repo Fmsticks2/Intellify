@@ -44,14 +44,14 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     checkWalletConnection();
     if (typeof window !== 'undefined' && window.ethereum) {
-      window.ethereum.on('accountsChanged', handleAccountsChanged);
-      window.ethereum.on('chainChanged', handleChainChanged);
+      (window.ethereum as unknown as EthereumProvider).on('accountsChanged', handleAccountsChanged);
+        (window.ethereum as unknown as EthereumProvider).on('chainChanged', handleChainChanged);
     }
 
     return () => {
       if (typeof window !== 'undefined' && window.ethereum) {
-        window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
-        window.ethereum.removeListener('chainChanged', handleChainChanged);
+        (window.ethereum as unknown as EthereumProvider).removeListener('accountsChanged', handleAccountsChanged);
+         (window.ethereum as unknown as EthereumProvider).removeListener('chainChanged', handleChainChanged);
       }
     };
   }, []);
@@ -59,8 +59,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const checkWalletConnection = async () => {
     if (typeof window !== 'undefined' && window.ethereum) {
       try {
-        const accounts = await window.ethereum.request({ method: 'eth_accounts' });
-        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+        const accounts = await (window.ethereum as unknown as EthereumProvider).request({ method: 'eth_accounts' });
+         const chainId = await (window.ethereum as unknown as EthereumProvider).request({ method: 'eth_chainId' });
         
         if (accounts.length > 0) {
           const balance = await getBalance(accounts[0]);
@@ -79,7 +79,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
   const getBalance = async (address: string): Promise<string> => {
     try {
-      const balance = await window.ethereum.request({
+      const balance = await (window.ethereum as unknown as EthereumProvider).request({
         method: 'eth_getBalance',
         params: [address, 'latest'],
       });
@@ -96,8 +96,8 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     if (typeof window !== 'undefined' && window.ethereum) {
       setIsConnecting(true);
       try {
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        const chainId = await window.ethereum.request({ method: 'eth_chainId' });
+        const accounts = await (window.ethereum as unknown as EthereumProvider).request({ method: 'eth_requestAccounts' });
+         const chainId = await (window.ethereum as unknown as EthereumProvider).request({ method: 'eth_chainId' });
         const balance = await getBalance(accounts[0]);
         
         setWallet({
@@ -130,7 +130,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     if (typeof window !== 'undefined' && window.ethereum) {
       try {
         // Try to switch to the network
-        await window.ethereum.request({
+        await (window.ethereum as unknown as EthereumProvider).request({
           method: 'wallet_switchEthereumChain',
           params: [{ chainId: TARGET_NETWORK.chainId }],
         });
@@ -139,7 +139,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         // This error code indicates that the chain has not been added to MetaMask
         if (switchError.code === 4902) {
           try {
-            await window.ethereum.request({
+            await (window.ethereum as unknown as EthereumProvider).request({
               method: 'wallet_addEthereumChain',
               params: [TARGET_NETWORK],
             });
@@ -169,7 +169,9 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   const handleChainChanged = (chainId: string) => {
     setWallet(prev => ({ ...prev, chainId: parseInt(chainId, 16) }));
     // Reload the page to reset any state that depends on the network
-    window.location.reload();
+    if (typeof window !== 'undefined') {
+      window.location.reload();
+    }
   };
 
   const value: WalletContextType = {
@@ -196,8 +198,9 @@ export function useWallet() {
 }
 
 // Extend Window interface for TypeScript
-declare global {
-  interface Window {
-    ethereum?: any;
-  }
+interface EthereumProvider {
+  request: (args: { method: string; params?: any[] }) => Promise<any>;
+  on: (event: string, handler: (...args: any[]) => void) => void;
+  removeListener: (event: string, handler: (...args: any[]) => void) => void;
+  isMetaMask?: boolean;
 }

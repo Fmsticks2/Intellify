@@ -99,7 +99,9 @@ export function TransactionStatus({ status, txHash, message, onClose }: Transact
                   </code>
                   <button
                     onClick={() => {
-                      navigator.clipboard.writeText(txHash);
+                      if (navigator?.clipboard) {
+                        navigator.clipboard.writeText(txHash);
+                      }
                     }}
                     className="text-xs text-blue-600 hover:text-blue-800 transition-colors"
                     title="Copy full hash"

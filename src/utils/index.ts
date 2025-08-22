@@ -1,4 +1,4 @@
-import { ZERO_G_TESTNET } from '../constants';
+import { ZERO_G_TESTNET } from '../constants/index.js';
 
 // Address formatting utilities
 export function formatAddress(address: string, length: number = 6): string {
@@ -163,37 +163,47 @@ export function parseContractError(error: any): string {
 // Local storage utilities
 export function saveToLocalStorage(key: string, value: any): void {
   try {
-    localStorage.setItem(key, JSON.stringify(value));
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
   } catch (error) {
-    console.warn('Failed to save to localStorage:', error);
+    console.error('Failed to save to localStorage:', error);
   }
 }
 
 export function loadFromLocalStorage<T>(key: string, defaultValue: T): T {
   try {
-    const item = localStorage.getItem(key);
-    return item ? JSON.parse(item) : defaultValue;
+    if (typeof window !== 'undefined' && window.localStorage) {
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : defaultValue;
+    }
+    return defaultValue;
   } catch (error) {
-    console.warn('Failed to load from localStorage:', error);
+    console.error('Failed to load from localStorage:', error);
     return defaultValue;
   }
 }
 
 export function removeFromLocalStorage(key: string): void {
   try {
-    localStorage.removeItem(key);
+    if (typeof window !== 'undefined' && window.localStorage) {
+      localStorage.removeItem(key);
+    }
   } catch (error) {
-    console.warn('Failed to remove from localStorage:', error);
+    console.error('Failed to remove from localStorage:', error);
   }
 }
 
 // Clipboard utilities
 export async function copyToClipboard(text: string): Promise<boolean> {
   try {
-    await navigator.clipboard.writeText(text);
-    return true;
+    if (typeof window !== 'undefined' && navigator?.clipboard) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+    return false;
   } catch (error) {
-    console.warn('Failed to copy to clipboard:', error);
+    console.error('Failed to copy to clipboard:', error);
     return false;
   }
 }

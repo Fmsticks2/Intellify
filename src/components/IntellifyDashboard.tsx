@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useWallet } from './WalletProvider';
-import { MintINFTModal } from './MintINFTModal';
-import { INFTCard } from './INFTCard';
-import { useIntellifyContract } from '../hooks/useIntellifyContract';
+import { useWallet } from './WalletProvider.js';
+import { MintINFTModal } from './MintINFTModal.js';
+import { INFTCard } from './INFTCard.js';
+import { useIntellifyContract } from '../hooks/useIntellifyContract.js';
 
 interface INFT {
   tokenId: number;
