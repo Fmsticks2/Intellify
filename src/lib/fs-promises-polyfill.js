@@ -68,4 +68,4 @@ const fsPromises = {
   }
 };
 
-module.exports = fsPromises;
+export default fsPromises;
