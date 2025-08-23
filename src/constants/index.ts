@@ -2,10 +2,10 @@ import { NetworkConfig } from '../types/index';
 
 // 0G Network Configuration
 export const ZERO_G_TESTNET: NetworkConfig = {
-  chainId: 16513,
-  name: '0G Testnet',
+  chainId: 16601,
+  name: '0G-Galileo-Testnet',
   rpcUrl: 'https://evmrpc-testnet.0g.ai',
-  blockExplorerUrl: 'https://chainscan-testnet.0g.ai',
+  blockExplorerUrl: 'https://chainscan-galileo.0g.ai',
   nativeCurrency: {
     name: 'OG Token',
     symbol: 'OG',
@@ -220,7 +220,7 @@ export const POLLING_INTERVAL = 2000; // 2 seconds
 // Error Messages
 export const ERROR_MESSAGES = {
   WALLET_NOT_CONNECTED: 'Please connect your wallet first',
-  WRONG_NETWORK: 'Please switch to 0G Testnet',
+  WRONG_NETWORK: 'Please switch to 0G-Galileo-Testnet',
   INSUFFICIENT_BALANCE: 'Insufficient balance for transaction',
   TRANSACTION_FAILED: 'Transaction failed. Please try again.',
   CONTRACT_ERROR: 'Smart contract error occurred',

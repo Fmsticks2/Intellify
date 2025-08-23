@@ -21,15 +21,15 @@ const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
 // 0G Testnet configuration
 const TARGET_NETWORK = {
-  chainId: '0x4081', // 16641 in hex
-  chainName: '0G Testnet',
+  chainId: '0x40D9', // 16601 in hex
+  chainName: '0G-Galileo-Testnet',
   nativeCurrency: {
-    name: '0G',
-    symbol: '0G',
+    name: 'OG',
+    symbol: 'OG',
     decimals: 18,
   },
   rpcUrls: ['https://evmrpc-testnet.0g.ai'],
-  blockExplorerUrls: ['https://chainscan-testnet.0g.ai'],
+  blockExplorerUrls: ['https://chainscan-galileo.0g.ai'],
 };
 
 export function WalletProvider({ children }: { children: ReactNode }) {
@@ -64,12 +64,20 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         
         if (accounts.length > 0) {
           const balance = await getBalance(accounts[0]);
+          const currentChainId = parseInt(chainId, 16);
+          
           setWallet({
             isConnected: true,
             address: accounts[0],
-            chainId: parseInt(chainId, 16),
+            chainId: currentChainId,
             balance,
           });
+          
+          // Auto-switch to correct network if connected but on wrong network
+          if (currentChainId !== parseInt(TARGET_NETWORK.chainId, 16)) {
+            console.log('Wrong network detected, attempting to switch...');
+            await switchToCorrectNetwork();
+          }
         }
       } catch (error) {
         console.error('Error checking wallet connection:', error);
@@ -99,13 +107,20 @@ export function WalletProvider({ children }: { children: ReactNode }) {
         const accounts = await (window.ethereum as unknown as EthereumProvider).request({ method: 'eth_requestAccounts' });
          const chainId = await (window.ethereum as unknown as EthereumProvider).request({ method: 'eth_chainId' });
         const balance = await getBalance(accounts[0]);
+        const currentChainId = parseInt(chainId, 16);
         
         setWallet({
           isConnected: true,
           address: accounts[0],
-          chainId: parseInt(chainId, 16),
+          chainId: currentChainId,
           balance,
         });
+        
+        // Auto-switch to correct network if connected but on wrong network
+        if (currentChainId !== parseInt(TARGET_NETWORK.chainId, 16)) {
+          console.log('Wrong network detected during connection, attempting to switch...');
+          await switchToCorrectNetwork();
+        }
       } catch (error) {
         console.error('Error connecting wallet:', error);
         throw error;

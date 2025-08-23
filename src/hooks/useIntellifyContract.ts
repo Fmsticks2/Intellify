@@ -32,11 +32,12 @@ const INTELLIFY_ABI = [
   'event AIInteraction(uint256 indexed tokenId, address indexed user, string interactionType)',
 ];
 
-// Contract address - you'll need to update this after deployment
-const CONTRACT_ADDRESS = '0x1234567890123456789012345678901234567890'; // Placeholder
+import { CONTRACT_ADDRESS } from '../constants';
+
+// Contract address imported from constants
 
 // 0G Testnet chain ID
-const TARGET_CHAIN_ID = 16641;
+const TARGET_CHAIN_ID = 16601;
 
 export function useIntellifyContract() {
   const { wallet } = useWallet();

@@ -80,7 +80,7 @@ export default function IntellifyDashboard() {
     if (success) {
       // Network switched successfully, the page will reload
     } else {
-      setError('Failed to switch to 0G Testnet. Please switch manually.');
+      setError('Failed to switch to 0G-Galileo-Testnet. Please switch manually.');
     }
   };
 
@@ -119,10 +119,10 @@ export default function IntellifyDashboard() {
             </div>
             <h3 className="text-xl font-semibold text-gray-900">Wrong Network</h3>
             <p className="text-gray-600">
-              Please switch to 0G Testnet to use Intellify.
+              Please switch to 0G-Galileo-Testnet to use Intellify.
             </p>
             <button onClick={handleNetworkSwitch} className="btn-primary w-full">
-              Switch to 0G Testnet
+              Switch to 0G-Galileo-Testnet
             </button>
           </div>
         </div>
