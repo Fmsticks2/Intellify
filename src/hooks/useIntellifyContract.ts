@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import { useWallet } from '../components/WalletProvider.js';
+import { useWallet } from '../components/WalletProvider';
 
 // Contract ABI - only the functions we need
 const INTELLIFY_ABI = [

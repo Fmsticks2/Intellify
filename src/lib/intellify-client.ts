@@ -5,7 +5,7 @@
 
 import { ethers } from 'ethers';
 // import { Indexer, ZgFile } from '@0glabs/0g-ts-sdk'; // Commented out due to package issues
-import { appKit, ethersAdapter } from './reown-config.js';
+import { appKit, ethersAdapter } from './reown-config';
 import CryptoJS from 'crypto-js';
 
 // Temporary type definitions for 0G SDK until package is available

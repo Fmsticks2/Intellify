@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useIntellifyContract } from '../hooks/useIntellifyContract.js';
+import { useIntellifyContract } from '../hooks/useIntellifyContract';
 
 interface INFT {
   tokenId: number;

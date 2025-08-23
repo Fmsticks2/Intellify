@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useWallet } from './WalletProvider.js'
-import MintINFTModal from './MintINFTModal.js'
-import INFTCard from './INFTCard.js'
-import { useIntellifyContract } from '../hooks/useIntellifyContract.js';
+import { useWallet } from './WalletProvider'
+import MintINFTModal from './MintINFTModal'
+import INFTCard from './INFTCard'
+import { useIntellifyContract } from '../hooks/useIntellifyContract';
 
 interface INFT {
   tokenId: number;
@@ -90,7 +90,7 @@ export default function IntellifyDashboard() {
       <div className="text-center py-16">
         <div className="card max-w-md mx-auto">
           <div className="space-y-4">
-            <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mx-auto flex items-center justify-center">
+            <div className="w-16 h-16 bg-black rounded-full mx-auto flex items-center justify-center">
               <img src="/icons/wallet.svg" alt="Wallet" className="w-8 h-8" />
             </div>
             <h3 className="text-xl font-semibold text-gray-900">Connect Your Wallet</h3>

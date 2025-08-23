@@ -2,8 +2,8 @@ import React from 'react';
 import './globals.css';
 // import { Inter } from 'next/font/google';
 import { Metadata } from 'next';
-import { WalletProvider } from '../components/WalletProvider.js'
-import Header from '../components/Header.js';
+import { WalletProvider } from '../components/WalletProvider'
+import Header from '../components/Header';
 
 // const inter = Inter({ subsets: ['latin'] });
 

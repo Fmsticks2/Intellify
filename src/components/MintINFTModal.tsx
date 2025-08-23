@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useWallet } from './WalletProvider.js'
-import { useIntellifyContract } from '../hooks/useIntellifyContract.js';
+import { useWallet } from './WalletProvider'
+import { useIntellifyContract } from '../hooks/useIntellifyContract';
 
 interface MintINFTModalProps {
   onClose: () => void;

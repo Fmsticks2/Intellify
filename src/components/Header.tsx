@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useWallet } from './WalletProvider.js';
+import { useWallet } from './WalletProvider';
 
 interface HeaderProps {
   className?: string;
@@ -54,7 +54,7 @@ export default function Header({ className = '' }: HeaderProps) {
             {wallet.isConnected ? (
               <div className="flex items-center space-x-3">
                 {/* Wallet Info */}
-                <div className="flex items-center space-x-2 bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-2 rounded-xl border border-blue-100">
+                <div className="flex items-center space-x-2 bg-gray-50 px-4 py-2 rounded-xl border border-gray-200">
                   <img src="/icons/wallet.svg" alt="Wallet" className="w-5 h-5" />
                   <span className="text-sm font-medium text-gray-700">
                     {formatAddress(wallet.address!)}

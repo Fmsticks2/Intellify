@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import IntellifyDashboard from '../components/IntellifyDashboard.js';
+import IntellifyDashboard from '../components/IntellifyDashboard';
 
 export default function HomePage() {
   const [isClient, setIsClient] = useState(false);

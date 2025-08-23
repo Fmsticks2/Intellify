@@ -1,4 +1,4 @@
-import { ZERO_G_TESTNET } from '../constants/index.js';
+import { ZERO_G_TESTNET } from '../constants/index';
 
 // Address formatting utilities
 export function formatAddress(address: string, length: number = 6): string {

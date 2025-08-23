@@ -1,4 +1,4 @@
-import { NetworkConfig } from '../types/index.js';
+import { NetworkConfig } from '../types/index';
 
 // 0G Network Configuration
 export const ZERO_G_TESTNET: NetworkConfig = {
