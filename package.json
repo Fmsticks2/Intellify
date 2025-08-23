@@ -37,7 +37,7 @@
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.1.0",
-    "@nomicfoundation/hardhat-ethers": "^4.0.0",
+    "@nomicfoundation/hardhat-ethers": "^3.1.0",
     "@nomicfoundation/hardhat-toolbox": "^6.1.0",
     "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/react": "^13.4.0",
@@ -60,7 +60,7 @@
     "typescript": "^5.2.2"
   },
   "engines": {
-    "node": ">=18.0.0",
+    "node": "18.x",
     "npm": ">=8.0.0"
   },
   "keywords": [
