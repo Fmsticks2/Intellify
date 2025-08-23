@@ -9,12 +9,12 @@ const projectId = process.env.NEXT_PUBLIC_REOWN_PROJECT_ID || '2f05a7cac472eca57
 
 // 2. Define 0G Network
 const ogNetwork: AppKitNetwork = {
-  id: 16600,
-  name: '0G Newton Testnet',
+  id: 16601,
+  name: '0G-Galileo-Testnet',
   nativeCurrency: {
     decimals: 18,
-    name: '0G',
-    symbol: '0G',
+    name: 'OG',
+    symbol: 'OG',
   },
   rpcUrls: {
     default: {
@@ -27,7 +27,7 @@ const ogNetwork: AppKitNetwork = {
   blockExplorers: {
     default: {
       name: '0G Explorer',
-      url: 'https://chainscan-newton.0g.ai',
+      url: 'https://chainscan-galileo.0g.ai',
     },
   },
   testnet: true,
