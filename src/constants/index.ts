@@ -2,10 +2,10 @@ import { NetworkConfig } from '../types/index';
 
 // 0G Network Configuration
 export const ZERO_G_TESTNET: NetworkConfig = {
-  chainId: 16601,
-  name: '0G-Galileo-Testnet',
+  chainId: 16513,
+  name: '0G Testnet',
   rpcUrl: 'https://evmrpc-testnet.0g.ai',
-  blockExplorerUrl: 'https://chainscan-galileo.0g.ai',
+  blockExplorerUrl: 'https://chainscan-testnet.0g.ai',
   nativeCurrency: {
     name: 'OG Token',
     symbol: 'OG',
@@ -14,7 +14,7 @@ export const ZERO_G_TESTNET: NetworkConfig = {
 };
 
 // Contract Configuration
-export const CONTRACT_ADDRESS = '0x1234567890123456789012345678901234567890'; // Replace with actual deployed contract address
+export const CONTRACT_ADDRESS = '0xdc6c396319895dA489b0Cd145A4c5D660b9e10F6'; // Deployed INFT contract address
 
 // Contract ABI (from IntellifyINFT.sol)
 export const CONTRACT_ABI = [
@@ -220,7 +220,7 @@ export const POLLING_INTERVAL = 2000; // 2 seconds
 // Error Messages
 export const ERROR_MESSAGES = {
   WALLET_NOT_CONNECTED: 'Please connect your wallet first',
-  WRONG_NETWORK: 'Please switch to 0G-Galileo-Testnet',
+  WRONG_NETWORK: 'Please switch to 0G Testnet',
   INSUFFICIENT_BALANCE: 'Insufficient balance for transaction',
   TRANSACTION_FAILED: 'Transaction failed. Please try again.',
   CONTRACT_ERROR: 'Smart contract error occurred',
