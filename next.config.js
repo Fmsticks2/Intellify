@@ -4,6 +4,10 @@ const webpack = require('webpack');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
+  experimental: {
+    serverComponentsExternalPackages: ['@0glabs/0g-ts-sdk']
+  },
   webpack: (config) => {
     // Fallbacks for Node core modules
     config.resolve.fallback = {

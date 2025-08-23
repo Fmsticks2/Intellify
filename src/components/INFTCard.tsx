@@ -19,7 +19,7 @@ interface INFTCardProps {
   onUpdate: () => void;
 }
 
-export function INFTCard({ inft, onUpdate }: INFTCardProps) {
+export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
   const { recordInteraction, deactivateINFT, reactivateINFT, burnINFT } = useIntellifyContract();
   const [loading, setLoading] = useState(false);
   const [showActions, setShowActions] = useState(false);

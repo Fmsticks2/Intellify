@@ -1,6 +1,15 @@
-# Intellify - AI-Powered NFT Platform
+# Intellify Wave 2 - Decentralized AI Knowledge Companion
 
-**Intellify** is a cutting-edge NFT platform that combines artificial intelligence with blockchain technology, built on the 0G Network testnet. The platform enables users to create, mint, and manage AI-enhanced NFTs with advanced knowledge integration capabilities.
+A cutting-edge decentralized application that combines AI and blockchain technology to create intelligent NFTs (INFTs) on the 0G Network.
+
+## Features
+
+- 🤖 **AI-Powered INFTs**: Create intelligent NFTs with embedded AI capabilities
+- 🔗 **0G Network Integration**: Built on the high-performance 0G blockchain
+- 🎨 **Professional UI**: Modern, responsive design with professional icons
+- 💼 **Wallet Integration**: Seamless wallet connection with address management
+- 📱 **Mobile Responsive**: Optimized for all device sizes
+- 🔒 **Secure**: Privacy-first approach with decentralized storage
 
 ## 🚀 Deployed Contract
 
@@ -79,6 +88,76 @@ $ anvil
 $ forge script script/Deploy.s.sol:DeployScript --rpc-url 0g_testnet --broadcast --private-key <your_private_key>
 
 ```
+
+## 🛠️ Development
+
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+- MetaMask wallet
+- 0G Network testnet tokens
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd intellify
+```
+
+2. Install dependencies:
+```bash
+npm install
+```
+
+3. Set up environment variables:
+```bash
+cp .env.example .env.local
+```
+
+4. Update the environment variables in `.env.local` with your configuration.
+
+5. Start the development server:
+```bash
+npm run dev
+```
+
+6. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## 🚀 Deployment to Vercel
+
+### Automatic Deployment (Recommended)
+
+1. Push your code to GitHub
+2. Connect your GitHub repository to Vercel
+3. Configure environment variables in Vercel dashboard
+4. Deploy automatically on every push
+
+### Manual Deployment
+
+1. Install Vercel CLI:
+```bash
+npm i -g vercel
+```
+
+2. Login to Vercel:
+```bash
+vercel login
+```
+
+3. Deploy:
+```bash
+vercel --prod
+```
+
+### Environment Variables for Vercel
+
+Configure these environment variables in your Vercel dashboard:
+
+- `NEXT_PUBLIC_0G_RPC_URL`
+- `NEXT_PUBLIC_INTELLIFY_CONTRACT_ADDRESS`
+- `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` (optional)
+- Other variables from `.env.example`
 
 ### Frontend Development
 

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useWallet } from './WalletProvider.js';
+import { useWallet } from './WalletProvider.js'
 import { useIntellifyContract } from '../hooks/useIntellifyContract.js';
 
 interface MintINFTModalProps {
@@ -16,7 +16,7 @@ interface FormData {
   description: string;
 }
 
-export function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps) {
+export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps) {
   const { wallet } = useWallet();
   const { mintINFT, isKnowledgeHashUsed } = useIntellifyContract();
   const [formData, setFormData] = useState<FormData>({

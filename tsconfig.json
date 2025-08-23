@@ -29,6 +29,14 @@
     "**/*.tsx"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "ignition",
+    "test",
+    "script",
+    "scripts",
+    "contracts",
+    "out",
+    "broadcast",
+    "lib"
   ]
 }
