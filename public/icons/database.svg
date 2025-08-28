@@ -1,0 +1,47 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="databaseGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#764ba2;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#f093fb;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="dataGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4facfe;stop-opacity:0.8" />
+      <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:0.8" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Database cylinder top -->
+  <ellipse cx="12" cy="6" rx="8" ry="3" fill="url(#dataGradient)" stroke="url(#databaseGradient)" stroke-width="2"/>
+  
+  <!-- Database cylinder body -->
+  <rect x="4" y="6" width="16" height="12" fill="url(#dataGradient)" opacity="0.6"/>
+  <line x1="4" y1="6" x2="4" y2="18" stroke="url(#databaseGradient)" stroke-width="2"/>
+  <line x1="20" y1="6" x2="20" y2="18" stroke="url(#databaseGradient)" stroke-width="2"/>
+  
+  <!-- Database cylinder bottom -->
+  <ellipse cx="12" cy="18" rx="8" ry="3" fill="url(#dataGradient)" stroke="url(#databaseGradient)" stroke-width="2"/>
+  
+  <!-- Data layers -->
+  <ellipse cx="12" cy="10" rx="8" ry="2" fill="none" stroke="url(#databaseGradient)" stroke-width="1.5" opacity="0.7"/>
+  <ellipse cx="12" cy="14" rx="8" ry="2" fill="none" stroke="url(#databaseGradient)" stroke-width="1.5" opacity="0.7"/>
+  
+  <!-- Data indicators -->
+  <rect x="6" y="7" width="3" height="1" rx="0.5" fill="url(#databaseGradient)" opacity="0.8"/>
+  <rect x="10" y="7" width="4" height="1" rx="0.5" fill="url(#databaseGradient)" opacity="0.6"/>
+  <rect x="15" y="7" width="2" height="1" rx="0.5" fill="url(#databaseGradient)" opacity="0.8"/>
+  
+  <rect x="6" y="11" width="2" height="1" rx="0.5" fill="url(#databaseGradient)" opacity="0.6"/>
+  <rect x="9" y="11" width="5" height="1" rx="0.5" fill="url(#databaseGradient)" opacity="0.8"/>
+  <rect x="15" y="11" width="3" height="1" rx="0.5" fill="url(#databaseGradient)" opacity="0.6"/>
+  
+  <rect x="6" y="15" width="4" height="1" rx="0.5" fill="url(#databaseGradient)" opacity="0.8"/>
+  <rect x="11" y="15" width="2" height="1" rx="0.5" fill="url(#databaseGradient)" opacity="0.6"/>
+  <rect x="14" y="15" width="3" height="1" rx="0.5" fill="url(#databaseGradient)" opacity="0.8"/>
+  
+  <!-- Access indicator -->
+  <circle cx="16" cy="4" r="2" fill="url(#databaseGradient)" opacity="0.9">
+    <animate attributeName="opacity" values="0.5;1;0.5" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <path d="M15 4 L17 4 M16 3 L16 5" stroke="white" stroke-width="1" stroke-linecap="round"/>
+</svg>

@@ -94,12 +94,14 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
   };
 
   return (
-    <div className="nft-card relative">
+    <div className="nft-card relative bg-gradient-to-br from-white to-gray-50 border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300">
       {/* Status Badge */}
       <div className="absolute top-4 right-4 z-10">
         <span className={`status-badge ${
-          inft.isActive ? 'status-active' : 'status-inactive'
-        }`}>
+          inft.isActive 
+            ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md' 
+            : 'bg-gradient-to-r from-gray-400 to-gray-500 text-white shadow-md'
+        } px-3 py-1 rounded-full text-xs font-medium`}>
           {inft.isActive ? 'Active' : 'Inactive'}
         </span>
       </div>
@@ -107,18 +109,23 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
       {/* Card Header */}
       <div className="p-6">
         <div className="flex items-start justify-between mb-4">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900">
-              INFT #{inft.tokenId}
-            </h3>
-            <p className="text-sm text-gray-500">
-              {formatAddress(inft.owner)}
-            </p>
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center shadow-md">
+              <img src="/icons/brain.svg" alt="INFT" className="w-6 h-6" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                INFT #{inft.tokenId}
+              </h3>
+              <p className="text-sm text-gray-500">
+                {formatAddress(inft.owner)}
+              </p>
+            </div>
           </div>
           
           <button
             onClick={() => setShowActions(!showActions)}
-            className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+            className="p-2 text-gray-400 hover:text-gray-600 transition-colors hover:bg-gray-100 rounded-lg"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
@@ -128,27 +135,21 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
 
         {/* AI Model Info */}
         <div className="space-y-3">
-          <div className="flex items-center space-x-2">
-            <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-            <span className="text-sm text-gray-600">Model: {inft.modelVersion}</span>
+          <div className="flex items-center space-x-2 p-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
+            <img src="/icons/neural-network.svg" alt="Model" className="w-4 h-4" />
+            <span className="text-sm text-gray-700 font-medium">Model: {inft.modelVersion}</span>
           </div>
           
-          <div className="flex items-center space-x-2">
-            <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-            </svg>
-            <span className="text-sm text-gray-600">
+          <div className="flex items-center space-x-2 p-2 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg">
+            <img src="/icons/knowledge.svg" alt="Knowledge" className="w-4 h-4" />
+            <span className="text-sm text-gray-700 font-medium">
               {inft.knowledgeHashes.length} Knowledge File{inft.knowledgeHashes.length !== 1 ? 's' : ''}
             </span>
           </div>
           
-          <div className="flex items-center space-x-2">
-            <svg className="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
-            <span className="text-sm text-gray-600">
+          <div className="flex items-center space-x-2 p-2 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg">
+            <img src="/icons/analytics.svg" alt="Interactions" className="w-4 h-4" />
+            <span className="text-sm text-gray-700 font-medium">
               {inft.interactionCount} Interaction{inft.interactionCount !== 1 ? 's' : ''}
             </span>
           </div>
@@ -163,8 +164,15 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
 
         {/* Error Message */}
         {error && (
-          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-700">{error}</p>
+          <div className="mt-4 p-3 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-lg shadow-sm">
+            <div className="flex items-center space-x-2">
+              <div className="w-4 h-4 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center">
+                <svg className="w-2 h-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </div>
+              <p className="text-sm text-red-700 font-medium">{error}</p>
+            </div>
           </div>
         )}
 
