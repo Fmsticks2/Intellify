@@ -28,24 +28,41 @@ export default function Header({ className = '' }: HeaderProps) {
   };
 
   return (
-    <header className={`bg-white/80 backdrop-blur-sm border-b border-white/20 sticky top-0 z-50 ${className}`}>
+    <header className={`glass-nav sticky top-0 z-50 ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center space-x-3">
-            <img src="/logo.svg" alt="Intellify" className="h-10" />
+            <div className="relative group">
+              <img 
+                src="/logo-professional.svg" 
+                alt="Intellify Logo" 
+                className="h-11 relative z-10 transition-all duration-300 group-hover:scale-110" 
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-green-400 via-green-500 to-green-600 rounded-full blur-xl opacity-40 animate-pulse group-hover:opacity-60 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-r from-green-300 to-green-400 rounded-full blur-md opacity-20 animate-ping" />
+            </div>
+            <h1 className="text-2xl font-bold gradient-text group-hover:text-shadow-lg transition-all duration-300">
+              Intellify
+            </h1>
           </div>
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
-              Dashboard
+            <a href="#" className="relative text-gray-300 hover:text-green-400 transition-all duration-300 font-medium group">
+              <span className="relative z-10">Dashboard</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-green-500/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm" />
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-green-400 to-green-500 group-hover:w-full transition-all duration-300" />
             </a>
-            <a href="#" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
-              My INFTs
+            <a href="#" className="relative text-gray-300 hover:text-green-400 transition-all duration-300 font-medium group">
+              <span className="relative z-10">My INFTs</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-green-500/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm" />
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-green-400 to-green-500 group-hover:w-full transition-all duration-300" />
             </a>
-            <a href="#" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
-              Explore
+            <a href="#" className="relative text-gray-300 hover:text-green-400 transition-all duration-300 font-medium group">
+              <span className="relative z-10">Explore</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-green-500/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm" />
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-green-400 to-green-500 group-hover:w-full transition-all duration-300" />
             </a>
           </nav>
 
@@ -54,48 +71,61 @@ export default function Header({ className = '' }: HeaderProps) {
             {wallet.isConnected ? (
               <div className="flex items-center space-x-3">
                 {/* Wallet Info */}
-                <div className="flex items-center space-x-2 bg-gray-50 px-4 py-2 rounded-xl border border-gray-200">
-                  <img src="/icons/wallet.svg" alt="Wallet" className="w-5 h-5" />
-                  <span className="text-sm font-medium text-gray-700">
-                    {formatAddress(wallet.address!)}
-                  </span>
-                  <button
-                    onClick={copyAddress}
-                    className="p-1 hover:bg-white/50 rounded transition-colors"
-                    title="Copy address"
-                  >
-                    <img 
-                      src="/icons/copy.svg" 
-                      alt={copied ? "Copied!" : "Copy"} 
-                      className="w-4 h-4" 
-                    />
-                  </button>
+                <div className="relative flex items-center space-x-2 glass px-4 py-2 rounded-xl cyber-border group overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-r from-green-400/10 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="relative z-10 flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-lg shadow-green-400/50"></div>
+                    <img src="/icons/wallet.svg" alt="Wallet" className="w-5 h-5 filter brightness-0 invert" style={{filter: 'brightness(0) saturate(100%) invert(64%) sepia(98%) saturate(464%) hue-rotate(86deg) brightness(118%) contrast(119%)'}} />
+                    <span className="text-sm font-medium text-green-300 font-mono">
+                      {formatAddress(wallet.address!)}
+                    </span>
+                    <button
+                      onClick={copyAddress}
+                      className="p-1 hover:bg-green-500/20 rounded transition-all duration-300 hover:scale-110 group/copy"
+                      title="Copy address"
+                    >
+                      <img 
+                        src="/icons/copy.svg" 
+                        alt={copied ? "Copied!" : "Copy"} 
+                        className="w-4 h-4 filter brightness-0 invert group-hover/copy:scale-110 transition-all duration-200" 
+                        style={{filter: copied ? 'brightness(0) saturate(100%) invert(64%) sepia(98%) saturate(464%) hue-rotate(86deg) brightness(118%) contrast(119%)' : 'brightness(0) saturate(100%) invert(64%) sepia(98%) saturate(464%) hue-rotate(86deg) brightness(118%) contrast(119%)'}}
+                      />
+                    </button>
+                  </div>
                 </div>
 
                 {/* Balance */}
                 {wallet.balance && (
-                  <div className="text-sm text-gray-600">
-                    {parseFloat(wallet.balance).toFixed(4)} 0G
+                  <div className="relative text-sm text-green-400 font-mono px-3 py-2 rounded-lg glass cyber-border group overflow-hidden">
+                    <div className="absolute inset-0 bg-gradient-to-r from-green-400/10 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <span className="relative z-10 font-medium">
+                      {parseFloat(wallet.balance).toFixed(4)} 0G
+                    </span>
                   </div>
                 )}
 
                 {/* Disconnect Button */}
                 <button
                   onClick={disconnectWallet}
-                  className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                  className="relative p-2 text-gray-400 hover:text-red-400 hover:bg-red-500/20 rounded-lg transition-all duration-300 hover:scale-110 cyber-border group overflow-hidden"
                   title="Disconnect wallet"
                 >
-                  <img src="/icons/disconnect.svg" alt="Disconnect" className="w-5 h-5" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-red-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <img src="/icons/disconnect.svg" alt="Disconnect" className="w-5 h-5 filter brightness-0 invert relative z-10 group-hover:scale-110 transition-transform duration-200" style={{filter: 'brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)'}} />
                 </button>
               </div>
             ) : (
               <button
                 onClick={connectWallet}
                 disabled={isConnecting}
-                className="btn-primary flex items-center space-x-2"
+                className="btn-primary flex items-center space-x-2 cyber-glow relative overflow-hidden group"
               >
-                <img src="/icons/wallet.svg" alt="Wallet" className="w-5 h-5" />
-                <span>{isConnecting ? 'Connecting...' : 'Connect Wallet'}</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-green-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="relative z-10 flex items-center space-x-2">
+                  <img src="/icons/wallet.svg" alt="Wallet" className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
+                  <span className="font-semibold">{isConnecting ? 'Connecting...' : 'Connect Wallet'}</span>
+                  {isConnecting && <div className="loading-spinner ml-2"></div>}
+                </div>
               </button>
             )}
           </div>

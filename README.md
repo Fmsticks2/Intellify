@@ -1,15 +1,17 @@
 # Intellify Wave 2 - Decentralized AI Knowledge Companion
 
-A cutting-edge decentralized application that combines AI and blockchain technology to create intelligent NFTs (INFTs) on the 0G Network.
+A cutting-edge decentralized application that combines AI and blockchain technology to create intelligent NFTs (INFTs) on the 0G Network, implementing the revolutionary **ERC-7857 standard** for AI agents with private metadata.
 
-## Features
+## 🌟 Key Features
 
-- 🤖 **AI-Powered INFTs**: Create intelligent NFTs with embedded AI capabilities
-- 🔗 **0G Network Integration**: Built on the high-performance 0G blockchain
-- 🎨 **Professional UI**: Modern, responsive design with professional icons
-- 💼 **Wallet Integration**: Seamless wallet connection with address management
-- 📱 **Mobile Responsive**: Optimized for all device sizes
-- 🔒 **Secure**: Privacy-first approach with decentralized storage
+- 🤖 **ERC-7857 Compliant INFTs**: Full implementation of the ERC-7857 standard for AI agents with private metadata
+- 🔐 **Private Metadata Management**: Secure handling of encrypted AI model data with verifiable ownership
+- 👥 **Access Control System**: Role-based permissions and user authorization for AI agent data
+- 🔗 **0G Network Integration**: Built on the high-performance 0G blockchain for optimal performance
+- 🎨 **Professional UI**: Modern, responsive design with AI/ML themed professional icons
+- 💼 **Advanced Wallet Integration**: Seamless wallet connection with comprehensive address management
+- 📱 **Mobile Responsive**: Optimized for all device sizes with modern UX patterns
+- 🔒 **Enhanced Security**: Privacy-first approach with encrypted data structures and secure transfer mechanisms
 
 ## 🚀 Deployed Contract
 
@@ -18,21 +20,94 @@ A cutting-edge decentralized application that combines AI and blockchain technol
 **Transaction Hash**: `0x193f3ea69353f0a6a89610152644e8ab579cd4d685c7ce1d53bae6d7a4961fad`  
 **Block**: 5330601  
 
+## 🔬 ERC-7857 Implementation
+
+Intellify Wave 2 is one of the first platforms to implement the **ERC-7857 standard** for AI agents with private metadata. This revolutionary standard enables:
+
+### 🧠 AI Agent Features
+- **Private Metadata Storage**: Encrypted AI model data with secure access control
+- **Verifiable Ownership**: Cryptographic proof of AI agent ownership and authenticity
+- **Dynamic Knowledge Updates**: Real-time updates to AI knowledge base with immutable history
+- **Sealed Executor Pattern**: Secure processing of AI requests with privacy guarantees
+
+### 🔐 Security & Privacy
+- **Access Control Lists**: Fine-grained permissions for AI agent data access
+- **Encrypted Data Structures**: Private metadata protected with advanced encryption
+- **Signature Verification**: Authentication via authorized public keys per token
+- **Transfer Verification**: Secure ownership transfers with data integrity checks
+
+### 📊 Smart Contract Capabilities
+- **Knowledge Indexing**: Immutable knowledge hash tracking and deduplication
+- **AI State Management**: Dynamic AI model versioning and interaction history
+- **Metadata Interfaces**: Comprehensive metadata management with update events
+- **User Authorization**: Multi-user access control with revocation capabilities
+
 ## 🛠 Technology Stack
 
 - **Frontend**: Next.js 14, TypeScript, Tailwind CSS
 - **Wallet Integration**: Reown (WalletConnect v2)
-- **Smart Contracts**: Solidity, OpenZeppelin v5
+- **Smart Contracts**: Solidity, OpenZeppelin v5, ERC-7857 Standard
 - **Development Tools**: Foundry, Hardhat
 - **Blockchain**: 0G Network Testnet
+- **AI Integration**: Knowledge indexing, encrypted metadata, private AI states
 
-## 📋 Features
+## 📋 Core Functionality
 
-- 🎨 AI-powered NFT creation and minting
-- 🔗 Seamless wallet connection with Reown
-- 🧠 Knowledge hash integration for AI state management
-- 🔒 Secure smart contract with OpenZeppelin standards
-- 🌐 Built on 0G Network for enhanced performance
+### 🎨 INFT Creation & Management
+- **ERC-7857 Compliant Minting**: Create AI agents with private metadata and encrypted data
+- **Knowledge Hash Integration**: Immutable AI knowledge tracking with deduplication
+- **Dynamic AI State Updates**: Real-time AI model versioning and interaction history
+- **Private Metadata Management**: Secure handling of encrypted AI model configurations
+
+### 🔐 Access Control & Security
+- **User Authorization System**: Grant and revoke access to AI agent data
+- **Ownership Verification**: Cryptographic proof of AI agent ownership
+- **Secure Transfer Mechanisms**: Verified ownership transfers with data integrity
+- **Encrypted Data Storage**: Private AI model data protected with advanced encryption
+
+### 🌐 Blockchain Integration
+- **0G Network Optimization**: High-performance blockchain for AI workloads
+- **Seamless Wallet Connection**: Advanced Reown integration with multi-wallet support
+- **Gas-Efficient Operations**: Optimized smart contract functions for cost-effective usage
+- **Event-Driven Architecture**: Real-time updates via blockchain events
+
+## 📖 Smart Contract API
+
+### ERC-7857 Core Functions
+
+```solidity
+// Metadata Management
+function getDataHashes(uint256 tokenId) external view returns (string[] memory)
+function updateMetadata(uint256 tokenId, string[] memory newDataHashes, string memory newMetadataURI) external
+function getMetadataURI(uint256 tokenId) external view returns (string memory)
+function setMetadataURI(uint256 tokenId, string memory metadataURI) external
+
+// Access Control
+function authorizeUser(uint256 tokenId, address user) external
+function revokeUser(uint256 tokenId, address user) external
+function isAuthorized(uint256 tokenId, address user) external view returns (bool)
+function getAuthorizedUsers(uint256 tokenId) external view returns (address[] memory)
+
+// Verification
+function verifyOwnership(uint256 tokenId, address claimedOwner) external view returns (bool)
+function verifyTransfer(uint256 tokenId, address from, address to) external view returns (bool)
+```
+
+### INFT Specific Functions
+
+```solidity
+// INFT Management
+function mintINFT(string memory knowledgeHash, string memory initialMetadataURI) external returns (uint256)
+function addKnowledge(uint256 tokenId, string memory knowledgeHash) external
+function recordInteraction(uint256 tokenId, string memory interactionData) external
+function updateAIModel(uint256 tokenId, string memory newModelVersion) external
+
+// Query Functions
+function getAIState(uint256 tokenId) external view returns (AIState memory)
+function getUserINFTs(address user) external view returns (uint256[] memory)
+function getPrivateMetadata(uint256 tokenId) external view returns (PrivateMetadata memory)
+function isMetadataEncrypted(uint256 tokenId) external view returns (bool)
+```
 
 ## 🏗 Development Tools
 

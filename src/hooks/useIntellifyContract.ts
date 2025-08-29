@@ -8,13 +8,22 @@ import { useWallet } from '../components/WalletProvider';
 const INTELLIFY_ABI = [
   // View functions
   'function getUserINFTs(address user) view returns (uint256[])',
-  'function getAIState(uint256 tokenId) view returns (tuple(string modelVersion, string[] knowledgeHashes, uint256 interactionCount, uint256 lastUpdated, bool isActive, address owner))',
+  'function getAIState(uint256 tokenId) view returns (tuple(string modelVersion, string[] knowledgeHashes, uint256 interactionCount, uint256 lastUpdated, bool isActive, address owner, string encryptedStateHash, string stateEncryptionKey))',
   'function getKnowledgeHashes(uint256 tokenId) view returns (string[])',
   'function getKnowledgeMetadata(uint256 tokenId) view returns (tuple(string contentType, uint256 fileSize, string encryptionKey, uint256 uploadTimestamp, bool isEncrypted)[])',
   'function totalSupply() view returns (uint256)',
   'function tokenURI(uint256 tokenId) view returns (string)',
   'function ownerOf(uint256 tokenId) view returns (address)',
   'function isKnowledgeHashUsed(string knowledgeHash) view returns (bool)',
+  
+  // Enhanced encryption view functions
+  'function getEncryptedKnowledgeIndex(uint256 tokenId) view returns (tuple(string[] contentHashes, string[] semanticHashes, string indexStructure, string encryptionKey))',
+  'function getEncryptedModelState(uint256 tokenId) view returns (tuple(string stateHash, string parametersHash, string configHash, string encryptionKey))',
+  'function getUserAccessKey(uint256 tokenId, address user) view returns (string)',
+  'function isContentHashVerified(string contentHash) view returns (bool)',
+  'function getEncryptionVersion(uint256 tokenId) view returns (uint256)',
+  'function getKnowledgeIndexSummary(uint256 tokenId) view returns (uint256, uint256, uint256)',
+  'function getModelStateSummary(uint256 tokenId) view returns (bool, bool, uint256)',
   
   // Write functions
   'function mintINFT(address to, string metadataURI, string knowledgeHash, string modelVersion) returns (uint256)',
@@ -25,11 +34,24 @@ const INTELLIFY_ABI = [
   'function reactivateINFT(uint256 tokenId)',
   'function burn(uint256 tokenId)',
   
+  // Enhanced encryption write functions
+  'function addEncryptedKnowledgeChunk(uint256 tokenId, string contentHash, string semanticHash)',
+  'function updateEncryptedModelState(uint256 tokenId, string stateHash, string parametersHash, string configHash)',
+  'function grantUserAccessKey(uint256 tokenId, address user, string accessKey)',
+  'function revokeUserAccessKey(uint256 tokenId, address user)',
+  'function updateEncryptionVersion(uint256 tokenId)',
+  
   // Events
   'event INFTMinted(uint256 indexed tokenId, address indexed owner, string knowledgeHash)',
   'event AIStateUpdated(uint256 indexed tokenId, uint256 interactionCount)',
   'event KnowledgeAdded(uint256 indexed tokenId, string knowledgeHash)',
   'event AIInteraction(uint256 indexed tokenId, address indexed user, string interactionType)',
+  'event EncryptedKnowledgeIndexed(uint256 indexed tokenId, string contentHash, string semanticHash)',
+  'event EncryptedModelStateUpdated(uint256 indexed tokenId, string stateHash)',
+  'event UserAccessKeyGranted(uint256 indexed tokenId, address indexed user)',
+  'event UserAccessKeyRevoked(uint256 indexed tokenId, address indexed user)',
+  'event EncryptionVersionUpdated(uint256 indexed tokenId, uint256 newVersion)',
+  'event ContentHashVerified(string indexed contentHash, address indexed verifier)',
 ];
 
 import { CONTRACT_ADDRESS } from '../constants';
@@ -121,6 +143,42 @@ export function useIntellifyContract() {
     return await contract.isKnowledgeHashUsed(knowledgeHash);
   };
 
+  // Enhanced encryption read functions
+  const getEncryptedKnowledgeIndex = async (tokenId: number | bigint) => {
+    if (!contract) throw new Error('Contract not initialized');
+    return await contract.getEncryptedKnowledgeIndex(tokenId);
+  };
+
+  const getEncryptedModelState = async (tokenId: number | bigint) => {
+    if (!contract) throw new Error('Contract not initialized');
+    return await contract.getEncryptedModelState(tokenId);
+  };
+
+  const getUserAccessKey = async (tokenId: number | bigint, userAddress: string): Promise<string> => {
+    if (!contract) throw new Error('Contract not initialized');
+    return await contract.getUserAccessKey(tokenId, userAddress);
+  };
+
+  const isContentHashVerified = async (contentHash: string): Promise<boolean> => {
+    if (!contract) throw new Error('Contract not initialized');
+    return await contract.isContentHashVerified(contentHash);
+  };
+
+  const getEncryptionVersion = async (tokenId: number | bigint): Promise<bigint> => {
+    if (!contract) throw new Error('Contract not initialized');
+    return await contract.getEncryptionVersion(tokenId);
+  };
+
+  const getKnowledgeIndexSummary = async (tokenId: number | bigint) => {
+    if (!contract) throw new Error('Contract not initialized');
+    return await contract.getKnowledgeIndexSummary(tokenId);
+  };
+
+  const getModelStateSummary = async (tokenId: number | bigint) => {
+    if (!contract) throw new Error('Contract not initialized');
+    return await contract.getModelStateSummary(tokenId);
+  };
+
   // Write functions
   const mintINFT = async (
     to: string,
@@ -178,6 +236,50 @@ export function useIntellifyContract() {
     return await contract.burn(tokenId);
   };
 
+  // Enhanced encryption write functions
+  const addEncryptedKnowledgeChunk = async (
+    tokenId: number | bigint,
+    contentHash: string,
+    semanticHash: string
+  ): Promise<ethers.ContractTransactionResponse> => {
+    if (!contract) throw new Error('Contract not initialized');
+    return await contract.addEncryptedKnowledgeChunk(tokenId, contentHash, semanticHash);
+  };
+
+  const updateEncryptedModelState = async (
+    tokenId: number | bigint,
+    stateHash: string,
+    parametersHash: string,
+    configHash: string
+  ): Promise<ethers.ContractTransactionResponse> => {
+    if (!contract) throw new Error('Contract not initialized');
+    return await contract.updateEncryptedModelState(tokenId, stateHash, parametersHash, configHash);
+  };
+
+  const grantUserAccessKey = async (
+    tokenId: number | bigint,
+    userAddress: string,
+    accessKey: string
+  ): Promise<ethers.ContractTransactionResponse> => {
+    if (!contract) throw new Error('Contract not initialized');
+    return await contract.grantUserAccessKey(tokenId, userAddress, accessKey);
+  };
+
+  const revokeUserAccessKey = async (
+    tokenId: number | bigint,
+    userAddress: string
+  ): Promise<ethers.ContractTransactionResponse> => {
+    if (!contract) throw new Error('Contract not initialized');
+    return await contract.revokeUserAccessKey(tokenId, userAddress);
+  };
+
+  const updateEncryptionVersion = async (
+    tokenId: number | bigint
+  ): Promise<ethers.ContractTransactionResponse> => {
+    if (!contract) throw new Error('Contract not initialized');
+    return await contract.updateEncryptionVersion(tokenId);
+  };
+
   // Utility functions
   const waitForTransaction = async (txHash: string) => {
     if (!provider) throw new Error('Provider not initialized');
@@ -205,6 +307,15 @@ export function useIntellifyContract() {
     getOwnerOf,
     isKnowledgeHashUsed,
     
+    // Enhanced encryption read functions
+    getEncryptedKnowledgeIndex,
+    getEncryptedModelState,
+    getUserAccessKey,
+    isContentHashVerified,
+    getEncryptionVersion,
+    getKnowledgeIndexSummary,
+    getModelStateSummary,
+    
     // Write functions
     mintINFT,
     addKnowledge,
@@ -213,6 +324,13 @@ export function useIntellifyContract() {
     deactivateINFT,
     reactivateINFT,
     burnINFT,
+    
+    // Enhanced encryption write functions
+    addEncryptedKnowledgeChunk,
+    updateEncryptedModelState,
+    grantUserAccessKey,
+    revokeUserAccessKey,
+    updateEncryptionVersion,
     
     // Utility functions
     waitForTransaction,

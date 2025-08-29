@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useIntellifyContract } from '../hooks/useIntellifyContract';
 
 interface INFT {
@@ -94,32 +95,81 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
   };
 
   return (
-    <div className="nft-card relative bg-gradient-to-br from-white to-gray-50 border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300">
+    <motion.div 
+      className="nft-card relative glass-strong rounded-2xl border border-white/20 shadow-xl overflow-hidden"
+      initial={{ opacity: 0, y: 20, scale: 0.9 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      whileHover={{ 
+        scale: 1.02, 
+        y: -5,
+        boxShadow: "0 25px 50px rgba(0, 0, 0, 0.25)"
+      }}
+      transition={{ duration: 0.3 }}
+    >
       {/* Status Badge */}
-      <div className="absolute top-4 right-4 z-10">
-        <span className={`status-badge ${
-          inft.isActive 
-            ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md' 
-            : 'bg-gradient-to-r from-gray-400 to-gray-500 text-white shadow-md'
-        } px-3 py-1 rounded-full text-xs font-medium`}>
+      <motion.div 
+        className="absolute top-4 right-4 z-10"
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+      >
+        <motion.span 
+          className={`status-badge ${
+            inft.isActive 
+              ? 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg' 
+              : 'bg-gradient-to-r from-gray-400 to-gray-500 text-white shadow-lg'
+          } px-3 py-1 rounded-full text-xs font-medium`}
+          animate={inft.isActive ? {
+            boxShadow: [
+              "0 0 20px rgba(34, 197, 94, 0.3)",
+              "0 0 30px rgba(34, 197, 94, 0.6)",
+              "0 0 20px rgba(34, 197, 94, 0.3)"
+            ]
+          } : {}}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
           {inft.isActive ? 'Active' : 'Inactive'}
-        </span>
-      </div>
+        </motion.span>
+      </motion.div>
 
       {/* Card Header */}
-      <div className="p-6">
-        <div className="flex items-start justify-between mb-4">
+      <motion.div 
+        className="p-6 pb-4"
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.1 }}
+      >
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center shadow-md">
+            <motion.div 
+              className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg glass"
+              whileHover={{ 
+                scale: 1.1, 
+                rotate: 5,
+                boxShadow: "0 10px 30px rgba(139, 92, 246, 0.4)"
+              }}
+              whileTap={{ scale: 0.95 }}
+            >
               <img src="/icons/brain.svg" alt="INFT" className="w-6 h-6" />
-            </div>
+            </motion.div>
             <div>
-              <h3 className="text-lg font-semibold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              <motion.h3 
+                className="text-lg font-bold gradient-text"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
                 INFT #{inft.tokenId}
-              </h3>
-              <p className="text-sm text-gray-500">
-                {formatAddress(inft.owner)}
-              </p>
+              </motion.h3>
+              <motion.p 
+                className="text-sm text-gray-300 truncate max-w-[200px]" 
+                title={inft.owner}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+              >
+                Owner: {inft.owner.slice(0, 6)}...{inft.owner.slice(-4)}
+              </motion.p>
             </div>
           </div>
           
@@ -134,130 +184,230 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
         </div>
 
         {/* AI Model Info */}
-        <div className="space-y-3">
-          <div className="flex items-center space-x-2 p-2 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg">
+        <motion.div 
+          className="space-y-3"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, staggerChildren: 0.1 }}
+        >
+          <motion.div 
+            className="flex items-center space-x-2 p-2 rounded-lg glass hover:glass-strong transition-all duration-300"
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            whileHover={{ x: 5 }}
+          >
             <img src="/icons/neural-network.svg" alt="Model" className="w-4 h-4" />
-            <span className="text-sm text-gray-700 font-medium">Model: {inft.modelVersion}</span>
-          </div>
+            <span className="text-sm font-medium text-gray-200">Model:</span>
+            <span className="text-sm text-white font-semibold">{inft.modelVersion}</span>
+          </motion.div>
           
-          <div className="flex items-center space-x-2 p-2 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg">
+          <motion.div 
+            className="flex items-center space-x-2 p-2 rounded-lg glass hover:glass-strong transition-all duration-300"
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            whileHover={{ x: 5 }}
+          >
             <img src="/icons/knowledge.svg" alt="Knowledge" className="w-4 h-4" />
-            <span className="text-sm text-gray-700 font-medium">
-              {inft.knowledgeHashes.length} Knowledge File{inft.knowledgeHashes.length !== 1 ? 's' : ''}
+            <span className="text-sm font-medium text-gray-200">Knowledge Files:</span>
+            <span className="text-sm text-white font-semibold">
+              {inft.knowledgeHashes.length} File{inft.knowledgeHashes.length !== 1 ? 's' : ''}
             </span>
-          </div>
+          </motion.div>
           
-          <div className="flex items-center space-x-2 p-2 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg">
+          <motion.div 
+            className="flex items-center space-x-2 p-2 rounded-lg glass hover:glass-strong transition-all duration-300"
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            whileHover={{ x: 5 }}
+          >
             <img src="/icons/analytics.svg" alt="Interactions" className="w-4 h-4" />
-            <span className="text-sm text-gray-700 font-medium">
+            <span className="text-sm font-medium text-gray-200">Interactions:</span>
+            <span className="text-sm text-white font-semibold">
               {inft.interactionCount} Interaction{inft.interactionCount !== 1 ? 's' : ''}
             </span>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Last Updated */}
-        <div className="mt-4 pt-4 border-t border-gray-100">
-          <p className="text-xs text-gray-500">
-            Last updated: {formatDate(inft.lastUpdated)}
-          </p>
-        </div>
+        <motion.div 
+          className="mt-4 pt-4 border-t border-white/10"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6 }}
+        >
+          <div className="flex items-center space-x-2 text-xs text-gray-300">
+            <img src="/icons/clock.svg" alt="Updated" className="w-4 h-4" />
+            <span>Last updated: {formatDate(inft.lastUpdated)}</span>
+          </div>
+        </motion.div>
 
         {/* Error Message */}
-        {error && (
-          <div className="mt-4 p-3 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-lg shadow-sm">
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center">
-                <svg className="w-2 h-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </div>
-              <p className="text-sm text-red-700 font-medium">{error}</p>
-            </div>
-          </div>
-        )}
+        <AnimatePresence>
+          {error && (
+            <motion.div 
+              className="mt-4"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <motion.div 
+                className="p-3 glass-strong border border-red-400/30 rounded-lg bg-red-500/10"
+                initial={{ scale: 0.9 }}
+                animate={{ scale: 1 }}
+                whileHover={{ scale: 1.02 }}
+              >
+                <div className="flex items-center space-x-2">
+                  <motion.div 
+                    className="w-4 h-4 bg-gradient-to-r from-red-500 to-pink-500 rounded-full flex items-center justify-center"
+                    animate={{ rotate: [0, 10, -10, 0] }}
+                    transition={{ duration: 0.5, repeat: 2 }}
+                  >
+                    <svg className="w-2 h-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </motion.div>
+                  <p className="text-sm text-red-200 font-medium">{error}</p>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Action Buttons */}
-        {showActions && (
-          <div className="mt-4 pt-4 border-t border-gray-100 space-y-2">
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={() => handleInteraction('summary')}
-                disabled={loading || !inft.isActive}
-                className="btn-secondary text-sm py-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        <AnimatePresence>
+          {showActions && (
+            <motion.div 
+              className="mt-4 pt-4 border-t border-white/10 space-y-3"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <motion.div 
+                className="grid grid-cols-2 gap-3"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.1, staggerChildren: 0.1 }}
               >
-                {loading ? (
-                  <div className="loading-spinner mx-auto"></div>
-                ) : (
-                  'Generate Summary'
-                )}
-              </button>
+                <motion.button
+                  onClick={() => handleInteraction('summary')}
+                  disabled={loading || !inft.isActive}
+                  className="btn-primary text-sm py-2 flex items-center justify-center space-x-2 glass-strong"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {loading ? (
+                    <div className="loading-spinner mx-auto"></div>
+                  ) : (
+                    <>
+                      <img src="/icons/brain.svg" alt="Summary" className="w-4 h-4" />
+                      <span>Summary</span>
+                    </>
+                  )}
+                </motion.button>
+                
+                <motion.button
+                  onClick={() => handleInteraction('qa')}
+                  disabled={loading || !inft.isActive}
+                  className="btn-secondary text-sm py-2 flex items-center justify-center space-x-2 glass-strong"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {loading ? (
+                    <div className="loading-spinner mx-auto"></div>
+                  ) : (
+                    'Ask Question'
+                  )}
+                </motion.button>
+              </motion.div>
               
-              <button
-                onClick={() => handleInteraction('qa')}
-                disabled={loading || !inft.isActive}
-                className="btn-secondary text-sm py-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              <motion.div 
+                className="grid grid-cols-2 gap-3"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2 }}
               >
-                {loading ? (
-                  <div className="loading-spinner mx-auto"></div>
-                ) : (
-                  'Ask Question'
-                )}
-              </button>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={handleToggleActive}
-                disabled={loading}
-                className={`text-sm py-2 font-medium rounded-lg transition-colors ${
-                  inft.isActive
-                    ? 'bg-yellow-100 text-yellow-800 hover:bg-yellow-200'
-                    : 'bg-green-100 text-green-800 hover:bg-green-200'
-                } disabled:opacity-50 disabled:cursor-not-allowed`}
-              >
-                {loading ? (
-                  <div className="loading-spinner mx-auto"></div>
-                ) : inft.isActive ? (
-                  'Deactivate'
-                ) : (
-                  'Reactivate'
-                )}
-              </button>
-              
-              <button
-                onClick={handleBurn}
-                disabled={loading}
-                className="btn-danger text-sm py-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? (
-                  <div className="loading-spinner mx-auto"></div>
-                ) : (
-                  'Burn'
-                )}
-              </button>
-            </div>
-          </div>
-        )}
+                <motion.button
+                  onClick={handleToggleActive}
+                  disabled={loading}
+                  className={`text-sm py-2 font-medium rounded-lg glass-strong transition-all duration-300 ${
+                    inft.isActive
+                      ? 'bg-gradient-to-r from-yellow-500/80 to-orange-500/80 text-white hover:from-yellow-600/90 hover:to-orange-600/90'
+                      : 'bg-gradient-to-r from-green-500/80 to-emerald-500/80 text-white hover:from-green-600/90 hover:to-emerald-600/90'
+                  } disabled:opacity-50 disabled:cursor-not-allowed`}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {loading ? (
+                    <div className="loading-spinner mx-auto"></div>
+                  ) : inft.isActive ? (
+                    'Deactivate'
+                  ) : (
+                    'Reactivate'
+                  )}
+                </motion.button>
+                
+                <motion.button
+                  onClick={handleBurn}
+                  disabled={loading}
+                  className="text-sm py-2 bg-gradient-to-r from-red-500/80 to-pink-500/80 text-white rounded-lg hover:from-red-600/90 hover:to-pink-600/90 disabled:opacity-50 disabled:cursor-not-allowed font-medium glass-strong transition-all duration-300"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {loading ? (
+                    <div className="loading-spinner mx-auto"></div>
+                  ) : (
+                    'Burn'
+                  )}
+                </motion.button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Quick Actions */}
-        {!showActions && inft.isActive && (
-          <div className="mt-4 pt-4 border-t border-gray-100">
-            <div className="flex space-x-2">
-              <button
-                onClick={() => handleInteraction('summary')}
-                disabled={loading}
-                className="flex-1 btn-primary text-sm py-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {loading ? (
-                  <div className="loading-spinner mx-auto"></div>
-                ) : (
-                  'Interact'
-                )}
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+        <AnimatePresence>
+          {!showActions && inft.isActive && (
+            <motion.div 
+              className="mt-4 pt-4 border-t border-white/10"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="flex space-x-2">
+                <motion.button
+                  onClick={() => handleInteraction('summary')}
+                  disabled={loading}
+                  className="flex-1 text-sm py-2 bg-gradient-to-r from-purple-600/80 to-indigo-600/80 text-white rounded-lg hover:from-purple-700/90 hover:to-indigo-700/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium glass-strong flex items-center justify-center space-x-2"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {loading ? (
+                    <div className="loading-spinner mx-auto"></div>
+                  ) : (
+                    <>
+                      <img src="/icons/brain.svg" alt="Interact" className="w-4 h-4" />
+                      <span>Interact</span>
+                    </>
+                  )}
+                </motion.button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </motion.div>
   );
 }

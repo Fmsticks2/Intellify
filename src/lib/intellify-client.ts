@@ -407,7 +407,7 @@ export class IntellifyClient {
       
       // Convert EncryptedData to File-like object for upload
       const encryptedFile = new File(
-        [encryptedData.data],
+        [encryptedData.data] as BlobPart[],
         encryptedData.filename,
         { type: encryptedData.contentType }
       );
