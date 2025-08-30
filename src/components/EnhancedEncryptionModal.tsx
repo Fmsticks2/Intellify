@@ -236,7 +236,7 @@ export default function EnhancedEncryptionModal({
                     <h3 className="text-lg font-semibold text-white">Encryption Settings</h3>
                     <button
                       onClick={() => setShowPrivacySettings(true)}
-                      className="text-blue-400 hover:text-blue-300 text-sm font-medium transition-colors"
+                      className="text-green-400 hover:text-green-300 text-sm font-medium transition-colors"
                     >
                       Customize
                     </button>

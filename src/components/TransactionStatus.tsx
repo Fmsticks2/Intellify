@@ -103,7 +103,7 @@ export function TransactionStatus({ status, txHash, message, onClose }: Transact
                         navigator.clipboard.writeText(txHash);
                       }
                     }}
-                    className="text-xs text-blue-600 hover:text-blue-800 transition-colors"
+                    className="text-xs text-green-600 hover:text-green-800 transition-colors"
                     title="Copy full hash"
                   >
                     Copy
@@ -112,7 +112,7 @@ export function TransactionStatus({ status, txHash, message, onClose }: Transact
                     href={`https://explorer.0g.ai/tx/${txHash}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs text-blue-600 hover:text-blue-800 transition-colors"
+                    className="text-xs text-green-600 hover:text-green-800 transition-colors"
                   >
                     View
                   </a>

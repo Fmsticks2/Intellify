@@ -224,7 +224,7 @@ export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps
                   <button
                     type="button"
                     onClick={generateSampleHash}
-                    className="px-4 py-3 bg-blue-600/20 border border-blue-400/30 rounded-lg text-blue-300 hover:bg-blue-500/10 transition-colors"
+                    className="px-4 py-3 bg-green-600/20 border border-green-400/30 rounded-lg text-green-300 hover:bg-green-500/10 transition-colors"
                   >
                     Generate
                   </button>
@@ -323,13 +323,13 @@ export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps
               {txHash && (
                 <div className="bg-blue-600/20 border border-blue-400/30 rounded-lg p-4">
                   <p className="text-sm text-gray-300 mb-2">Transaction Hash:</p>
-                  <p className="text-blue-300 font-mono text-sm break-all">{txHash}</p>
+                  <p className="text-green-300 font-mono text-sm break-all">{txHash}</p>
                 </div>
               )}
               
               <button
                 onClick={onClose}
-                className="w-full py-3 bg-blue-600/20 border border-blue-400/30 rounded-lg text-blue-300 hover:bg-blue-500/10 transition-colors font-medium"
+                className="w-full py-3 bg-green-600/20 border border-green-400/30 rounded-lg text-green-300 hover:bg-green-500/10 transition-colors font-medium"
               >
                 View My INFTs
               </button>

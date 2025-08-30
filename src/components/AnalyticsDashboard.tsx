@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Icon } from '@iconify/react';
 import { useWallet } from './WalletProvider';
 import { useIntellifyContract } from '../hooks/useIntellifyContract';
 
@@ -138,9 +139,7 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-500 to-blue-500 flex items-center justify-center">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
+              <Icon icon="mdi:chart-bar" className="w-6 h-6 text-white" />
             </div>
             <div>
               <h2 className="text-2xl font-bold text-white">Analytics Dashboard</h2>
@@ -162,9 +161,7 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
               onClick={onClose}
               className="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
             >
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <Icon icon="mdi:close" className="w-5 h-5 text-white" />
             </button>
           </div>
         </div>
@@ -189,9 +186,7 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
                     <p className="text-green-400 text-sm mt-1">+{analyticsData.growthRate.toFixed(1)}% growth</p>
                   </div>
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                    </svg>
+                    <Icon icon="mdi:brain" className="w-6 h-6 text-white" />
                   </div>
                 </div>
               </motion.div>
@@ -205,12 +200,10 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
                   <div>
                     <p className="text-gray-400 text-sm font-medium">Active INFTs</p>
                     <p className="text-3xl font-bold text-white mt-1">{analyticsData.activeINFTs}</p>
-                    <p className="text-blue-400 text-sm mt-1">{((analyticsData.activeINFTs / analyticsData.totalINFTs) * 100).toFixed(1)}% active</p>
+                    <p className="text-green-400 text-sm mt-1">{((analyticsData.activeINFTs / analyticsData.totalINFTs) * 100).toFixed(1)}% active</p>
                   </div>
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
+                    <Icon icon="mdi:lightning-bolt" className="w-6 h-6 text-white" />
                   </div>
                 </div>
               </motion.div>
@@ -224,12 +217,10 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
                   <div>
                     <p className="text-gray-400 text-sm font-medium">Total Interactions</p>
                     <p className="text-3xl font-bold text-white mt-1">{analyticsData.totalInteractions}</p>
-                    <p className="text-purple-400 text-sm mt-1">{analyticsData.avgInteractionsPerINFT.toFixed(1)} avg per INFT</p>
+                    <p className="text-green-400 text-sm mt-1">{analyticsData.avgInteractionsPerINFT.toFixed(1)} avg per INFT</p>
                   </div>
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                    </svg>
+                    <Icon icon="mdi:message-text" className="w-6 h-6 text-white" />
                   </div>
                 </div>
               </motion.div>
@@ -243,12 +234,10 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
                   <div>
                     <p className="text-gray-400 text-sm font-medium">Encrypted INFTs</p>
                     <p className="text-3xl font-bold text-white mt-1">{analyticsData.encryptedINFTs}</p>
-                    <p className="text-yellow-400 text-sm mt-1">{((analyticsData.encryptedINFTs / analyticsData.totalINFTs) * 100).toFixed(1)}% encrypted</p>
+                    <p className="text-green-400 text-sm mt-1">{((analyticsData.encryptedINFTs / analyticsData.totalINFTs) * 100).toFixed(1)}% encrypted</p>
                   </div>
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                    </svg>
+                    <Icon icon="mdi:lock" className="w-6 h-6 text-white" />
                   </div>
                 </div>
               </motion.div>

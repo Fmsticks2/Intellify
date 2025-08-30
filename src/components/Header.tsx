@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { Icon } from '@iconify/react';
 import { useWallet } from './WalletProvider';
 
 interface HeaderProps {
@@ -34,10 +35,9 @@ export default function Header({ className = '' }: HeaderProps) {
           {/* Logo */}
           <div className="flex items-center space-x-3">
             <div className="relative group">
-              <img 
-                src="/logo-professional.svg" 
-                alt="Intellify Logo" 
-                className="h-11 relative z-10 transition-all duration-300 group-hover:scale-110" 
+              <Icon 
+                icon="mdi:brain" 
+                className="h-11 w-11 text-green-400 relative z-10 transition-all duration-300 group-hover:scale-110" 
               />
               <div className="absolute inset-0 bg-gradient-to-r from-green-400 via-green-500 to-green-600 rounded-full blur-xl opacity-40 animate-pulse group-hover:opacity-60 transition-opacity duration-300" />
               <div className="absolute inset-0 bg-gradient-to-r from-green-300 to-green-400 rounded-full blur-md opacity-20 animate-ping" />
@@ -75,7 +75,7 @@ export default function Header({ className = '' }: HeaderProps) {
                   <div className="absolute inset-0 bg-gradient-to-r from-green-400/10 to-green-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="relative z-10 flex items-center space-x-2">
                     <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse shadow-lg shadow-green-400/50"></div>
-                    <img src="/icons/wallet.svg" alt="Wallet" className="w-5 h-5 filter brightness-0 invert" style={{filter: 'brightness(0) saturate(100%) invert(64%) sepia(98%) saturate(464%) hue-rotate(86deg) brightness(118%) contrast(119%)'}} />
+                    <Icon icon="mdi:wallet" className="w-5 h-5 text-green-400" />
                     <span className="text-sm font-medium text-green-300 font-mono">
                       {formatAddress(wallet.address!)}
                     </span>
@@ -84,11 +84,9 @@ export default function Header({ className = '' }: HeaderProps) {
                       className="p-1 hover:bg-green-500/20 rounded transition-all duration-300 hover:scale-110 group/copy"
                       title="Copy address"
                     >
-                      <img 
-                        src="/icons/copy.svg" 
-                        alt={copied ? "Copied!" : "Copy"} 
-                        className="w-4 h-4 filter brightness-0 invert group-hover/copy:scale-110 transition-all duration-200" 
-                        style={{filter: copied ? 'brightness(0) saturate(100%) invert(64%) sepia(98%) saturate(464%) hue-rotate(86deg) brightness(118%) contrast(119%)' : 'brightness(0) saturate(100%) invert(64%) sepia(98%) saturate(464%) hue-rotate(86deg) brightness(118%) contrast(119%)'}}
+                      <Icon 
+                        icon={copied ? "mdi:check" : "mdi:content-copy"} 
+                        className="w-4 h-4 text-green-400 group-hover/copy:scale-110 transition-all duration-200"
                       />
                     </button>
                   </div>
@@ -111,7 +109,7 @@ export default function Header({ className = '' }: HeaderProps) {
                   title="Disconnect wallet"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-red-500/10 to-red-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <img src="/icons/disconnect.svg" alt="Disconnect" className="w-5 h-5 filter brightness-0 invert relative z-10 group-hover:scale-110 transition-transform duration-200" style={{filter: 'brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)'}} />
+                  <Icon icon="mdi:logout" className="w-5 h-5 text-red-400 relative z-10 group-hover:scale-110 transition-transform duration-200" />
                 </button>
               </div>
             ) : (
@@ -122,7 +120,7 @@ export default function Header({ className = '' }: HeaderProps) {
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 to-green-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <div className="relative z-10 flex items-center space-x-2">
-                  <img src="/icons/wallet.svg" alt="Wallet" className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
+                  <Icon icon="mdi:wallet" className="w-5 h-5 text-green-400 group-hover:scale-110 transition-transform duration-200" />
                   <span className="font-semibold">{isConnecting ? 'Connecting...' : 'Connect Wallet'}</span>
                   {isConnecting && <div className="loading-spinner ml-2"></div>}
                 </div>

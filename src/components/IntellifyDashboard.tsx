@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Icon } from '@iconify/react';
 import { useWallet } from './WalletProvider'
 import MintINFTModal from './MintINFTModal'
 import INFTCard from './INFTCard'
@@ -139,7 +140,7 @@ export default function IntellifyDashboard() {
               whileHover={{ rotate: 360 }}
               transition={{ duration: 0.8 }}
             >
-              <img src="/icons/wallet.svg" alt="Wallet" className="w-8 h-8 filter brightness-0 invert" />
+              <Icon icon="mdi:wallet" className="w-8 h-8 text-white" />
             </motion.div>
             <h3 className="text-xl font-semibold gradient-text text-glow">Connect Your Wallet</h3>
             <p className="text-gray-300 text-shadow leading-relaxed">
@@ -201,9 +202,9 @@ export default function IntellifyDashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
             </motion.div>
-            <h3 className="text-xl font-semibold text-yellow-400 text-glow">Network Mismatch</h3>
+            <h3 className="text-xl font-semibold text-green-400 text-glow">Network Mismatch</h3>
             <p className="text-gray-300 text-shadow leading-relaxed">
-              Please switch to <span className="text-yellow-400 font-semibold">0G-Galileo-Testnet</span> to use Intellify.
+              Please switch to <span className="text-green-400 font-semibold">0G-Galileo-Testnet</span> to use Intellify.
             </p>
             <motion.button 
               onClick={handleNetworkSwitch} 
@@ -270,7 +271,7 @@ export default function IntellifyDashboard() {
               whileHover={{ rotate: 360 }}
               transition={{ duration: 0.8 }}
             >
-              <img src="/icons/database.svg" alt="Database" className="w-6 h-6 filter brightness-0 invert" />
+              <Icon icon="mdi:database" className="w-6 h-6 text-white" />
             </motion.div>
             <div>
               <p className="text-sm text-primary-300/80 font-medium">Total INFTs</p>
@@ -361,7 +362,7 @@ export default function IntellifyDashboard() {
               whileHover={{ rotate: 360 }}
               transition={{ duration: 0.8 }}
             >
-              <img src="/icons/analytics.svg" alt="Analytics" className="w-6 h-6 filter brightness-0 invert" />
+              <Icon icon="mdi:chart-line" className="w-6 h-6 text-white" />
             </motion.div>
             <div>
               <p className="text-sm text-primary-300/80 font-medium">Total Interactions</p>
@@ -515,7 +516,7 @@ export default function IntellifyDashboard() {
               whileHover={{ scale: 1.1, rotate: 360 }}
               transition={{ duration: 0.8 }}
             >
-              <img src="/icons/knowledge.svg" alt="No INFTs" className="w-12 h-12 filter brightness-0 invert" />
+              <Icon icon="mdi:brain" className="w-12 h-12 text-gray-400" />
             </motion.div>
             <motion.h3 
               className="text-xl font-semibold gradient-text text-glow mb-3"

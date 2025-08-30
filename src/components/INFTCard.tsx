@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Icon } from '@iconify/react';
 import { useIntellifyContract } from '../hooks/useIntellifyContract';
 
 interface INFT {
@@ -150,7 +151,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
               }}
               whileTap={{ scale: 0.95 }}
             >
-              <img src="/icons/brain.svg" alt="INFT" className="w-6 h-6" />
+              <Icon icon="mdi:brain" className="w-6 h-6 text-green-400" />
             </motion.div>
             <div>
               <motion.h3 
@@ -196,7 +197,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
             animate={{ opacity: 1, x: 0 }}
             whileHover={{ x: 5 }}
           >
-            <img src="/icons/neural-network.svg" alt="Model" className="w-4 h-4" />
+            <Icon icon="mdi:neural-network" className="w-4 h-4 text-green-400" />
             <span className="text-sm font-medium text-gray-200">Model:</span>
             <span className="text-sm text-white font-semibold">{inft.modelVersion}</span>
           </motion.div>
@@ -207,7 +208,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
             animate={{ opacity: 1, x: 0 }}
             whileHover={{ x: 5 }}
           >
-            <img src="/icons/knowledge.svg" alt="Knowledge" className="w-4 h-4" />
+            <Icon icon="mdi:book-open-variant" className="w-4 h-4 text-green-400" />
             <span className="text-sm font-medium text-gray-200">Knowledge Files:</span>
             <span className="text-sm text-white font-semibold">
               {inft.knowledgeHashes.length} File{inft.knowledgeHashes.length !== 1 ? 's' : ''}
@@ -220,7 +221,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
             animate={{ opacity: 1, x: 0 }}
             whileHover={{ x: 5 }}
           >
-            <img src="/icons/analytics.svg" alt="Interactions" className="w-4 h-4" />
+            <Icon icon="mdi:chart-line" className="w-4 h-4 text-green-400" />
             <span className="text-sm font-medium text-gray-200">Interactions:</span>
             <span className="text-sm text-white font-semibold">
               {inft.interactionCount} Interaction{inft.interactionCount !== 1 ? 's' : ''}
@@ -236,7 +237,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
           transition={{ delay: 0.6 }}
         >
           <div className="flex items-center space-x-2 text-xs text-gray-300">
-            <img src="/icons/clock.svg" alt="Updated" className="w-4 h-4" />
+            <Icon icon="mdi:clock" className="w-4 h-4 text-gray-400" />
             <span>Last updated: {formatDate(inft.lastUpdated)}</span>
           </div>
         </motion.div>
@@ -303,7 +304,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
                     <div className="loading-spinner mx-auto"></div>
                   ) : (
                     <>
-                      <img src="/icons/brain.svg" alt="Summary" className="w-4 h-4" />
+                      <Icon icon="mdi:brain" className="w-4 h-4 text-green-400" />
                       <span>Summary</span>
                     </>
                   )}
@@ -398,7 +399,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
                     <div className="loading-spinner mx-auto"></div>
                   ) : (
                     <>
-                      <img src="/icons/brain.svg" alt="Interact" className="w-4 h-4" />
+                      <Icon icon="mdi:brain" className="w-4 h-4 text-green-400" />
                       <span>Interact</span>
                     </>
                   )}
