@@ -123,34 +123,24 @@ export default function IntellifyDashboard() {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.6 }}
       >
-        <motion.div 
-          className="glass-strong max-w-md mx-auto rounded-3xl p-8 cyber-border relative overflow-hidden"
-          whileHover={{ scale: 1.02 }}
-          transition={{ duration: 0.3 }}
-        >
-          {/* Animated Border */}
-          <div className="absolute inset-0 rounded-3xl">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary-500 to-transparent animate-shimmer" />
-            <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary-500 to-transparent animate-shimmer" style={{animationDelay: '1s'}} />
-          </div>
-          
-          <div className="space-y-6 relative z-10">
+        <div className="bg-white max-w-md mx-auto rounded-2xl p-8 border border-gray-200 shadow-lg">
+          <div className="space-y-6">
             <motion.div 
-              className="w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full mx-auto flex items-center justify-center shadow-lg cyber-glow"
+              className="w-16 h-16 bg-blue-600 rounded-full mx-auto flex items-center justify-center shadow-lg"
               whileHover={{ rotate: 360 }}
               transition={{ duration: 0.8 }}
             >
               <Icon icon="mdi:wallet" className="w-8 h-8 text-white" />
             </motion.div>
-            <h3 className="text-xl font-semibold gradient-text text-glow">Connect Your Wallet</h3>
-            <p className="text-gray-300 text-shadow leading-relaxed">
-              Connect your wallet to start creating and managing your <span className="text-primary-400 font-semibold">AI Knowledge INFTs</span>.
+            <h3 className="text-xl font-semibold text-gray-900">Connect Your Wallet</h3>
+            <p className="text-gray-600 leading-relaxed">
+              Connect your wallet to start creating and managing your <span className="text-blue-600 font-semibold">AI Knowledge INFTs</span>.
             </p>
             <motion.button 
               onClick={connectWallet} 
-              className="btn-primary w-full cyber-glow"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg w-full transition-colors duration-200 shadow-md"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               transition={{ duration: 0.2 }}
             >
               <span className="flex items-center justify-center space-x-2">
@@ -161,7 +151,7 @@ export default function IntellifyDashboard() {
               </span>
             </motion.button>
           </div>
-        </motion.div>
+        </div>
       </motion.div>
     );
   }
@@ -175,42 +165,22 @@ export default function IntellifyDashboard() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        <motion.div 
-          className="glass-strong max-w-md mx-auto rounded-3xl p-8 cyber-border relative overflow-hidden"
-          whileHover={{ scale: 1.02 }}
-          transition={{ duration: 0.3 }}
-        >
-          {/* Warning Border Animation */}
-          <div className="absolute inset-0 rounded-3xl">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-500 to-transparent animate-shimmer" />
-            <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-500 to-transparent animate-shimmer" style={{animationDelay: '1s'}} />
-          </div>
-          
-          <div className="space-y-6 relative z-10">
-            <motion.div 
-              className="w-16 h-16 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-full mx-auto flex items-center justify-center shadow-lg"
-              animate={{ 
-                boxShadow: [
-                  "0 0 20px rgba(245, 158, 11, 0.3)",
-                  "0 0 40px rgba(245, 158, 11, 0.6)",
-                  "0 0 20px rgba(245, 158, 11, 0.3)"
-                ]
-              }}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
+        <div className="bg-white max-w-md mx-auto rounded-2xl p-8 border border-orange-200 shadow-lg">
+          <div className="space-y-6">
+            <div className="w-16 h-16 bg-orange-500 rounded-full mx-auto flex items-center justify-center shadow-lg">
               <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
               </svg>
-            </motion.div>
-            <h3 className="text-xl font-semibold text-green-400 text-glow">Network Mismatch</h3>
-            <p className="text-gray-300 text-shadow leading-relaxed">
-              Please switch to <span className="text-green-400 font-semibold">0G-Galileo-Testnet</span> to use Intellify.
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900">Network Mismatch</h3>
+            <p className="text-gray-600 leading-relaxed">
+              Please switch to <span className="text-orange-600 font-semibold">0G-Galileo-Testnet</span> to use Intellify.
             </p>
             <motion.button 
               onClick={handleNetworkSwitch} 
-              className="btn-primary w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-400 hover:to-orange-400"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-6 rounded-lg w-full transition-colors duration-200 shadow-md"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               transition={{ duration: 0.2 }}
             >
               <span className="flex items-center justify-center space-x-2">
@@ -221,7 +191,7 @@ export default function IntellifyDashboard() {
               </span>
             </motion.button>
           </div>
-        </motion.div>
+        </div>
       </motion.div>
     );
   }
@@ -259,24 +229,24 @@ export default function IntellifyDashboard() {
         variants={containerVariants}
       >
         <motion.div 
-          className="glass-strong rounded-2xl p-6 border border-primary-400/30 bg-gradient-to-br from-black/80 to-gray-900/60 backdrop-blur-xl shadow-2xl relative overflow-hidden"
+          className="bg-white rounded-2xl p-6 border border-gray-200 shadow-lg relative overflow-hidden"
           variants={cardVariants}
           whileHover={{ scale: 1.05, y: -5 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 to-transparent opacity-50" />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-transparent opacity-50" />
           <div className="flex items-center space-x-4 relative z-10">
             <motion.div 
-              className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-lg cyber-glow"
+              className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg"
               whileHover={{ rotate: 360 }}
               transition={{ duration: 0.8 }}
             >
               <Icon icon="mdi:database" className="w-6 h-6 text-white" />
             </motion.div>
             <div>
-              <p className="text-sm text-primary-300/80 font-medium">Total INFTs</p>
+              <p className="text-sm text-gray-600 font-medium">Total INFTs</p>
               <motion.p 
-                className="text-2xl font-bold gradient-text text-glow"
+                className="text-2xl font-bold text-gray-900"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
@@ -288,15 +258,15 @@ export default function IntellifyDashboard() {
         </motion.div>
 
         <motion.div 
-          className="glass-strong rounded-2xl p-6 border border-primary-400/30 bg-gradient-to-br from-black/80 to-gray-900/60 backdrop-blur-xl shadow-2xl relative overflow-hidden"
+          className="bg-white rounded-2xl p-6 border border-gray-200 shadow-lg relative overflow-hidden"
           variants={cardVariants}
           whileHover={{ scale: 1.05, y: -5 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 to-transparent opacity-50" />
+          <div className="absolute inset-0 bg-gradient-to-br from-green-50 to-transparent opacity-50" />
           <div className="flex items-center space-x-4 relative z-10">
             <motion.div 
-              className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-lg cyber-glow"
+              className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center shadow-lg"
               whileHover={{ rotate: 360 }}
               transition={{ duration: 0.8 }}
             >
@@ -305,9 +275,9 @@ export default function IntellifyDashboard() {
               </svg>
             </motion.div>
             <div>
-              <p className="text-sm text-primary-300/80 font-medium">Encrypted INFTs</p>
+              <p className="text-sm text-gray-600 font-medium">Encrypted INFTs</p>
               <motion.p 
-                className="text-2xl font-bold gradient-text text-glow"
+                className="text-2xl font-bold text-gray-900"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
@@ -319,15 +289,15 @@ export default function IntellifyDashboard() {
         </motion.div>
 
         <motion.div 
-          className="glass-strong rounded-2xl p-6 border border-primary-400/30 bg-gradient-to-br from-black/80 to-gray-900/60 backdrop-blur-xl shadow-2xl relative overflow-hidden"
+          className="bg-white rounded-2xl p-6 border border-gray-200 shadow-lg relative overflow-hidden"
           variants={cardVariants}
           whileHover={{ scale: 1.05, y: -5 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 to-transparent opacity-50" />
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-50 to-transparent opacity-50" />
           <div className="flex items-center space-x-4 relative z-10">
             <motion.div 
-              className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-lg cyber-glow"
+              className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center shadow-lg"
               whileHover={{ rotate: 360 }}
               transition={{ duration: 0.8 }}
             >
@@ -336,9 +306,9 @@ export default function IntellifyDashboard() {
               </svg>
             </motion.div>
             <div>
-              <p className="text-sm text-primary-300/80 font-medium">Active Sessions</p>
+              <p className="text-sm text-gray-600 font-medium">Active Sessions</p>
               <motion.p 
-                className="text-2xl font-bold gradient-text text-glow"
+                className="text-2xl font-bold text-gray-900"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.7, type: "spring", stiffness: 200 }}
@@ -350,24 +320,24 @@ export default function IntellifyDashboard() {
         </motion.div>
 
         <motion.div 
-          className="glass-strong rounded-2xl p-6 border border-primary-400/30 bg-gradient-to-br from-black/80 to-gray-900/60 backdrop-blur-xl shadow-2xl relative overflow-hidden"
+          className="bg-white rounded-2xl p-6 border border-gray-200 shadow-lg relative overflow-hidden"
           variants={cardVariants}
           whileHover={{ scale: 1.05, y: -5 }}
           transition={{ duration: 0.3 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 to-transparent opacity-50" />
+          <div className="absolute inset-0 bg-gradient-to-br from-orange-50 to-transparent opacity-50" />
           <div className="flex items-center space-x-4 relative z-10">
             <motion.div 
-              className="w-12 h-12 bg-gradient-to-br from-primary-500 to-primary-600 rounded-xl flex items-center justify-center shadow-lg cyber-glow"
+              className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg"
               whileHover={{ rotate: 360 }}
               transition={{ duration: 0.8 }}
             >
               <Icon icon="mdi:chart-line" className="w-6 h-6 text-white" />
             </motion.div>
             <div>
-              <p className="text-sm text-primary-300/80 font-medium">Total Interactions</p>
+              <p className="text-sm text-gray-600 font-medium">Total Interactions</p>
               <motion.p 
-                className="text-2xl font-bold gradient-text text-glow"
+                className="text-2xl font-bold text-gray-900"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.8, type: "spring", stiffness: 200 }}
@@ -386,7 +356,7 @@ export default function IntellifyDashboard() {
       >
         <motion.button
           onClick={() => setShowPrivacySettings(true)}
-          className="btn-secondary flex items-center justify-center space-x-2 glass border border-primary-400/30 bg-gradient-to-r from-black/80 to-gray-900/60 backdrop-blur-xl"
+          className="flex items-center justify-center space-x-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-xl border border-gray-200 transition-colors"
           whileHover={{ scale: 1.05, y: -2 }}
           whileTap={{ scale: 0.95 }}
           transition={{ duration: 0.2 }}
@@ -405,7 +375,7 @@ export default function IntellifyDashboard() {
         </motion.button>
         <motion.button
           onClick={() => setShowAnalytics(true)}
-          className="btn-secondary flex items-center justify-center space-x-2 glass border border-primary-400/30 bg-gradient-to-r from-black/80 to-gray-900/60 backdrop-blur-xl"
+          className="flex items-center justify-center space-x-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-xl border border-gray-200 transition-colors"
           whileHover={{ scale: 1.05, y: -2 }}
           whileTap={{ scale: 0.95 }}
           transition={{ duration: 0.2 }}
@@ -424,7 +394,7 @@ export default function IntellifyDashboard() {
         </motion.button>
         <motion.button
           onClick={() => setShowMintModal(true)}
-          className="btn-primary flex items-center justify-center space-x-2 glass-strong border border-primary-400/30 cyber-glow"
+          className="flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl border border-blue-600 transition-colors"
           whileHover={{ scale: 1.05, y: -2 }}
           whileTap={{ scale: 0.95 }}
           transition={{ duration: 0.2 }}
@@ -442,7 +412,7 @@ export default function IntellifyDashboard() {
         <motion.button
           onClick={loadUserINFTs}
           disabled={loading}
-          className="btn-secondary flex items-center justify-center space-x-2 glass border border-primary-400/30 bg-gradient-to-r from-black/80 to-gray-900/60 backdrop-blur-xl"
+          className="flex items-center justify-center space-x-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-xl border border-gray-200 transition-colors disabled:opacity-50"
           whileHover={{ scale: 1.05, y: -2 }}
           whileTap={{ scale: 0.95 }}
           transition={{ duration: 0.2 }}
@@ -462,7 +432,7 @@ export default function IntellifyDashboard() {
       <AnimatePresence>
         {error && (
           <motion.div 
-            className="glass-strong border border-red-400/30 rounded-2xl p-4 shadow-lg bg-gradient-to-r from-black/80 to-gray-900/60 backdrop-blur-xl"
+            className="bg-red-50 border border-red-200 rounded-2xl p-4 shadow-lg"
             initial={{ opacity: 0, y: -20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.9 }}
@@ -478,7 +448,7 @@ export default function IntellifyDashboard() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </motion.div>
-              <p className="text-white font-medium text-shadow">{error}</p>
+              <p className="text-red-800 font-medium">{error}</p>
             </div>
           </motion.div>
         )}
@@ -496,7 +466,7 @@ export default function IntellifyDashboard() {
           >
             <div className="loading-spinner"></div>
             <motion.span 
-              className="ml-3 text-white/80 text-shadow"
+              className="ml-3 text-gray-600"
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
@@ -512,14 +482,14 @@ export default function IntellifyDashboard() {
             transition={{ duration: 0.6 }}
           >
             <motion.div 
-              className="glass-strong w-24 h-24 rounded-full mx-auto flex items-center justify-center mb-6 shadow-lg bg-gradient-to-br from-primary-500/20 to-primary-600/10 border border-primary-400/30 cyber-glow"
+              className="bg-gray-100 w-24 h-24 rounded-full mx-auto flex items-center justify-center mb-6 shadow-lg border border-gray-200"
               whileHover={{ scale: 1.1, rotate: 360 }}
               transition={{ duration: 0.8 }}
             >
-              <Icon icon="mdi:brain" className="w-12 h-12 text-gray-400" />
+              <Icon icon="mdi:brain" className="w-12 h-12 text-gray-500" />
             </motion.div>
             <motion.h3 
-              className="text-xl font-semibold gradient-text text-glow mb-3"
+              className="text-xl font-semibold text-gray-900 mb-3"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
@@ -527,7 +497,7 @@ export default function IntellifyDashboard() {
               No INFTs Yet
             </motion.h3>
             <motion.p 
-              className="text-primary-300/80 text-shadow mb-8 max-w-md mx-auto font-medium"
+              className="text-gray-600 mb-8 max-w-md mx-auto font-medium"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
@@ -536,7 +506,7 @@ export default function IntellifyDashboard() {
             </motion.p>
             <motion.button
               onClick={() => setShowMintModal(true)}
-              className="btn-primary glass-strong border border-primary-400/30 cyber-glow"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl border border-blue-600 transition-colors"
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
               initial={{ opacity: 0, y: 20 }}

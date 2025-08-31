@@ -97,7 +97,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
 
   return (
     <motion.div 
-      className="nft-card relative glass-strong rounded-2xl border border-white/20 shadow-xl overflow-hidden"
+      className="nft-card relative bg-white rounded-2xl border border-gray-200 shadow-xl overflow-hidden"
       initial={{ opacity: 0, y: 20, scale: 0.9 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       whileHover={{ 
@@ -143,7 +143,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-3">
             <motion.div 
-              className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg glass"
+              className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg"
               whileHover={{ 
                 scale: 1.1, 
                 rotate: 5,
@@ -151,7 +151,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
               }}
               whileTap={{ scale: 0.95 }}
             >
-              <Icon icon="mdi:brain" className="w-6 h-6 text-green-400" />
+              <Icon icon="mdi:brain" className="w-6 h-6 text-white" />
             </motion.div>
             <div>
               <motion.h3 
@@ -163,7 +163,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
                 INFT #{inft.tokenId}
               </motion.h3>
               <motion.p 
-                className="text-sm text-gray-300 truncate max-w-[200px]" 
+                className="text-sm text-gray-600 truncate max-w-[200px]" 
                 title={inft.owner}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -192,38 +192,38 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
           transition={{ delay: 0.5, staggerChildren: 0.1 }}
         >
           <motion.div 
-            className="flex items-center space-x-2 p-2 rounded-lg glass hover:glass-strong transition-all duration-300"
+            className="flex items-center space-x-2 p-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-all duration-300"
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             whileHover={{ x: 5 }}
           >
-            <Icon icon="mdi:neural-network" className="w-4 h-4 text-green-400" />
-            <span className="text-sm font-medium text-gray-200">Model:</span>
-            <span className="text-sm text-white font-semibold">{inft.modelVersion}</span>
+            <Icon icon="mdi:neural-network" className="w-4 h-4 text-blue-600" />
+            <span className="text-sm font-medium text-gray-700">Model:</span>
+            <span className="text-sm text-gray-900 font-semibold">{inft.modelVersion}</span>
           </motion.div>
           
           <motion.div 
-            className="flex items-center space-x-2 p-2 rounded-lg glass hover:glass-strong transition-all duration-300"
+            className="flex items-center space-x-2 p-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-all duration-300"
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             whileHover={{ x: 5 }}
           >
-            <Icon icon="mdi:book-open-variant" className="w-4 h-4 text-green-400" />
-            <span className="text-sm font-medium text-gray-200">Knowledge Files:</span>
-            <span className="text-sm text-white font-semibold">
+            <Icon icon="mdi:book-open-variant" className="w-4 h-4 text-blue-600" />
+            <span className="text-sm font-medium text-gray-700">Knowledge Files:</span>
+            <span className="text-sm text-gray-900 font-semibold">
               {inft.knowledgeHashes.length} File{inft.knowledgeHashes.length !== 1 ? 's' : ''}
             </span>
           </motion.div>
           
           <motion.div 
-            className="flex items-center space-x-2 p-2 rounded-lg glass hover:glass-strong transition-all duration-300"
+            className="flex items-center space-x-2 p-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-all duration-300"
             initial={{ opacity: 0, x: -10 }}
             animate={{ opacity: 1, x: 0 }}
             whileHover={{ x: 5 }}
           >
-            <Icon icon="mdi:chart-line" className="w-4 h-4 text-green-400" />
-            <span className="text-sm font-medium text-gray-200">Interactions:</span>
-            <span className="text-sm text-white font-semibold">
+            <Icon icon="mdi:chart-line" className="w-4 h-4 text-blue-600" />
+            <span className="text-sm font-medium text-gray-700">Interactions:</span>
+            <span className="text-sm text-gray-900 font-semibold">
               {inft.interactionCount} Interaction{inft.interactionCount !== 1 ? 's' : ''}
             </span>
           </motion.div>
@@ -231,13 +231,13 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
 
         {/* Last Updated */}
         <motion.div 
-          className="mt-4 pt-4 border-t border-white/10"
+          className="mt-4 pt-4 border-t border-gray-200"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
         >
-          <div className="flex items-center space-x-2 text-xs text-gray-300">
-            <Icon icon="mdi:clock" className="w-4 h-4 text-gray-400" />
+          <div className="flex items-center space-x-2 text-xs text-gray-600">
+            <Icon icon="mdi:clock" className="w-4 h-4 text-gray-500" />
             <span>Last updated: {formatDate(inft.lastUpdated)}</span>
           </div>
         </motion.div>
@@ -253,7 +253,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
               transition={{ duration: 0.3 }}
             >
               <motion.div 
-                className="p-3 glass-strong border border-red-400/30 rounded-lg bg-red-500/10"
+                className="p-3 bg-red-50 border border-red-200 rounded-lg"
                 initial={{ scale: 0.9 }}
                 animate={{ scale: 1 }}
                 whileHover={{ scale: 1.02 }}
@@ -268,7 +268,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={4} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                   </motion.div>
-                  <p className="text-sm text-red-200 font-medium">{error}</p>
+                  <p className="text-sm text-red-700 font-medium">{error}</p>
                 </div>
               </motion.div>
             </motion.div>
@@ -279,7 +279,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
         <AnimatePresence>
           {showActions && (
             <motion.div 
-              className="mt-4 pt-4 border-t border-white/10 space-y-3"
+              className="mt-4 pt-4 border-t border-gray-200 space-y-3"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
@@ -294,7 +294,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
                 <motion.button
                   onClick={() => handleInteraction('summary')}
                   disabled={loading || !inft.isActive}
-                  className="btn-primary text-sm py-2 flex items-center justify-center space-x-2 glass-strong"
+                  className="text-sm py-2 flex items-center justify-center space-x-2 bg-blue-600 text-white hover:bg-blue-700 rounded-lg border border-blue-600 font-medium transition-all duration-300"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ scale: 1.05, y: -2 }}
@@ -304,7 +304,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
                     <div className="loading-spinner mx-auto"></div>
                   ) : (
                     <>
-                      <Icon icon="mdi:brain" className="w-4 h-4 text-green-400" />
+                      <Icon icon="mdi:brain" className="w-4 h-4 text-white" />
                       <span>Summary</span>
                     </>
                   )}
@@ -313,7 +313,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
                 <motion.button
                   onClick={() => handleInteraction('qa')}
                   disabled={loading || !inft.isActive}
-                  className="btn-secondary text-sm py-2 flex items-center justify-center space-x-2 glass-strong"
+                  className="text-sm py-2 flex items-center justify-center space-x-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-lg border border-gray-300 font-medium transition-all duration-300"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ scale: 1.05, y: -2 }}
@@ -336,10 +336,10 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
                 <motion.button
                   onClick={handleToggleActive}
                   disabled={loading}
-                  className={`text-sm py-2 font-medium rounded-lg glass-strong transition-all duration-300 ${
+                  className={`text-sm py-2 font-medium rounded-lg transition-all duration-300 border ${
                     inft.isActive
-                      ? 'bg-gradient-to-r from-yellow-500/80 to-orange-500/80 text-white hover:from-yellow-600/90 hover:to-orange-600/90'
-                      : 'bg-gradient-to-r from-green-500/80 to-emerald-500/80 text-white hover:from-green-600/90 hover:to-emerald-600/90'
+                      ? 'bg-yellow-500 text-white hover:bg-yellow-600 border-yellow-500'
+                      : 'bg-green-500 text-white hover:bg-green-600 border-green-500'
                   } disabled:opacity-50 disabled:cursor-not-allowed`}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -358,7 +358,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
                 <motion.button
                   onClick={handleBurn}
                   disabled={loading}
-                  className="text-sm py-2 bg-gradient-to-r from-red-500/80 to-pink-500/80 text-white rounded-lg hover:from-red-600/90 hover:to-pink-600/90 disabled:opacity-50 disabled:cursor-not-allowed font-medium glass-strong transition-all duration-300"
+                  className="text-sm py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed font-medium transition-all duration-300 border border-red-500"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ scale: 1.05, y: -2 }}
@@ -379,7 +379,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
         <AnimatePresence>
           {!showActions && inft.isActive && (
             <motion.div 
-              className="mt-4 pt-4 border-t border-white/10"
+              className="mt-4 pt-4 border-t border-gray-200"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
@@ -389,7 +389,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
                 <motion.button
                   onClick={() => handleInteraction('summary')}
                   disabled={loading}
-                  className="flex-1 text-sm py-2 bg-gradient-to-r from-purple-600/80 to-indigo-600/80 text-white rounded-lg hover:from-purple-700/90 hover:to-indigo-700/90 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium glass-strong flex items-center justify-center space-x-2"
+                  className="flex-1 text-sm py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 font-medium border border-purple-600 flex items-center justify-center space-x-2"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   whileHover={{ scale: 1.05, y: -2 }}
@@ -399,7 +399,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
                     <div className="loading-spinner mx-auto"></div>
                   ) : (
                     <>
-                      <Icon icon="mdi:brain" className="w-4 h-4 text-green-400" />
+                      <Icon icon="mdi:brain" className="w-4 h-4 text-white" />
                       <span>Interact</span>
                     </>
                   )}

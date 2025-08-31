@@ -84,7 +84,7 @@ export default function PrivacySettings({ onClose, sessionId }: PrivacySettingsP
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50" onClick={onClose}>
       <motion.div 
-        className="glass-strong max-w-2xl w-full mx-4 rounded-3xl p-8 max-h-[90vh] overflow-y-auto"
+        className="bg-white max-w-2xl w-full mx-4 rounded-3xl p-8 max-h-[90vh] overflow-y-auto border border-gray-200 shadow-2xl"
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -100,15 +100,15 @@ export default function PrivacySettings({ onClose, sessionId }: PrivacySettingsP
               </svg>
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-white">Privacy & Encryption Settings</h2>
-              <p className="text-gray-400">Configure your data protection preferences</p>
+              <h2 className="text-2xl font-bold text-gray-900">Privacy & Encryption Settings</h2>
+              <p className="text-gray-600">Configure your data protection preferences</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="w-10 h-10 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
+            className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
           >
-            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
@@ -117,9 +117,9 @@ export default function PrivacySettings({ onClose, sessionId }: PrivacySettingsP
         {/* Settings Form */}
         <div className="space-y-6">
           {/* Encryption Settings */}
-          <div className="glass-subtle rounded-2xl p-6">
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-              <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
               Encryption Settings
@@ -129,8 +129,8 @@ export default function PrivacySettings({ onClose, sessionId }: PrivacySettingsP
               {/* End-to-End Encryption */}
               <div className="flex items-center justify-between">
                 <div>
-                  <label className="text-white font-medium">End-to-End Encryption</label>
-                  <p className="text-gray-400 text-sm">Encrypt all data before uploading to storage</p>
+                  <label className="text-gray-900 font-medium">End-to-End Encryption</label>
+                  <p className="text-gray-600 text-sm">Encrypt all data before uploading to storage</p>
                 </div>
                 <button
                   onClick={() => handleSettingChange('enableEndToEndEncryption', !settings.enableEndToEndEncryption)}
@@ -147,8 +147,8 @@ export default function PrivacySettings({ onClose, sessionId }: PrivacySettingsP
               {/* Zero-Knowledge Proofs */}
               <div className="flex items-center justify-between">
                 <div>
-                  <label className="text-white font-medium">Zero-Knowledge Proofs</label>
-                  <p className="text-gray-400 text-sm">Verify data without revealing content</p>
+                  <label className="text-gray-900 font-medium">Zero-Knowledge Proofs</label>
+                  <p className="text-gray-600 text-sm">Verify data without revealing content</p>
                 </div>
                 <button
                   onClick={() => handleSettingChange('enableZeroKnowledgeProofs', !settings.enableZeroKnowledgeProofs)}
@@ -165,8 +165,8 @@ export default function PrivacySettings({ onClose, sessionId }: PrivacySettingsP
               {/* Data Obfuscation */}
               <div className="flex items-center justify-between">
                 <div>
-                  <label className="text-white font-medium">Data Obfuscation</label>
-                  <p className="text-gray-400 text-sm">Add noise to protect against analysis</p>
+                  <label className="text-gray-900 font-medium">Data Obfuscation</label>
+                  <p className="text-gray-600 text-sm">Add noise to protect against analysis</p>
                 </div>
                 <button
                   onClick={() => handleSettingChange('enableDataObfuscation', !settings.enableDataObfuscation)}
@@ -182,24 +182,24 @@ export default function PrivacySettings({ onClose, sessionId }: PrivacySettingsP
 
               {/* Encryption Strength */}
               <div>
-                <label className="text-white font-medium block mb-2">Encryption Strength</label>
+                <label className="text-gray-900 font-medium block mb-2">Encryption Strength</label>
                 <select
                   value={settings.encryptionStrength}
                   onChange={(e) => handleSettingChange('encryptionStrength', (e.target as HTMLSelectElement).value)}
-                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
-                  <option value="standard" className="bg-gray-800">Standard - {getEncryptionStrengthDescription('standard')}</option>
-                  <option value="high" className="bg-gray-800">High - {getEncryptionStrengthDescription('high')}</option>
-                  <option value="maximum" className="bg-gray-800">Maximum - {getEncryptionStrengthDescription('maximum')}</option>
+                  <option value="standard" className="bg-white">Standard - {getEncryptionStrengthDescription('standard')}</option>
+                  <option value="high" className="bg-white">High - {getEncryptionStrengthDescription('high')}</option>
+                  <option value="maximum" className="bg-white">Maximum - {getEncryptionStrengthDescription('maximum')}</option>
                 </select>
               </div>
             </div>
           </div>
 
           {/* Privacy Settings */}
-          <div className="glass-subtle rounded-2xl p-6">
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-              <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
               </svg>
@@ -210,8 +210,8 @@ export default function PrivacySettings({ onClose, sessionId }: PrivacySettingsP
               {/* Allow Data Sharing */}
               <div className="flex items-center justify-between">
                 <div>
-                  <label className="text-white font-medium">Allow Data Sharing</label>
-                  <p className="text-gray-400 text-sm">Allow sharing encrypted data with authorized users</p>
+                  <label className="text-gray-900 font-medium">Allow Data Sharing</label>
+                  <p className="text-gray-600 text-sm">Allow sharing encrypted data with authorized users</p>
                 </div>
                 <button
                   onClick={() => handleSettingChange('allowDataSharing', !settings.allowDataSharing)}
@@ -228,8 +228,8 @@ export default function PrivacySettings({ onClose, sessionId }: PrivacySettingsP
               {/* Anonymize Metadata */}
               <div className="flex items-center justify-between">
                 <div>
-                  <label className="text-white font-medium">Anonymize Metadata</label>
-                  <p className="text-gray-400 text-sm">Remove or hash identifying information</p>
+                  <label className="text-gray-900 font-medium">Anonymize Metadata</label>
+                  <p className="text-gray-600 text-sm">Remove or hash identifying information</p>
                 </div>
                 <button
                   onClick={() => handleSettingChange('anonymizeMetadata', !settings.anonymizeMetadata)}
@@ -245,24 +245,24 @@ export default function PrivacySettings({ onClose, sessionId }: PrivacySettingsP
 
               {/* Key Rotation Interval */}
               <div>
-                <label className="text-white font-medium block mb-2">Key Rotation Interval (days)</label>
+                <label className="text-gray-900 font-medium block mb-2">Key Rotation Interval (days)</label>
                 <input
                   type="number"
                   min="1"
                   max="365"
                   value={settings.keyRotationInterval}
                   onChange={(e) => handleSettingChange('keyRotationInterval', parseInt((e.target as HTMLInputElement).value))}
-                  className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full bg-white border border-gray-300 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500"
                 />
-                <p className="text-gray-400 text-sm mt-1">Automatically rotate encryption keys every N days</p>
+                <p className="text-gray-600 text-sm mt-1">Automatically rotate encryption keys every N days</p>
               </div>
             </div>
           </div>
 
           {/* Key Management */}
-          <div className="glass-subtle rounded-2xl p-6">
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-              <svg className="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <svg className="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
               </svg>
               Key Management
@@ -270,12 +270,12 @@ export default function PrivacySettings({ onClose, sessionId }: PrivacySettingsP
             
             <div className="space-y-4">
               {activeSession && (
-                <div className="flex items-center justify-between p-4 bg-green-500/10 border border-green-500/20 rounded-xl">
+                <div className="flex items-center justify-between p-4 bg-green-50 border border-green-200 rounded-xl">
                   <div>
-                    <p className="text-green-400 font-medium">Active Secure Session</p>
-                    <p className="text-gray-400 text-sm">Session ID: {activeSession.substring(0, 16)}...</p>
+                    <p className="text-green-700 font-medium">Active Secure Session</p>
+                    <p className="text-gray-600 text-sm">Session ID: {activeSession.substring(0, 16)}...</p>
                   </div>
-                  <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse" />
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse" />
                 </div>
               )}
               
@@ -301,7 +301,7 @@ export default function PrivacySettings({ onClose, sessionId }: PrivacySettingsP
         <div className="flex gap-4 mt-8">
           <button
             onClick={onClose}
-            className="flex-1 bg-white/10 hover:bg-white/20 text-white font-medium py-3 px-6 rounded-xl transition-colors"
+            className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-xl transition-colors"
           >
             Cancel
           </button>
@@ -333,7 +333,7 @@ export default function PrivacySettings({ onClose, sessionId }: PrivacySettingsP
               <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
-              <p className="text-green-400 font-medium">Privacy settings saved successfully!</p>
+              <p className="text-green-700 font-medium">Privacy settings saved successfully!</p>
             </motion.div>
           )}
         </AnimatePresence>
