@@ -62,11 +62,32 @@ export default function EnhancedEncryptionModal({
   };
 
   const handleEncrypt = async () => {
-    if (!sessionId || !data.content) return;
+    // Clear any previous errors
+    setError(null);
+    
+    // Validate input data
+    if (!data.content.trim()) {
+      setError('Please enter some data to encrypt.');
+      return;
+    }
+    
+    if (data.content.length < 4) {
+      setError('Data must be at least 4 characters long for security purposes.');
+      return;
+    }
+    
+    if (data.content.length > 10000) {
+      setError('Data is too large. Please limit to 10,000 characters or less.');
+      return;
+    }
+
+    if (!sessionId) {
+      setError('Session not initialized. Please try again.');
+      return;
+    }
 
     setLoading(true);
     setStep('encrypt');
-    setError(null);
     setEncryptionProgress(0);
 
     try {
@@ -82,11 +103,11 @@ export default function EnhancedEncryptionModal({
       }, 200);
 
       // Encrypt the data
-      const encrypted = await encryptionService.encryptData(sessionId, data.content, data.metadata);
+      const encrypted = await encryptionService.encryptData(data.content, sessionId);
       
       // Generate zero-knowledge proof if enabled
       if (privacySettings.enableZeroKnowledgeProofs) {
-        await encryptionService.generateZKProof(sessionId, data.content);
+        await encryptionService.generateZKProof(data.content, sessionId);
       }
 
       // Obfuscate metadata if enabled
@@ -105,8 +126,26 @@ export default function EnhancedEncryptionModal({
       }, 2000);
 
     } catch (err) {
-      setError('Encryption failed. Please try again.');
       console.error('Encryption error:', err);
+      
+      // Provide more specific error messages
+      let errorMessage = 'Encryption failed. Please try again.';
+      
+      if (err instanceof Error) {
+        if (err.message.includes('session')) {
+          errorMessage = 'Session initialization failed. Please refresh and try again.';
+        } else if (err.message.includes('key')) {
+          errorMessage = 'Encryption key generation failed. Please check your connection and try again.';
+        } else if (err.message.includes('data')) {
+          errorMessage = 'Invalid data format. Please check your input and try again.';
+        } else if (err.message.includes('network')) {
+          errorMessage = 'Network error occurred. Please check your connection and try again.';
+        } else {
+          errorMessage = `Encryption failed: ${err.message}`;
+        }
+      }
+      
+      setError(errorMessage);
       setStep('configure');
     } finally {
       setLoading(false);
@@ -179,13 +218,13 @@ export default function EnhancedEncryptionModal({
                 
                 return (
                   <React.Fragment key={stepName}>
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center font-medium transition-colors ${
-                      isActive ? 'bg-blue-500 text-white' : 
-                      isCompleted ? 'bg-green-500 text-white' : 
-                      'bg-white/10 text-gray-400'
+                    <div className={`w-12 h-12 rounded-full flex items-center justify-center font-semibold transition-all duration-200 shadow-lg ${
+                      isActive ? 'bg-blue-600 text-white ring-4 ring-blue-200' : 
+                      isCompleted ? 'bg-green-600 text-white ring-4 ring-green-200' : 
+                      'bg-gray-100 text-gray-500 border-2 border-gray-300'
                     }`}>
                       {isCompleted ? (
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                       ) : (
@@ -193,8 +232,8 @@ export default function EnhancedEncryptionModal({
                       )}
                     </div>
                     {index < 2 && (
-                      <div className={`w-12 h-0.5 transition-colors ${
-                        isCompleted ? 'bg-green-500' : 'bg-white/20'
+                      <div className={`w-16 h-1 rounded transition-all duration-200 ${
+                        isCompleted ? 'bg-green-600' : 'bg-gray-300'
                       }`} />
                     )}
                   </React.Fragment>
@@ -217,14 +256,17 @@ export default function EnhancedEncryptionModal({
                 <div className="glass-subtle rounded-2xl p-6">
                   <h3 className="text-lg font-semibold text-white mb-4">Data to Encrypt</h3>
                   <div className="bg-black/20 rounded-xl p-4">
-                    <p className="text-gray-300 text-sm font-mono">
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Enter your knowledge data to encrypt
+                    </label>
+                    <p className="text-gray-300 text-sm font-mono bg-gray-800/50 p-3 rounded-lg border border-gray-600">
                       {data.content.length > 200 ? 
                         `${data.content.substring(0, 200)}...` : 
-                        data.content
+                        data.content || "Enter your knowledge data here... (e.g., research notes, personal insights, confidential information)"
                       }
                     </p>
                     <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/10">
-                      <span className="text-gray-400 text-sm">Size: {data.content.length} characters</span>
+                      <span className="text-gray-400 text-sm">Size: {data.content.length} characters (minimum 4 required)</span>
                       <span className="text-gray-400 text-sm">Type: {data.type}</span>
                     </div>
                   </div>
@@ -233,7 +275,7 @@ export default function EnhancedEncryptionModal({
                 {/* Encryption Settings Summary */}
                 <div className="glass-subtle rounded-2xl p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-white">Encryption Settings</h3>
+                    <h3 className="text-lg font-semibold text-white">Security Features</h3>
                     <button
                       onClick={() => setShowPrivacySettings(true)}
                       className="text-green-400 hover:text-green-300 text-sm font-medium transition-colors"
@@ -242,28 +284,72 @@ export default function EnhancedEncryptionModal({
                     </button>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-3 h-3 rounded-full ${
-                        privacySettings.enableEndToEndEncryption ? 'bg-green-400' : 'bg-gray-500'
-                      }`} />
-                      <span className="text-gray-300 text-sm">End-to-End Encryption</span>
+                  <div className="space-y-4">
+                    <div className={`flex items-center justify-between p-3 rounded-lg border ${
+                      privacySettings.enableEndToEndEncryption 
+                        ? 'bg-green-500/10 border-green-500/20' 
+                        : 'bg-gray-500/10 border-gray-500/20'
+                    }`}>
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-3 h-3 rounded-full ${
+                          privacySettings.enableEndToEndEncryption ? 'bg-green-400' : 'bg-gray-500'
+                        }`} />
+                        <span className="text-sm font-medium text-white">End-to-End Encryption</span>
+                      </div>
+                      <span className={`text-xs px-2 py-1 rounded-full font-semibold ${
+                        privacySettings.enableEndToEndEncryption 
+                          ? 'text-green-300 bg-green-500/20' 
+                          : 'text-gray-400 bg-gray-500/20'
+                      }`}>
+                        {privacySettings.enableEndToEndEncryption ? 'Active' : 'Disabled'}
+                      </span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className={`w-3 h-3 rounded-full ${
-                        privacySettings.enableZeroKnowledgeProofs ? 'bg-green-400' : 'bg-gray-500'
-                      }`} />
-                      <span className="text-gray-300 text-sm">Zero-Knowledge Proofs</span>
+                    <div className={`flex items-center justify-between p-3 rounded-lg border ${
+                      privacySettings.enableZeroKnowledgeProofs 
+                        ? 'bg-green-500/10 border-green-500/20' 
+                        : 'bg-gray-500/10 border-gray-500/20'
+                    }`}>
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-3 h-3 rounded-full ${
+                          privacySettings.enableZeroKnowledgeProofs ? 'bg-green-400' : 'bg-gray-500'
+                        }`} />
+                        <span className="text-sm font-medium text-white">Zero-Knowledge Proofs</span>
+                      </div>
+                      <span className={`text-xs px-2 py-1 rounded-full font-semibold ${
+                        privacySettings.enableZeroKnowledgeProofs 
+                          ? 'text-green-300 bg-green-500/20' 
+                          : 'text-gray-400 bg-gray-500/20'
+                      }`}>
+                        {privacySettings.enableZeroKnowledgeProofs ? 'Active' : 'Disabled'}
+                      </span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className={`w-3 h-3 rounded-full ${
-                        privacySettings.enableDataObfuscation ? 'bg-green-400' : 'bg-gray-500'
-                      }`} />
-                      <span className="text-gray-300 text-sm">Data Obfuscation</span>
+                    <div className={`flex items-center justify-between p-3 rounded-lg border ${
+                      privacySettings.enableDataObfuscation 
+                        ? 'bg-green-500/10 border-green-500/20' 
+                        : 'bg-gray-500/10 border-gray-500/20'
+                    }`}>
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-3 h-3 rounded-full ${
+                          privacySettings.enableDataObfuscation ? 'bg-green-400' : 'bg-gray-500'
+                        }`} />
+                        <span className="text-sm font-medium text-white">Data Obfuscation</span>
+                      </div>
+                      <span className={`text-xs px-2 py-1 rounded-full font-semibold ${
+                        privacySettings.enableDataObfuscation 
+                          ? 'text-green-300 bg-green-500/20' 
+                          : 'text-gray-400 bg-gray-500/20'
+                      }`}>
+                        {privacySettings.enableDataObfuscation ? 'Active' : 'Disabled'}
+                      </span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 rounded-full bg-blue-400" />
-                      <span className="text-gray-300 text-sm">Strength: {privacySettings.encryptionStrength}</span>
+                    <div className="flex items-center justify-between p-3 bg-blue-500/10 rounded-lg border border-blue-500/20">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-3 h-3 rounded-full bg-blue-400" />
+                        <span className="text-sm font-medium text-white">Security Strength</span>
+                      </div>
+                      <span className="text-xs text-blue-300 bg-blue-500/20 px-2 py-1 rounded-full font-semibold capitalize">
+                        {privacySettings.encryptionStrength}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -280,8 +366,16 @@ export default function EnhancedEncryptionModal({
                 )}
 
                 {error && (
-                  <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-4">
-                    <p className="text-red-400 text-sm">{error}</p>
+                  <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded-lg shadow-sm">
+                    <div className="flex items-center">
+                      <svg className="w-5 h-5 text-red-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <div>
+                        <h4 className="text-red-800 font-semibold text-sm">Encryption Error</h4>
+                        <p className="text-red-700 text-sm mt-1">{error}</p>
+                      </div>
+                    </div>
                   </div>
                 )}
               </motion.div>
@@ -302,20 +396,40 @@ export default function EnhancedEncryptionModal({
                 </div>
                 
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-2">Encrypting Your Data</h3>
-                  <p className="text-gray-400">Applying advanced encryption algorithms...</p>
+                  <h3 className="text-xl font-semibold text-white mb-3">Encrypting Your Data</h3>
+                  <p className="text-gray-400 text-lg mb-2">Securing your information with advanced encryption...</p>
+                  <div className="flex items-center justify-center space-x-2 text-sm text-gray-400">
+                    <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    <span>Processing...</span>
+                  </div>
                 </div>
 
                 {/* Progress Bar */}
-                <div className="w-full bg-white/10 rounded-full h-2">
-                  <motion.div 
-                    className="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full"
-                    initial={{ width: 0 }}
-                    animate={{ width: `${encryptionProgress}%` }}
-                    transition={{ duration: 0.5 }}
-                  />
+                <div className="mb-8">
+                  <div className="flex justify-between text-sm text-gray-300 mb-3">
+                    <span className="font-medium">Encryption Progress</span>
+                    <span className="font-semibold">{Math.round(encryptionProgress)}%</span>
+                  </div>
+                  <div className="w-full bg-white/10 rounded-full h-3 shadow-inner">
+                    <motion.div 
+                      className="bg-gradient-to-r from-blue-400 via-blue-500 to-purple-500 h-3 rounded-full shadow-lg"
+                      initial={{ width: 0 }}
+                      animate={{ width: `${encryptionProgress}%` }}
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                    />
+                  </div>
+                  <div className="mt-3 text-center">
+                    <span className="text-xs text-gray-400">
+                      {encryptionProgress < 25 ? 'Initializing encryption...' :
+                       encryptionProgress < 50 ? 'Generating security keys...' :
+                       encryptionProgress < 75 ? 'Encrypting data...' :
+                       encryptionProgress < 100 ? 'Finalizing encryption...' :
+                       'Encryption complete!'}
+                    </span>
+                  </div>
                 </div>
-                <p className="text-gray-400 text-sm">{encryptionProgress}% complete</p>
               </motion.div>
             )}
 
@@ -376,12 +490,12 @@ export default function EnhancedEncryptionModal({
               <button
                 onClick={handleEncrypt}
                 disabled={!sessionId || loading}
-                className="flex-1 bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 disabled:from-gray-600 disabled:to-gray-700 text-white font-medium py-3 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-2"
+                className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-700 text-white font-semibold py-4 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:transform-none"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
-                Start Encryption
+                <span className="text-lg">Start Encryption</span>
               </button>
             )}
           </div>
