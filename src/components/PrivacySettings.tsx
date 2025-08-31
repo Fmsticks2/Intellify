@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Icon } from '@iconify/react';
 import { useWallet } from './WalletProvider';
 import { encryptionService, PrivacySettings as IPrivacySettings, defaultPrivacySettings } from '../lib/enhanced-encryption';
 
@@ -94,10 +95,8 @@ export default function PrivacySettings({ onClose, sessionId }: PrivacySettingsP
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
+            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center">
+              <Icon icon="mdi:shield-lock" className="w-6 h-6 text-white" />
             </div>
             <div>
               <h2 className="text-2xl font-bold text-gray-900">Privacy & Encryption Settings</h2>
@@ -108,9 +107,7 @@ export default function PrivacySettings({ onClose, sessionId }: PrivacySettingsP
             onClick={onClose}
             className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
           >
-            <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <Icon icon="mdi:close" className="w-5 h-5 text-gray-600" />
           </button>
         </div>
 
@@ -119,9 +116,7 @@ export default function PrivacySettings({ onClose, sessionId }: PrivacySettingsP
           {/* Encryption Settings */}
           <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
+              <Icon icon="mdi:shield-check" className="w-5 h-5 text-blue-600" />
               Encryption Settings
             </h3>
             
@@ -199,10 +194,7 @@ export default function PrivacySettings({ onClose, sessionId }: PrivacySettingsP
           {/* Privacy Settings */}
           <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-              </svg>
+              <Icon icon="mdi:eye-settings" className="w-5 h-5 text-purple-600" />
               Privacy Settings
             </h3>
             
@@ -262,9 +254,7 @@ export default function PrivacySettings({ onClose, sessionId }: PrivacySettingsP
           {/* Key Management */}
           <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6">
             <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <svg className="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-              </svg>
+              <Icon icon="mdi:key-variant" className="w-5 h-5 text-yellow-600" />
               Key Management
             </h3>
             
@@ -287,9 +277,7 @@ export default function PrivacySettings({ onClose, sessionId }: PrivacySettingsP
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 ) : (
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                  </svg>
+                  <Icon icon="mdi:refresh" className="w-5 h-5" />
                 )}
                 Rotate Encryption Keys
               </button>
@@ -313,9 +301,7 @@ export default function PrivacySettings({ onClose, sessionId }: PrivacySettingsP
             {loading ? (
               <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             ) : (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
+              <Icon icon="mdi:check" className="w-5 h-5" />
             )}
             Save Settings
           </button>
@@ -330,9 +316,7 @@ export default function PrivacySettings({ onClose, sessionId }: PrivacySettingsP
               exit={{ opacity: 0, y: -10 }}
               className="mt-4 p-4 bg-green-500/10 border border-green-500/20 rounded-xl flex items-center gap-3"
             >
-              <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
+              <Icon icon="mdi:check-circle" className="w-5 h-5 text-green-500" />
               <p className="text-green-700 font-medium">Privacy settings saved successfully!</p>
             </motion.div>
           )}

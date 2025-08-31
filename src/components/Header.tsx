@@ -29,7 +29,7 @@ export default function Header({ className = '' }: HeaderProps) {
   };
 
   return (
-    <header className={`glass-nav sticky top-0 z-50 ${className}`}>
+    <header className={`bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -40,7 +40,7 @@ export default function Header({ className = '' }: HeaderProps) {
                 className="h-11 w-11 text-blue-600 relative z-10 transition-all duration-300 group-hover:scale-110" 
               />
             </div>
-            <h1 className="text-2xl font-bold gradient-text group-hover:text-shadow-lg transition-all duration-300">
+            <h1 className="text-2xl font-bold text-gray-900 transition-all duration-300">
               Intellify
             </h1>
           </div>
@@ -66,7 +66,7 @@ export default function Header({ className = '' }: HeaderProps) {
             {wallet.isConnected ? (
               <div className="flex items-center space-x-3">
                 {/* Wallet Info */}
-                <div className="relative flex items-center space-x-2 glass px-4 py-2 rounded-lg cyber-border group">
+                <div className="relative flex items-center space-x-2 bg-gray-50 px-4 py-2 rounded-lg border border-gray-200 group">
                   <div className="relative z-10 flex items-center space-x-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                     <Icon icon="mdi:wallet" className="w-5 h-5 text-blue-600" />
@@ -88,7 +88,7 @@ export default function Header({ className = '' }: HeaderProps) {
 
                 {/* Balance */}
                 {wallet.balance && (
-                  <div className="relative text-sm text-gray-700 font-mono px-3 py-2 rounded-lg glass cyber-border group">
+                  <div className="relative text-sm text-gray-700 font-mono px-3 py-2 rounded-lg bg-gray-50 border border-gray-200 group">
                     <span className="relative z-10 font-medium">
                       {parseFloat(wallet.balance).toFixed(4)} 0G
                     </span>
@@ -98,7 +98,7 @@ export default function Header({ className = '' }: HeaderProps) {
                 {/* Disconnect Button */}
                 <button
                   onClick={disconnectWallet}
-                  className="relative p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-300 hover:scale-110 cyber-border group"
+                  className="relative p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-300 hover:scale-110 border border-gray-200 group"
                   title="Disconnect wallet"
                 >
                   <Icon icon="mdi:logout" className="w-5 h-5 text-red-600 relative z-10 group-hover:scale-110 transition-transform duration-200" />
@@ -108,7 +108,7 @@ export default function Header({ className = '' }: HeaderProps) {
               <button
                 onClick={connectWallet}
                 disabled={isConnecting}
-                className="btn-primary flex items-center space-x-2 cyber-glow relative group"
+                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center space-x-2 relative group"
               >
                 <div className="relative z-10 flex items-center space-x-2">
                   <Icon icon="mdi:wallet" className="w-5 h-5 text-white group-hover:scale-110 transition-transform duration-200" />

@@ -126,7 +126,7 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={onClose}>
+    <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm flex items-center justify-center z-50" onClick={onClose}>
       <motion.div 
         className="bg-white max-w-6xl w-full mx-4 rounded-3xl p-8 max-h-[90vh] overflow-y-auto border border-gray-200 shadow-2xl"
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -263,7 +263,7 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
                         transition={{ delay: index * 0.1, duration: 0.5 }}
                         whileHover={{ scale: 1.05 }}
                       >
-                        <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white border border-gray-200 shadow-lg text-gray-900 text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
                           {day.interactions}
                         </div>
                       </motion.div>

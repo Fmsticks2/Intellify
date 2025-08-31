@@ -19,9 +19,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="bg-black">
+      <body className="bg-white">
         <WalletProvider>
-          <div className="min-h-screen">
+          <div className="min-h-screen bg-white">
             <Header />
             <main className="container mx-auto px-4 py-8">
               {children}

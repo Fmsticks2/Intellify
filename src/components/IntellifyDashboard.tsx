@@ -11,6 +11,7 @@ import PrivacySettings from './PrivacySettings';
 import EnhancedEncryptionModal from './EnhancedEncryptionModal';
 import AnalyticsDashboard from './AnalyticsDashboard';
 import { encryptionService } from '../lib/enhanced-encryption';
+import { INFTPersistence } from '../utils/inftPersistence';
 
 interface INFT {
   tokenId: number;
@@ -44,8 +45,21 @@ export default function IntellifyDashboard() {
     if (wallet.isConnected && contract && isCorrectNetwork) {
       loadUserINFTs();
       loadEncryptionStats();
+    } else if (!wallet.isConnected) {
+      // Clear INFTs when wallet disconnects
+      setInfts([]);
+      setError(null);
     }
   }, [wallet.isConnected, contract, isCorrectNetwork]);
+
+  // Cleanup cache when wallet disconnects
+  useEffect(() => {
+    if (!wallet.isConnected && wallet.address) {
+      // Optional: Clear cache on disconnect (uncomment if desired)
+      // INFTPersistence.clearINFTs(wallet.address);
+      console.log('Wallet disconnected, INFTs cleared from state');
+    }
+  }, [wallet.isConnected, wallet.address]);
 
   const loadEncryptionStats = async () => {
      try {
@@ -68,6 +82,33 @@ export default function IntellifyDashboard() {
     setError(null);
     
     try {
+      // First, try to load from localStorage cache
+      const cachedINFTs = INFTPersistence.loadINFTs(wallet.address);
+      if (cachedINFTs.length > 0) {
+        console.log('Loading INFTs from cache');
+        setInfts(cachedINFTs);
+        setLoading(false);
+        
+        // Optionally refresh in background
+        refreshINFTsFromBlockchain();
+        return;
+      }
+      
+      // If no cache, load from blockchain
+      await refreshINFTsFromBlockchain();
+    } catch (err) {
+      console.error('Error loading user INFTs:', err);
+      setError('Failed to load your INFTs. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const refreshINFTsFromBlockchain = async () => {
+    if (!wallet.address || !contract) return;
+    
+    try {
+      console.log('Fetching INFTs from blockchain');
       const tokenIds = await getUserINFTs(wallet.address);
       const inftsData: INFT[] = [];
       
@@ -92,11 +133,14 @@ export default function IntellifyDashboard() {
       }
       
       setInfts(inftsData);
+      
+      // Save to localStorage for future use
+      if (wallet.address) {
+        INFTPersistence.saveINFTs(wallet.address, inftsData);
+      }
     } catch (err) {
-      console.error('Error loading user INFTs:', err);
-      setError('Failed to load your INFTs. Please try again.');
-    } finally {
-      setLoading(false);
+      console.error('Error refreshing INFTs from blockchain:', err);
+      throw err;
     }
   };
 

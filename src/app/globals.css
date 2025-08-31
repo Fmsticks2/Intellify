@@ -10,8 +10,8 @@
   }
   
   body {
-    @apply min-h-screen bg-gray-50 text-gray-900;
-    background: #f8fafc;
+    @apply min-h-screen bg-white text-gray-900;
+    background: #ffffff;
     position: relative;
   }
 }
