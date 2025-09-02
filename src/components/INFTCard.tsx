@@ -163,7 +163,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
                 INFT #{inft.tokenId}
               </motion.h3>
               <motion.p 
-                className="text-sm text-gray-600 truncate max-w-[200px]" 
+                className="text-sm text-black truncate max-w-[200px]" 
                 title={inft.owner}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -198,8 +198,8 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
             whileHover={{ x: 5 }}
           >
             <Icon icon="mdi:neural-network" className="w-4 h-4 text-blue-600" />
-            <span className="text-sm font-medium text-gray-700">Model:</span>
-            <span className="text-sm text-gray-900 font-semibold">{inft.modelVersion}</span>
+            <span className="text-sm font-medium text-black">Model:</span>
+            <span className="text-sm text-black font-semibold">{inft.modelVersion}</span>
           </motion.div>
           
           <motion.div 
@@ -209,8 +209,8 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
             whileHover={{ x: 5 }}
           >
             <Icon icon="mdi:book-open-variant" className="w-4 h-4 text-blue-600" />
-            <span className="text-sm font-medium text-gray-700">Knowledge Files:</span>
-            <span className="text-sm text-gray-900 font-semibold">
+            <span className="text-sm font-medium text-black">Knowledge Files:</span>
+            <span className="text-sm text-black font-semibold">
               {inft.knowledgeHashes.length} File{inft.knowledgeHashes.length !== 1 ? 's' : ''}
             </span>
           </motion.div>
@@ -222,8 +222,8 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
             whileHover={{ x: 5 }}
           >
             <Icon icon="mdi:chart-line" className="w-4 h-4 text-blue-600" />
-            <span className="text-sm font-medium text-gray-700">Interactions:</span>
-            <span className="text-sm text-gray-900 font-semibold">
+            <span className="text-sm font-medium text-black">Interactions:</span>
+            <span className="text-sm text-black font-semibold">
               {inft.interactionCount} Interaction{inft.interactionCount !== 1 ? 's' : ''}
             </span>
           </motion.div>
@@ -236,7 +236,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
         >
-          <div className="flex items-center space-x-2 text-xs text-gray-600">
+          <div className="flex items-center space-x-2 text-xs text-black">
             <Icon icon="mdi:clock" className="w-4 h-4 text-gray-500" />
             <span>Last updated: {formatDate(inft.lastUpdated)}</span>
           </div>
@@ -313,7 +313,7 @@ export default function INFTCard({ inft, onUpdate }: INFTCardProps) {
                 <motion.button
                   onClick={() => handleInteraction('qa')}
                   disabled={loading || !inft.isActive}
-                  className="text-sm py-2 flex items-center justify-center space-x-2 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-lg border border-gray-300 font-medium transition-all duration-300"
+                  className="text-sm py-2 flex items-center justify-center space-x-2 bg-gray-100 text-black hover:bg-gray-200 rounded-lg border border-gray-300 font-medium transition-all duration-300"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   whileHover={{ scale: 1.05, y: -2 }}

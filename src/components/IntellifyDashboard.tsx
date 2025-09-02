@@ -75,27 +75,32 @@ export default function IntellifyDashboard() {
      }
    };
 
-  const loadUserINFTs = async () => {
+  const loadUserINFTs = async (forceRefresh = false) => {
     if (!wallet.address || !contract) return;
     
     setLoading(true);
     setError(null);
     
     try {
-      // First, try to load from localStorage cache
-      const cachedINFTs = INFTPersistence.loadINFTs(wallet.address);
-      if (cachedINFTs.length > 0) {
-        console.log('Loading INFTs from cache');
-        setInfts(cachedINFTs);
-        setLoading(false);
+      if (forceRefresh) {
+        // Force refresh from blockchain
+        await refreshINFTsFromBlockchain();
+      } else {
+        // First, try to load from localStorage cache
+        const cachedINFTs = INFTPersistence.loadINFTs(wallet.address);
+        if (cachedINFTs.length > 0) {
+          console.log('Loading INFTs from cache');
+          setInfts(cachedINFTs);
+          setLoading(false);
+          
+          // Optionally refresh in background
+          refreshINFTsFromBlockchain();
+          return;
+        }
         
-        // Optionally refresh in background
-        refreshINFTsFromBlockchain();
-        return;
+        // If no cache, load from blockchain
+        await refreshINFTsFromBlockchain();
       }
-      
-      // If no cache, load from blockchain
-      await refreshINFTsFromBlockchain();
     } catch (err) {
       console.error('Error loading user INFTs:', err);
       setError('Failed to load your INFTs. Please try again.');
@@ -146,7 +151,12 @@ export default function IntellifyDashboard() {
 
   const handleMintSuccess = () => {
     setShowMintModal(false);
-    loadUserINFTs(); // Refresh the list
+    // Clear cache to ensure fresh data is fetched
+    if (wallet.address) {
+      INFTPersistence.clearINFTs(wallet.address);
+    }
+    // Force refresh from blockchain
+    refreshINFTsFromBlockchain();
   };
 
   const handleNetworkSwitch = async () => {
@@ -177,7 +187,7 @@ export default function IntellifyDashboard() {
               <Icon icon="mdi:wallet" className="w-8 h-8 text-white" />
             </motion.div>
             <h3 className="text-xl font-semibold text-gray-900">Connect Your Wallet</h3>
-            <p className="text-gray-600 leading-relaxed">
+            <p className="text-black leading-relaxed">
               Connect your wallet to start creating and managing your <span className="text-blue-600 font-semibold">AI Knowledge INFTs</span>.
             </p>
             <motion.button 
@@ -217,7 +227,7 @@ export default function IntellifyDashboard() {
               </svg>
             </div>
             <h3 className="text-xl font-semibold text-gray-900">Network Mismatch</h3>
-            <p className="text-gray-600 leading-relaxed">
+            <p className="text-black leading-relaxed">
               Please switch to <span className="text-orange-600 font-semibold">0G-Galileo-Testnet</span> to use Intellify.
             </p>
             <motion.button 
@@ -288,9 +298,9 @@ export default function IntellifyDashboard() {
               <Icon icon="mdi:database" className="w-6 h-6 text-white" />
             </motion.div>
             <div>
-              <p className="text-sm text-gray-600 font-medium">Total INFTs</p>
+              <p className="text-sm text-black font-medium">Total INFTs</p>
               <motion.p 
-                className="text-2xl font-bold text-gray-900"
+                className="text-2xl font-bold text-black"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
@@ -319,9 +329,9 @@ export default function IntellifyDashboard() {
               </svg>
             </motion.div>
             <div>
-              <p className="text-sm text-gray-600 font-medium">Encrypted INFTs</p>
+              <p className="text-sm text-black font-medium">Encrypted INFTs</p>
               <motion.p 
-                className="text-2xl font-bold text-gray-900"
+                className="text-2xl font-bold text-black"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.6, type: "spring", stiffness: 200 }}
@@ -350,9 +360,9 @@ export default function IntellifyDashboard() {
               </svg>
             </motion.div>
             <div>
-              <p className="text-sm text-gray-600 font-medium">Active Sessions</p>
+              <p className="text-sm text-black font-medium">Active Sessions</p>
               <motion.p 
-                className="text-2xl font-bold text-gray-900"
+                className="text-2xl font-bold text-black"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.7, type: "spring", stiffness: 200 }}
@@ -379,9 +389,9 @@ export default function IntellifyDashboard() {
               <Icon icon="mdi:chart-line" className="w-6 h-6 text-white" />
             </motion.div>
             <div>
-              <p className="text-sm text-gray-600 font-medium">Total Interactions</p>
+              <p className="text-sm text-black font-medium">Total Interactions</p>
               <motion.p 
-                className="text-2xl font-bold text-gray-900"
+                className="text-2xl font-bold text-black"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
                 transition={{ delay: 0.8, type: "spring", stiffness: 200 }}
@@ -400,7 +410,7 @@ export default function IntellifyDashboard() {
       >
         <motion.button
           onClick={() => setShowPrivacySettings(true)}
-          className="flex items-center justify-center space-x-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-xl border border-gray-200 transition-colors"
+          className="flex items-center justify-center space-x-2 bg-gray-100 hover:bg-gray-200 text-black font-medium py-3 px-6 rounded-xl border border-gray-200 transition-colors"
           whileHover={{ scale: 1.05, y: -2 }}
           whileTap={{ scale: 0.95 }}
           transition={{ duration: 0.2 }}
@@ -419,7 +429,7 @@ export default function IntellifyDashboard() {
         </motion.button>
         <motion.button
           onClick={() => setShowAnalytics(true)}
-          className="flex items-center justify-center space-x-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-xl border border-gray-200 transition-colors"
+          className="flex items-center justify-center space-x-2 bg-gray-100 hover:bg-gray-200 text-black font-medium py-3 px-6 rounded-xl border border-gray-200 transition-colors"
           whileHover={{ scale: 1.05, y: -2 }}
           whileTap={{ scale: 0.95 }}
           transition={{ duration: 0.2 }}
@@ -454,21 +464,24 @@ export default function IntellifyDashboard() {
         </motion.button>
         
         <motion.button
-          onClick={loadUserINFTs}
+          onClick={() => loadUserINFTs(true)}
           disabled={loading}
-          className="flex items-center justify-center space-x-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium py-3 px-6 rounded-xl border border-gray-200 transition-colors disabled:opacity-50"
+          className="flex items-center justify-center space-x-2 bg-green-100 hover:bg-green-200 text-green-700 font-medium py-3 px-6 rounded-xl border border-green-200 transition-colors disabled:opacity-50"
           whileHover={{ scale: 1.05, y: -2 }}
           whileTap={{ scale: 0.95 }}
           transition={{ duration: 0.2 }}
         >
-          <motion.img 
-            src="/icons/refresh.svg" 
-            alt="Refresh" 
+          <motion.svg
             className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
             animate={loading ? { rotate: 360 } : {}}
             transition={loading ? { duration: 1, repeat: Infinity, ease: "linear" } : {}}
-          />
-          <span>Refresh</span>
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+          </motion.svg>
+          <span>{loading ? 'Refreshing...' : 'Refresh INFTs'}</span>
         </motion.button>
       </motion.div>
 
@@ -510,7 +523,7 @@ export default function IntellifyDashboard() {
           >
             <div className="loading-spinner"></div>
             <motion.span 
-              className="ml-3 text-gray-600"
+              className="ml-3 text-black"
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 2, repeat: Infinity }}
             >
@@ -533,7 +546,7 @@ export default function IntellifyDashboard() {
               <Icon icon="mdi:brain" className="w-12 h-12 text-gray-500" />
             </motion.div>
             <motion.h3 
-              className="text-xl font-semibold text-gray-900 mb-3"
+              className="text-xl font-semibold text-black mb-3"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
@@ -541,7 +554,7 @@ export default function IntellifyDashboard() {
               No INFTs Yet
             </motion.h3>
             <motion.p 
-              className="text-gray-600 mb-8 max-w-md mx-auto font-medium"
+              className="text-black mb-8 max-w-md mx-auto font-medium"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}

@@ -143,7 +143,7 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
             </div>
             <div>
               <h2 className="text-2xl font-bold text-gray-900">Analytics Dashboard</h2>
-              <p className="text-gray-600">Comprehensive insights into your INFT performance</p>
+              <p className="text-black">Comprehensive insights into your INFT performance</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -181,8 +181,8 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-gray-600 text-sm font-medium">Total INFTs</p>
-                    <p className="text-3xl font-bold text-gray-900 mt-1">{analyticsData.totalINFTs}</p>
+                    <p className="text-black text-sm font-medium">Total INFTs</p>
+                    <p className="text-3xl font-bold text-black mt-1">{analyticsData.totalINFTs}</p>
                     <p className="text-green-600 text-sm mt-1">+{analyticsData.growthRate.toFixed(1)}% growth</p>
                   </div>
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
@@ -198,8 +198,8 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-gray-600 text-sm font-medium">Active INFTs</p>
-                    <p className="text-3xl font-bold text-gray-900 mt-1">{analyticsData.activeINFTs}</p>
+                    <p className="text-black text-sm font-medium">Active INFTs</p>
+                    <p className="text-3xl font-bold text-black mt-1">{analyticsData.activeINFTs}</p>
                     <p className="text-green-600 text-sm mt-1">{((analyticsData.activeINFTs / analyticsData.totalINFTs) * 100).toFixed(1)}% active</p>
                   </div>
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center">
@@ -215,8 +215,8 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-gray-600 text-sm font-medium">Total Interactions</p>
-                    <p className="text-3xl font-bold text-gray-900 mt-1">{analyticsData.totalInteractions}</p>
+                    <p className="text-black text-sm font-medium">Total Interactions</p>
+                    <p className="text-3xl font-bold text-black mt-1">{analyticsData.totalInteractions}</p>
                     <p className="text-green-600 text-sm mt-1">{analyticsData.avgInteractionsPerINFT.toFixed(1)} avg per INFT</p>
                   </div>
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
@@ -232,8 +232,8 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-gray-600 text-sm font-medium">Encrypted INFTs</p>
-                    <p className="text-3xl font-bold text-gray-900 mt-1">{analyticsData.encryptedINFTs}</p>
+                    <p className="text-black text-sm font-medium">Encrypted INFTs</p>
+                    <p className="text-3xl font-bold text-black mt-1">{analyticsData.encryptedINFTs}</p>
                     <p className="text-green-600 text-sm mt-1">{((analyticsData.encryptedINFTs / analyticsData.totalINFTs) * 100).toFixed(1)}% encrypted</p>
                   </div>
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center">
@@ -247,7 +247,7 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               {/* Interaction History Chart */}
               <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-6">Interaction History</h3>
+                <h3 className="text-lg font-semibold text-black mb-6">Interaction History</h3>
                 <div className="h-64 flex items-end justify-between gap-2">
                   {analyticsData.interactionHistory.map((day, index) => {
                     const maxInteractions = Math.max(...analyticsData.interactionHistory.map(d => d.interactions));
@@ -270,7 +270,7 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
                     );
                   })}
                 </div>
-                <div className="flex justify-between mt-4 text-gray-600 text-sm">
+                <div className="flex justify-between mt-4 text-black text-sm">
                   <span>{getTimeframeLabel(selectedTimeframe)}</span>
                   <span>Interactions</span>
                 </div>
@@ -278,7 +278,7 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
 
               {/* Encryption Distribution */}
               <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-6">Encryption Distribution</h3>
+                <h3 className="text-lg font-semibold text-black mb-6">Encryption Distribution</h3>
                 <div className="flex items-center justify-center h-64">
                   <div className="relative w-48 h-48">
                     {/* Donut Chart */}
@@ -313,8 +313,8 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
                     </svg>
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="text-center">
-                        <p className="text-2xl font-bold text-gray-900">{analyticsData.encryptedINFTs}</p>
-                        <p className="text-gray-600 text-sm">Encrypted</p>
+                        <p className="text-2xl font-bold text-black">{analyticsData.encryptedINFTs}</p>
+                        <p className="text-black text-sm">Encrypted</p>
                       </div>
                     </div>
                   </div>
@@ -322,11 +322,11 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
                 <div className="flex justify-center gap-6 mt-4">
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full bg-gradient-to-r from-green-500 to-blue-500" />
-                    <span className="text-gray-700 text-sm">Encrypted ({analyticsData.encryptedINFTs})</span>
+                    <span className="text-black text-sm">Encrypted ({analyticsData.encryptedINFTs})</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <div className="w-3 h-3 rounded-full bg-gray-400" />
-                    <span className="text-gray-700 text-sm">Unencrypted ({analyticsData.encryptionStats.unencrypted})</span>
+                    <span className="text-black text-sm">Unencrypted ({analyticsData.encryptionStats.unencrypted})</span>
                   </div>
                 </div>
               </div>
@@ -334,7 +334,7 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
 
             {/* Top Performing INFTs */}
             <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-6">Top Performing INFTs</h3>
+              <h3 className="text-lg font-semibold text-black mb-6">Top Performing INFTs</h3>
               <div className="space-y-4">
                 {analyticsData.topPerformingINFTs.map((inft, index) => (
                   <motion.div
@@ -349,19 +349,19 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
                         #{index + 1}
                       </div>
                       <div>
-                        <p className="text-gray-900 font-medium">{inft.name}</p>
-                        <p className="text-gray-600 text-sm">Token ID: {inft.tokenId}</p>
+                        <p className="text-black font-medium">{inft.name}</p>
+                        <p className="text-black text-sm">Token ID: {inft.tokenId}</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-gray-900 font-bold">{inft.interactions} interactions</p>
-                      <p className="text-gray-600 text-sm">{inft.performance.toFixed(1)}% of total</p>
+                      <p className="text-black font-bold">{inft.interactions} interactions</p>
+                      <p className="text-black text-sm">{inft.performance.toFixed(1)}% of total</p>
                     </div>
                   </motion.div>
                 ))}
                 {analyticsData.topPerformingINFTs.length === 0 && (
                   <div className="text-center py-8">
-                    <p className="text-gray-600">No INFTs with interactions yet</p>
+                    <p className="text-black">No INFTs with interactions yet</p>
                   </div>
                 )}
               </div>
@@ -369,7 +369,7 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
           </div>
         ) : (
           <div className="text-center py-20">
-            <p className="text-gray-600">Failed to load analytics data</p>
+            <p className="text-black">Failed to load analytics data</p>
           </div>
         )}
       </motion.div>

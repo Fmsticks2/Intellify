@@ -176,30 +176,30 @@ export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50" onClick={onClose}>
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={onClose}>
       <div 
-        className="bg-white border border-gray-200 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl"
+        className="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 lg:p-8 w-full max-w-sm sm:max-w-md lg:max-w-lg xl:max-w-xl shadow-2xl max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Mint Intellify INFT</h2>
-          <p className="text-gray-600">Create your AI-powered Intelligent NFT</p>
+        <div className="mb-4 sm:mb-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Mint Intellify INFT</h2>
+          <p className="text-sm sm:text-base text-black">Create your AI-powered Intelligent NFT</p>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           {step === 1 && (
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Step 1: Knowledge Configuration</h3>
+            <div className="space-y-4 sm:space-y-6">
+              <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4">Step 1: Knowledge Configuration</h3>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-black mb-2">
                   AI Model Version
                 </label>
                 <select
                   name="modelVersion"
                   value={formData.modelVersion}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white border border-gray-300 rounded-lg text-sm sm:text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 >
                   <option value="gpt-4">GPT-4</option>
                   <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
@@ -209,22 +209,22 @@ export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-black mb-2">
                   Knowledge Hash
                 </label>
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <input
                     type="text"
                     name="knowledgeHash"
                     value={formData.knowledgeHash}
                     onChange={handleInputChange}
                     placeholder="Enter unique knowledge hash (0x...)"
-                    className="flex-1 px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-white border border-gray-300 rounded-lg text-sm sm:text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   <button
                     type="button"
                     onClick={generateSampleHash}
-                    className="px-4 py-3 bg-green-50 border border-green-300 rounded-lg text-green-700 hover:bg-green-100 transition-colors"
+                    className="px-3 sm:px-4 py-2 sm:py-3 bg-green-50 border border-green-300 rounded-lg text-sm sm:text-base text-green-700 hover:bg-green-100 transition-colors whitespace-nowrap"
                   >
                     Generate
                   </button>
@@ -234,26 +234,26 @@ export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps
           )}
 
           {step === 2 && (
-            <div className="space-y-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">Step 2: INFT Details</h3>
+            <div className="space-y-4 sm:space-y-6">
+              <h3 className="text-lg sm:text-xl font-semibold text-black mb-3 sm:mb-4">Step 2: INFT Details</h3>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-black mb-2">
                   Metadata URI
                 </label>
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <input
                     type="text"
                     name="metadataURI"
                     value={formData.metadataURI}
                     onChange={handleInputChange}
                     placeholder="Enter IPFS URI or metadata URL"
-                    className="flex-1 px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    className="flex-1 px-3 sm:px-4 py-2 sm:py-3 bg-white border border-gray-300 rounded-lg text-sm sm:text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                   <button
                     type="button"
                     onClick={generateSampleMetadataURI}
-                    className="px-4 py-3 bg-green-50 border border-green-300 rounded-lg text-green-700 hover:bg-green-100 transition-colors"
+                    className="px-3 sm:px-4 py-2 sm:py-3 bg-green-50 border border-green-300 rounded-lg text-sm sm:text-base text-green-700 hover:bg-green-100 transition-colors whitespace-nowrap"
                   >
                     Generate Sample
                   </button>
@@ -261,7 +261,7 @@ export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-black mb-2">
                   Description
                 </label>
                 <textarea
@@ -269,15 +269,15 @@ export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps
                   value={formData.description}
                   onChange={handleInputChange}
                   placeholder="Describe your AI model and its capabilities..."
-                  rows={4}
-                  className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  rows={3}
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 bg-white border border-gray-300 rounded-lg text-sm sm:text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
                 />
               </div>
 
               {/* Encryption Settings */}
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                 <div className="flex items-center justify-between mb-3">
-                  <label className="text-sm font-medium text-gray-700">Enhanced Encryption</label>
+                  <label className="text-sm font-medium text-black">Enhanced Encryption</label>
                   <button
                     type="button"
                     onClick={() => setEnableEncryption(!enableEncryption)}
@@ -290,7 +290,7 @@ export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps
                     }`} />
                   </button>
                 </div>
-                <p className="text-gray-600 text-xs">
+                <p className="text-black text-xs">
                   {enableEncryption 
                     ? 'Your data will be encrypted using advanced encryption algorithms before storage'
                     : 'Data will be stored without additional encryption'
@@ -311,25 +311,25 @@ export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps
           )}
 
           {step === 3 && (
-            <div className="text-center space-y-6">
-              <div className="w-20 h-20 mx-auto bg-green-100 rounded-full flex items-center justify-center border border-green-300">
-                <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="text-center space-y-4 sm:space-y-6">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-green-100 rounded-full flex items-center justify-center border border-green-300">
+                <svg className="w-8 h-8 sm:w-10 sm:h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900">INFT Minted Successfully!</h3>
-              <p className="text-gray-600">Your Intellify INFT has been created and is now available on the blockchain.</p>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900">INFT Minted Successfully!</h3>
+              <p className="text-sm sm:text-base text-black">Your Intellify INFT has been created and is now available on the blockchain.</p>
               
               {txHash && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                  <p className="text-sm text-gray-700 mb-2">Transaction Hash:</p>
-                  <p className="text-blue-600 font-mono text-sm break-all">{txHash}</p>
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4">
+                  <p className="text-xs sm:text-sm text-black mb-2">Transaction Hash:</p>
+                  <p className="text-blue-600 font-mono text-xs sm:text-sm break-all">{txHash}</p>
                 </div>
               )}
               
               <button
                 onClick={onClose}
-                className="w-full py-3 bg-green-50 border border-green-300 rounded-lg text-green-700 hover:bg-green-100 transition-colors font-medium"
+                className="w-full py-2 sm:py-3 bg-green-50 border border-green-300 rounded-lg text-sm sm:text-base text-green-700 hover:bg-green-100 transition-colors font-medium"
               >
                 View My INFTs
               </button>
@@ -348,13 +348,13 @@ export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps
           )}
         </div>
 
-        <div className="mt-8">
+        <div className="mt-6 sm:mt-8">
           {step < 3 && (
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               {step > 1 && (
                 <button
                   onClick={() => setStep(step - 1)}
-                  className="flex-1 py-3 bg-gray-100 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-200 transition-colors font-medium"
+                  className="flex-1 py-2 sm:py-3 bg-gray-100 border border-gray-300 rounded-lg text-sm sm:text-base text-gray-700 hover:bg-gray-200 transition-colors font-medium"
                 >
                   Back
                 </button>
@@ -362,12 +362,12 @@ export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps
               <button
                 onClick={step === 1 ? handleNext : handleMint}
                 disabled={loading}
-                className="flex-1 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-600 text-white rounded-lg font-medium transition-all duration-200 disabled:cursor-not-allowed"
+                className="flex-1 py-2 sm:py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-600 text-white rounded-lg text-sm sm:text-base font-medium transition-all duration-200 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <div className="flex items-center justify-center gap-2">
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    {step === 1 ? 'Verifying...' : 'Minting...'}
+                    <span className="text-sm sm:text-base">{step === 1 ? 'Verifying...' : 'Minting...'}</span>
                   </div>
                 ) : (
                   step === 1 ? 'Next' : 'Mint INFT'

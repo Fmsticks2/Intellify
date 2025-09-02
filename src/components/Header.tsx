@@ -47,15 +47,15 @@ export default function Header({ className = '' }: HeaderProps) {
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#" className="relative text-gray-600 hover:text-blue-600 transition-all duration-300 font-medium group">
+            <a href="#" className="relative text-black hover:text-blue-600 transition-all duration-300 font-medium group">
               <span className="relative z-10">Dashboard</span>
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
             </a>
-            <a href="#" className="relative text-gray-600 hover:text-blue-600 transition-all duration-300 font-medium group">
+            <a href="#" className="relative text-black hover:text-blue-600 transition-all duration-300 font-medium group">
               <span className="relative z-10">My INFTs</span>
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
             </a>
-            <a href="#" className="relative text-gray-600 hover:text-blue-600 transition-all duration-300 font-medium group">
+            <a href="#" className="relative text-black hover:text-blue-600 transition-all duration-300 font-medium group">
               <span className="relative z-10">Explore</span>
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
             </a>
@@ -70,7 +70,7 @@ export default function Header({ className = '' }: HeaderProps) {
                   <div className="relative z-10 flex items-center space-x-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                     <Icon icon="mdi:wallet" className="w-5 h-5 text-blue-600" />
-                    <span className="text-sm font-medium text-gray-700 font-mono">
+                    <span className="text-sm font-medium text-black font-mono">
                       {formatAddress(wallet.address!)}
                     </span>
                     <button
@@ -88,7 +88,7 @@ export default function Header({ className = '' }: HeaderProps) {
 
                 {/* Balance */}
                 {wallet.balance && (
-                  <div className="relative text-sm text-gray-700 font-mono px-3 py-2 rounded-lg bg-gray-50 border border-gray-200 group">
+                  <div className="relative text-sm text-black font-mono px-3 py-2 rounded-lg bg-gray-50 border border-gray-200 group">
                     <span className="relative z-10 font-medium">
                       {parseFloat(wallet.balance).toFixed(4)} 0G
                     </span>
