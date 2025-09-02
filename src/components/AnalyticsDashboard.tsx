@@ -332,6 +332,89 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
               </div>
             </div>
 
+            {/* All INFTs Display */}
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-base font-semibold text-gray-900">Your INFTs Collection</h3>
+                <span className="text-sm text-gray-600">{userINFTs.length} total</span>
+              </div>
+              
+              {userINFTs.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-96 overflow-y-auto">
+                  {userINFTs.map((inft, index) => (
+                    <motion.div
+                      key={inft.tokenId}
+                      className="bg-white rounded-lg p-4 border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-200"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      whileHover={{ scale: 1.02 }}
+                    >
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
+                            <Icon icon="mdi:brain" className="w-4 h-4 text-white" />
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-semibold text-gray-900">INFT #{inft.tokenId}</h4>
+                            <p className="text-xs text-gray-600">{inft.modelVersion}</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          {inft.isActive ? (
+                            <div className="w-2 h-2 bg-green-500 rounded-full" title="Active" />
+                          ) : (
+                            <div className="w-2 h-2 bg-gray-400 rounded-full" title="Inactive" />
+                          )}
+                          {inft.isEncrypted && (
+                            <div title="Encrypted">
+                              <Icon icon="mdi:lock" className="w-3 h-3 text-yellow-600" />
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-xs">
+                          <span className="text-gray-600">Interactions:</span>
+                          <span className="font-medium text-gray-900">{inft.interactionCount || 0}</span>
+                        </div>
+                        <div className="flex justify-between text-xs">
+                          <span className="text-gray-600">Knowledge Items:</span>
+                          <span className="font-medium text-gray-900">{inft.knowledgeHashes?.length || 0}</span>
+                        </div>
+                        <div className="flex justify-between text-xs">
+                          <span className="text-gray-600">Last Updated:</span>
+                          <span className="font-medium text-gray-900">
+                            {inft.lastUpdated ? new Date(Number(inft.lastUpdated) * 1000).toLocaleDateString() : 'N/A'}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-3 pt-3 border-t border-gray-100">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs text-gray-600">Status:</span>
+                          <span className={`text-xs px-2 py-1 rounded-full ${
+                            inft.isActive 
+                              ? 'bg-green-100 text-green-700' 
+                              : 'bg-gray-100 text-gray-700'
+                          }`}>
+                            {inft.isActive ? 'Active' : 'Inactive'}
+                          </span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-8">
+                  <Icon icon="mdi:brain" className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+                  <p className="text-gray-600 text-sm">No INFTs found in your wallet</p>
+                  <p className="text-gray-500 text-xs mt-1">Create your first INFT to get started</p>
+                </div>
+              )}
+            </div>
+
             {/* Top Performing INFTs */}
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
               <h3 className="text-base font-semibold text-gray-900 mb-4">Top Performing INFTs</h3>
