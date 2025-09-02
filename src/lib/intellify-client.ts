@@ -80,7 +80,7 @@ export interface IntellifyConfig {
 // INFT Contract ABI (simplified for Wave 2)
 const INFT_ABI = [
   "function mintINFT(address to, string memory metadataURI, string memory knowledgeHash, string memory modelVersion) public returns (uint256)",
-  "function getAIState(uint256 tokenId) public view returns (tuple(string modelVersion, string[] knowledgeHashes, uint256 interactionCount, uint256 lastUpdated, bool isActive, address owner))",
+  "function getAIState(uint256 tokenId) public view returns (tuple(string modelVersion, string[] knowledgeHashes, uint256 interactionCount, uint256 lastUpdated, bool isActive))",
   "function recordInteraction(uint256 tokenId, string memory interactionType) public",
   "function addKnowledge(uint256 tokenId, string memory knowledgeHash, tuple(string contentType, uint256 fileSize, string encryptionKey, uint256 uploadTimestamp, bool isEncrypted) metadata) public",
   "function getUserINFTs(address user) public view returns (uint256[])",

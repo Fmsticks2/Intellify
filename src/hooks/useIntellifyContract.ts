@@ -8,9 +8,9 @@ import { useWallet } from '../components/WalletProvider';
 const INTELLIFY_ABI = [
   // View functions
   'function getUserINFTs(address user) view returns (uint256[])',
-  'function getAIState(uint256 tokenId) view returns (tuple(string modelVersion, string[] knowledgeHashes, uint256 interactionCount, uint256 lastUpdated, bool isActive, address owner, string encryptedStateHash, string stateEncryptionKey))',
+  'function getAIState(uint256 tokenId) view returns (tuple(string modelVersion, string[] knowledgeHashes, uint256 interactionCount, uint256 lastUpdated, bool isActive))',
   'function getKnowledgeHashes(uint256 tokenId) view returns (string[])',
-  'function getKnowledgeMetadata(uint256 tokenId) view returns (tuple(string contentType, uint256 fileSize, string encryptionKey, uint256 uploadTimestamp, bool isEncrypted)[])',
+  'function getKnowledgeMetadata(uint256 tokenId, string knowledgeHash) view returns (string metadataURI, uint256 addedAt)',
   'function totalSupply() view returns (uint256)',
   'function tokenURI(uint256 tokenId) view returns (string)',
   'function ownerOf(uint256 tokenId) view returns (address)',

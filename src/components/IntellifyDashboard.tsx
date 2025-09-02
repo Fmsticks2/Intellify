@@ -129,9 +129,11 @@ export default function IntellifyDashboard() {
           const aiState = await getAIState(tokenId);
           const tokenURI = await contract.tokenURI(tokenId);
           
+          const owner = await contract.ownerOf(tokenId);
+          
           inftsData.push({
             tokenId: Number(tokenId),
-            owner: aiState.owner,
+            owner: owner,
             modelVersion: aiState.modelVersion,
             knowledgeHashes: aiState.knowledgeHashes,
             interactionCount: Number(aiState.interactionCount),
