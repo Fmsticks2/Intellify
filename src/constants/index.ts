@@ -14,7 +14,7 @@ export const ZERO_G_TESTNET: NetworkConfig = {
 };
 
 // Contract Configuration
-export const CONTRACT_ADDRESS = '0xdc6c396319895dA489b0Cd145A4c5D660b9e10F6'; // Deployed INFT contract address
+export const CONTRACT_ADDRESS = '0x37525E8B82C776F608eCA8A49C000b98a456fBdD'; // Deployed INFT contract address
 
 // Contract ABI (from IntellifyINFT.sol)
 export const CONTRACT_ABI = [

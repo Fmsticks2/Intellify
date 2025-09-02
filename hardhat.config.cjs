@@ -4,7 +4,7 @@ require("dotenv").config();
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: {
-    version: "0.8.19",
+    version: "0.8.20",
     settings: {
       optimizer: {
         enabled: true,
@@ -18,9 +18,10 @@ module.exports = {
     },
     "0g-testnet": {
       url: "https://evmrpc-testnet.0g.ai",
-      chainId: 9000,
+      chainId: 16600,
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      gasPrice: 20000000000, // 20 gwei
+      gas: 2100000,
+      gasPrice: 8000000000,
     },
   },
   paths: {

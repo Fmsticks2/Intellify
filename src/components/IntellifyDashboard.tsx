@@ -93,8 +93,10 @@ export default function IntellifyDashboard() {
           setInfts(cachedINFTs);
           setLoading(false);
           
-          // Optionally refresh in background
-          refreshINFTsFromBlockchain();
+          // Always refresh in background to ensure latest data
+          setTimeout(() => {
+            refreshINFTsFromBlockchain();
+          }, 1000);
           return;
         }
         
@@ -109,14 +111,14 @@ export default function IntellifyDashboard() {
     }
   };
 
-  const refreshINFTsFromBlockchain = async () => {
+  const refreshINFTsFromBlockchain = async (retryCount = 0) => {
     if (!wallet.address || !contract) {
       console.log('Cannot refresh: wallet address or contract not available');
       return;
     }
     
     try {
-      console.log('Fetching INFTs from blockchain for address:', wallet.address);
+      console.log(`Fetching INFTs from blockchain for address: ${wallet.address} (attempt ${retryCount + 1})`);
       const tokenIds = await getUserINFTs(wallet.address);
       console.log('Found token IDs:', tokenIds.map(id => Number(id)));
       const inftsData: INFT[] = [];
@@ -149,20 +151,50 @@ export default function IntellifyDashboard() {
       if (wallet.address) {
         INFTPersistence.saveINFTs(wallet.address, inftsData);
       }
+      
+      // Update encryption stats after loading INFTs
+      await loadEncryptionStats();
+      
     } catch (err) {
       console.error('Error refreshing INFTs from blockchain:', err);
-      throw err;
+      
+      // Retry logic for failed requests
+      if (retryCount < 2) {
+        console.log(`Retrying INFT refresh in 3 seconds... (attempt ${retryCount + 2})`);
+        setTimeout(() => {
+          refreshINFTsFromBlockchain(retryCount + 1);
+        }, 3000);
+      } else {
+        throw err;
+      }
     }
   };
 
-  const handleMintSuccess = () => {
+  const handleMintSuccess = async () => {
     setShowMintModal(false);
     // Clear cache to ensure fresh data is fetched
     if (wallet.address) {
       INFTPersistence.clearINFTs(wallet.address);
     }
-    // Force refresh from blockchain
-    refreshINFTsFromBlockchain();
+    // Add a small delay to allow blockchain state to update
+    setTimeout(async () => {
+      try {
+        // Force refresh from blockchain with retry logic
+        await refreshINFTsFromBlockchain();
+        // If no INFTs found, retry after another delay
+        if (infts.length === 0) {
+          setTimeout(() => {
+            refreshINFTsFromBlockchain();
+          }, 3000);
+        }
+      } catch (error) {
+        console.error('Error refreshing INFTs after mint:', error);
+        // Retry once more after error
+        setTimeout(() => {
+          refreshINFTsFromBlockchain();
+        }, 5000);
+      }
+    }, 2000);
   };
 
   const handleNetworkSwitch = async () => {

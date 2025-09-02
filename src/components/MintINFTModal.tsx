@@ -36,6 +36,8 @@ export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps
   const [encryptedData, setEncryptedData] = useState<EncryptedDataPackage | null>(null);
   const [encryptionSessionId, setEncryptionSessionId] = useState<string | null>(null);
   const [enableEncryption, setEnableEncryption] = useState(true);
+  const [isEncrypting, setIsEncrypting] = useState(false);
+  const [isMinting, setIsMinting] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const target = e.target as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
@@ -88,14 +90,19 @@ export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps
   };
 
   const handleMint = async () => {
-    if (!validateForm() || !wallet.address) return;
+    if (!validateForm() || !wallet.address || isMinting) return;
 
     // If encryption is enabled and we don't have encrypted data yet, show encryption modal
-    if (enableEncryption && !encryptedData) {
+    if (enableEncryption && !encryptedData && !isEncrypting) {
+      setIsEncrypting(true);
       setShowEncryptionModal(true);
       return;
     }
 
+    // Prevent multiple minting attempts
+    if (isMinting) return;
+    
+    setIsMinting(true);
     setLoading(true);
     setError(null);
 
@@ -149,6 +156,7 @@ export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps
       setError(err.message || 'Failed to mint INFT. Please try again.');
     } finally {
       setLoading(false);
+      setIsMinting(false);
     }
   };
 
@@ -156,6 +164,7 @@ export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps
     setEncryptedData(encrypted);
     setEncryptionSessionId(sessionId);
     setShowEncryptionModal(false);
+    setIsEncrypting(false);
     // Automatically proceed with minting
     setTimeout(() => {
       handleMint();
@@ -362,13 +371,15 @@ export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps
               )}
               <button
                 onClick={step === 1 ? handleNext : handleMint}
-                disabled={loading}
+                disabled={loading || isMinting || isEncrypting}
                 className="flex-1 py-2 sm:py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-600 disabled:to-gray-600 text-white rounded-lg text-sm sm:text-base font-medium transition-all duration-200 disabled:cursor-not-allowed"
               >
-                {loading ? (
+                {loading || isMinting || isEncrypting ? (
                   <div className="flex items-center justify-center gap-2">
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    <span className="text-sm sm:text-base">{step === 1 ? 'Verifying...' : 'Minting...'}</span>
+                    <span className="text-sm sm:text-base">
+                      {step === 1 ? 'Verifying...' : isEncrypting ? 'Encrypting...' : 'Minting...'}
+                    </span>
                   </div>
                 ) : (
                   step === 1 ? 'Next' : 'Mint INFT'
@@ -383,7 +394,10 @@ export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps
        {showEncryptionModal && (
          <EnhancedEncryptionModal
            isOpen={showEncryptionModal}
-           onClose={() => setShowEncryptionModal(false)}
+           onClose={() => {
+             setShowEncryptionModal(false);
+             setIsEncrypting(false);
+           }}
            onEncryptionComplete={handleEncryptionComplete}
            data={{
              content: formData.description,
