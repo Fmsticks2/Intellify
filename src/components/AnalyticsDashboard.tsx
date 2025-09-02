@@ -128,7 +128,7 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
   return (
     <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm flex items-center justify-center z-50" onClick={onClose}>
       <motion.div 
-        className="bg-white max-w-6xl w-full mx-4 rounded-3xl p-8 max-h-[90vh] overflow-y-auto border border-gray-200 shadow-2xl"
+        className="bg-white max-w-4xl w-full mx-4 rounded-2xl p-6 max-h-[85vh] overflow-y-auto border border-gray-200 shadow-2xl"
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -136,14 +136,14 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-500 to-blue-500 flex items-center justify-center">
-              <Icon icon="mdi:chart-bar" className="w-6 h-6 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-blue-500 flex items-center justify-center">
+              <Icon icon="mdi:chart-bar" className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">Analytics Dashboard</h2>
-              <p className="text-black">Comprehensive insights into your INFT performance</p>
+              <h2 className="text-xl font-bold text-gray-900">Analytics Dashboard</h2>
+              <p className="text-sm text-gray-600">Insights into your INFT performance</p>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -171,84 +171,84 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
             <div className="w-12 h-12 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin" />
           </div>
         ) : analyticsData ? (
-          <div className="space-y-8">
+          <div className="space-y-6">
             {/* Key Metrics */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <motion.div 
-                className="bg-gray-50 border border-gray-200 rounded-2xl p-6"
+                className="bg-gray-50 border border-gray-200 rounded-xl p-4"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.2 }}
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-black text-sm font-medium">Total INFTs</p>
-                    <p className="text-3xl font-bold text-black mt-1">{analyticsData.totalINFTs}</p>
-                    <p className="text-green-600 text-sm mt-1">+{analyticsData.growthRate.toFixed(1)}% growth</p>
+                    <p className="text-gray-700 text-xs font-medium">Total INFTs</p>
+                    <p className="text-2xl font-bold text-gray-900 mt-1">{analyticsData.totalINFTs}</p>
+                    <p className="text-green-600 text-xs mt-1">+{analyticsData.growthRate.toFixed(1)}% growth</p>
                   </div>
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
-                    <Icon icon="mdi:brain" className="w-6 h-6 text-white" />
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center">
+                    <Icon icon="mdi:brain" className="w-4 h-4 text-white" />
                   </div>
                 </div>
               </motion.div>
 
               <motion.div 
-                className="bg-gray-50 border border-gray-200 rounded-2xl p-6"
+                className="bg-gray-50 border border-gray-200 rounded-xl p-4"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.2 }}
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-black text-sm font-medium">Active INFTs</p>
-                    <p className="text-3xl font-bold text-black mt-1">{analyticsData.activeINFTs}</p>
-                    <p className="text-green-600 text-sm mt-1">{((analyticsData.activeINFTs / analyticsData.totalINFTs) * 100).toFixed(1)}% active</p>
+                    <p className="text-gray-700 text-xs font-medium">Active INFTs</p>
+                    <p className="text-2xl font-bold text-gray-900 mt-1">{analyticsData.activeINFTs}</p>
+                    <p className="text-green-600 text-xs mt-1">{((analyticsData.activeINFTs / analyticsData.totalINFTs) * 100).toFixed(1)}% active</p>
                   </div>
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center">
-                    <Icon icon="mdi:lightning-bolt" className="w-6 h-6 text-white" />
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center">
+                    <Icon icon="mdi:lightning-bolt" className="w-4 h-4 text-white" />
                   </div>
                 </div>
               </motion.div>
 
               <motion.div 
-                className="bg-gray-50 border border-gray-200 rounded-2xl p-6"
+                className="bg-gray-50 border border-gray-200 rounded-xl p-4"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.2 }}
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-black text-sm font-medium">Total Interactions</p>
-                    <p className="text-3xl font-bold text-black mt-1">{analyticsData.totalInteractions}</p>
-                    <p className="text-green-600 text-sm mt-1">{analyticsData.avgInteractionsPerINFT.toFixed(1)} avg per INFT</p>
+                    <p className="text-gray-700 text-xs font-medium">Total Interactions</p>
+                    <p className="text-2xl font-bold text-gray-900 mt-1">{analyticsData.totalInteractions}</p>
+                    <p className="text-green-600 text-xs mt-1">{analyticsData.avgInteractionsPerINFT.toFixed(1)} avg per INFT</p>
                   </div>
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                    <Icon icon="mdi:message-text" className="w-6 h-6 text-white" />
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                    <Icon icon="mdi:message-text" className="w-4 h-4 text-white" />
                   </div>
                 </div>
               </motion.div>
 
               <motion.div 
-                className="bg-gray-50 border border-gray-200 rounded-2xl p-6"
+                className="bg-gray-50 border border-gray-200 rounded-xl p-4"
                 whileHover={{ scale: 1.02 }}
                 transition={{ duration: 0.2 }}
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-black text-sm font-medium">Encrypted INFTs</p>
-                    <p className="text-3xl font-bold text-black mt-1">{analyticsData.encryptedINFTs}</p>
-                    <p className="text-green-600 text-sm mt-1">{((analyticsData.encryptedINFTs / analyticsData.totalINFTs) * 100).toFixed(1)}% encrypted</p>
+                    <p className="text-gray-700 text-xs font-medium">Encrypted INFTs</p>
+                    <p className="text-2xl font-bold text-gray-900 mt-1">{analyticsData.encryptedINFTs}</p>
+                    <p className="text-green-600 text-xs mt-1">{((analyticsData.encryptedINFTs / analyticsData.totalINFTs) * 100).toFixed(1)}% encrypted</p>
                   </div>
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center">
-                    <Icon icon="mdi:lock" className="w-6 h-6 text-white" />
+                  <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center">
+                    <Icon icon="mdi:lock" className="w-4 h-4 text-white" />
                   </div>
                 </div>
               </motion.div>
             </div>
 
             {/* Charts Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Interaction History Chart */}
-              <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6">
-                <h3 className="text-lg font-semibold text-black mb-6">Interaction History</h3>
-                <div className="h-64 flex items-end justify-between gap-2">
+              <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                <h3 className="text-base font-semibold text-gray-900 mb-4">Interaction History</h3>
+                <div className="h-48 flex items-end justify-between gap-2">
                   {analyticsData.interactionHistory.map((day, index) => {
                     const maxInteractions = Math.max(...analyticsData.interactionHistory.map(d => d.interactions));
                     const height = (day.interactions / maxInteractions) * 100;
@@ -270,17 +270,17 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
                     );
                   })}
                 </div>
-                <div className="flex justify-between mt-4 text-black text-sm">
+                <div className="flex justify-between mt-3 text-gray-700 text-xs">
                   <span>{getTimeframeLabel(selectedTimeframe)}</span>
                   <span>Interactions</span>
                 </div>
               </div>
 
               {/* Encryption Distribution */}
-              <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6">
-                <h3 className="text-lg font-semibold text-black mb-6">Encryption Distribution</h3>
-                <div className="flex items-center justify-center h-64">
-                  <div className="relative w-48 h-48">
+              <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+                <h3 className="text-base font-semibold text-gray-900 mb-4">Encryption Distribution</h3>
+                <div className="flex items-center justify-center h-48">
+                  <div className="relative w-36 h-36">
                     {/* Donut Chart */}
                     <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
                       <circle
@@ -313,63 +313,63 @@ export default function AnalyticsDashboard({ isOpen, onClose, userINFTs }: Analy
                     </svg>
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="text-center">
-                        <p className="text-2xl font-bold text-black">{analyticsData.encryptedINFTs}</p>
-                        <p className="text-black text-sm">Encrypted</p>
+                        <p className="text-xl font-bold text-gray-900">{analyticsData.encryptedINFTs}</p>
+                        <p className="text-gray-700 text-xs">Encrypted</p>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div className="flex justify-center gap-6 mt-4">
+                <div className="flex justify-center gap-4 mt-3">
                   <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-gradient-to-r from-green-500 to-blue-500" />
-                    <span className="text-black text-sm">Encrypted ({analyticsData.encryptedINFTs})</span>
+                    <div className="w-2 h-2 rounded-full bg-gradient-to-r from-green-500 to-blue-500" />
+                    <span className="text-gray-700 text-xs">Encrypted ({analyticsData.encryptedINFTs})</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-gray-400" />
-                    <span className="text-black text-sm">Unencrypted ({analyticsData.encryptionStats.unencrypted})</span>
+                    <div className="w-2 h-2 rounded-full bg-gray-400" />
+                    <span className="text-gray-700 text-xs">Unencrypted ({analyticsData.encryptionStats.unencrypted})</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Top Performing INFTs */}
-            <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6">
-              <h3 className="text-lg font-semibold text-black mb-6">Top Performing INFTs</h3>
-              <div className="space-y-4">
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-4">
+              <h3 className="text-base font-semibold text-gray-900 mb-4">Top Performing INFTs</h3>
+              <div className="space-y-3">
                 {analyticsData.topPerformingINFTs.map((inft, index) => (
                   <motion.div
                       key={inft.tokenId}
-                      className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+                      className="flex items-center justify-between p-3 bg-white rounded-lg hover:bg-gray-50 transition-colors border border-gray-100"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
                     >
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-sm">
                         #{index + 1}
                       </div>
                       <div>
-                        <p className="text-black font-medium">{inft.name}</p>
-                        <p className="text-black text-sm">Token ID: {inft.tokenId}</p>
+                        <p className="text-gray-900 font-medium text-sm">{inft.name}</p>
+                        <p className="text-gray-600 text-xs">Token ID: {inft.tokenId}</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-black font-bold">{inft.interactions} interactions</p>
-                      <p className="text-black text-sm">{inft.performance.toFixed(1)}% of total</p>
+                      <p className="text-gray-900 font-bold text-sm">{inft.interactions} interactions</p>
+                      <p className="text-gray-600 text-xs">{inft.performance.toFixed(1)}% of total</p>
                     </div>
                   </motion.div>
                 ))}
                 {analyticsData.topPerformingINFTs.length === 0 && (
-                  <div className="text-center py-8">
-                    <p className="text-black">No INFTs with interactions yet</p>
+                  <div className="text-center py-6">
+                    <p className="text-gray-600 text-sm">No INFTs with interactions yet</p>
                   </div>
                 )}
               </div>
             </div>
           </div>
         ) : (
-          <div className="text-center py-20">
-            <p className="text-black">Failed to load analytics data</p>
+          <div className="text-center py-12">
+            <p className="text-gray-600">Failed to load analytics data</p>
           </div>
         )}
       </motion.div>

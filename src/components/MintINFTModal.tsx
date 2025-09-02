@@ -139,9 +139,10 @@ export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps
 
       await tx.wait();
       
+      // Wait longer for blockchain state to update before refreshing
       setTimeout(() => {
         onSuccess();
-      }, 2000);
+      }, 5000);
 
     } catch (err: any) {
       console.error('Error minting INFT:', err);

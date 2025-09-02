@@ -110,15 +110,20 @@ export default function IntellifyDashboard() {
   };
 
   const refreshINFTsFromBlockchain = async () => {
-    if (!wallet.address || !contract) return;
+    if (!wallet.address || !contract) {
+      console.log('Cannot refresh: wallet address or contract not available');
+      return;
+    }
     
     try {
-      console.log('Fetching INFTs from blockchain');
+      console.log('Fetching INFTs from blockchain for address:', wallet.address);
       const tokenIds = await getUserINFTs(wallet.address);
+      console.log('Found token IDs:', tokenIds.map(id => Number(id)));
       const inftsData: INFT[] = [];
       
       for (const tokenId of tokenIds) {
         try {
+          console.log(`Loading data for token ID: ${tokenId}`);
           const aiState = await getAIState(tokenId);
           const tokenURI = await contract.tokenURI(tokenId);
           
@@ -137,6 +142,7 @@ export default function IntellifyDashboard() {
         }
       }
       
+      console.log(`Successfully loaded ${inftsData.length} INFTs`);
       setInfts(inftsData);
       
       // Save to localStorage for future use
