@@ -7,6 +7,7 @@ import { ethers } from 'ethers';
 // import { Indexer, ZgFile } from '@0glabs/0g-ts-sdk'; // Commented out due to package issues
 import { appKit, ethersAdapter } from './reown-config';
 import CryptoJS from 'crypto-js';
+import { ZGDAClient, createZGDAClient, INFTDAMetadata, BlobSubmissionResult } from './0g-da-client';
 
 // Temporary type definitions for 0G SDK until package is available
 interface Indexer {
@@ -60,6 +61,10 @@ export interface INFTMetadata {
     last_updated: number;
   };
   owner: string;
+  // 0G DA specific fields
+  da_blob_hash?: string;
+  level?: number;
+  experience?: number;
 }
 
 export interface StorageUploadResult {
@@ -95,6 +100,7 @@ export class IntellifyClient {
   private wallet: WalletConnection | null = null;
   private indexer: Indexer | null = null;
   private contract: ethers.Contract | null = null;
+  private zgdaClient: ZGDAClient | null = null;
 
   constructor(config: IntellifyConfig) {
     this.config = config;
@@ -107,6 +113,16 @@ export class IntellifyClient {
     // Initialize 0G indexer
     // Note: Indexer initialization would be done with actual 0G SDK
     // this.indexer = new Indexer(this.config.indexerRpc);
+    
+    // Initialize 0G DA client
+    try {
+      this.zgdaClient = createZGDAClient({
+        privateKey: this.config.privateKey
+      });
+    } catch (error) {
+      console.warn('Failed to initialize 0G DA client:', error);
+      // Continue without DA client for backward compatibility
+    }
   }
 
   /**
@@ -302,7 +318,41 @@ export class IntellifyClient {
   }
 
   /**
-   * Upload metadata to IPFS (mock implementation for Wave 2)
+   * Upload metadata to 0G DA network
+   */
+  private async uploadMetadataToDA(metadata: INFTMetadata): Promise<string> {
+    if (!this.zgdaClient) {
+      // Fallback to mock IPFS implementation
+      return this.uploadMetadataToIPFS(metadata);
+    }
+
+    try {
+      // Convert INFTMetadata to INFTDAMetadata format
+      const daMetadata: INFTDAMetadata = ZGDAClient.createInitialMetadata(
+        metadata.name,
+        metadata.description,
+        metadata.knowledge_hash,
+        metadata.ai_state.model_version,
+        metadata.owner
+      );
+
+      // Submit to 0G DA network
+      const result: BlobSubmissionResult = await this.zgdaClient.submitMetadata(daMetadata);
+      
+      // Store blob data locally for demo retrieval
+      const metadataString = JSON.stringify(daMetadata);
+      await this.zgdaClient.storeBlobLocally(result.blobHash, metadataString);
+      
+      // Return 0G DA URI format
+      return `0g-da://${result.blobHash}`;
+    } catch (error) {
+      console.warn('Failed to upload to 0G DA, falling back to mock IPFS:', error);
+      return this.uploadMetadataToIPFS(metadata);
+    }
+  }
+
+  /**
+   * Upload metadata to IPFS (fallback implementation)
    */
   private async uploadMetadataToIPFS(metadata: INFTMetadata): Promise<string> {
     // Mock IPFS upload - in production, use actual IPFS service
@@ -324,7 +374,7 @@ export class IntellifyClient {
     }
 
     try {
-      const metadataURI = await this.uploadMetadataToIPFS(metadata);
+      const metadataURI = await this.uploadMetadataToDA(metadata);
       
       const tx = await this.contract.mintINFT(
         metadata.owner,
@@ -390,6 +440,153 @@ export class IntellifyClient {
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
       throw new Error(`Failed to get AI state: ${errorMessage}`);
+    }
+  }
+
+  /**
+   * Record interaction and potentially trigger INFT evolution
+   */
+  async recordInteractionWithEvolution(tokenId: string, interactionType: string): Promise<{
+    transactionHash: string;
+    evolved: boolean;
+    newLevel?: number;
+    newMetadataURI?: string;
+  }> {
+    if (!this.contract) {
+      throw new Error('Contract not initialized');
+    }
+
+    try {
+      // Record the interaction on-chain
+      const tx = await this.contract.recordInteraction(tokenId, interactionType);
+      await tx.wait();
+
+      // Get current AI state to check for evolution
+      const aiState = await this.contract.getAIState(tokenId);
+      const currentInteractionCount = Number(aiState.interactionCount);
+      
+      // Check if INFT should evolve (every 10 interactions)
+      const shouldEvolve = currentInteractionCount > 0 && currentInteractionCount % 10 === 0;
+      
+      if (shouldEvolve && this.zgdaClient) {
+        try {
+          // Calculate new level based on interactions
+          const newLevel = Math.floor(currentInteractionCount / 10) + 1;
+          
+          // Get current metadata URI from contract
+          const currentMetadataURI = await this.contract.tokenURI(tokenId);
+          
+          // Retrieve current metadata
+          let currentMetadata: INFTDAMetadata;
+          if (currentMetadataURI.startsWith('0g-da://')) {
+            const blobHash = currentMetadataURI.replace('0g-da://', '');
+            currentMetadata = await this.zgdaClient.retrieveMetadata(blobHash);
+          } else {
+            // Fallback for IPFS or other formats
+            const hash = currentMetadataURI.replace('ipfs://', '');
+            const storedData = localStorage.getItem(`ipfs_${hash}`);
+            if (storedData) {
+              currentMetadata = JSON.parse(storedData) as INFTDAMetadata;
+            } else {
+              throw new Error('Could not retrieve current metadata');
+            }
+          }
+          
+          // Update metadata with evolution
+          const evolutionResult = await this.zgdaClient.updateMetadataWithEvolution(
+            currentMetadata,
+            newLevel,
+            `interaction_milestone_${currentInteractionCount}`
+          );
+          
+          const newMetadataURI = `0g-da://${evolutionResult.blobHash}`;
+          
+          // Update the token URI on-chain (would need to add this function to contract)
+          // For now, we'll emit an event or store the evolution data
+          
+          return {
+            transactionHash: tx.hash,
+            evolved: true,
+            newLevel,
+            newMetadataURI
+          };
+        } catch (evolutionError) {
+          console.warn('Evolution failed:', evolutionError);
+          return {
+            transactionHash: tx.hash,
+            evolved: false
+          };
+        }
+      }
+      
+      return {
+        transactionHash: tx.hash,
+        evolved: false
+      };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      throw new Error(`Failed to record interaction: ${errorMessage}`);
+    }
+  }
+
+  /**
+   * Get INFT evolution status and metadata
+   */
+  async getINFTEvolutionStatus(tokenId: string): Promise<{
+    level: number;
+    experience: number;
+    nextEvolutionAt: number;
+    evolutionHistory: Array<{
+      level: number;
+      timestamp: number;
+      trigger_event: string;
+    }>;
+  }> {
+    if (!this.contract) {
+      throw new Error('Contract not initialized');
+    }
+
+    try {
+      // Get AI state from contract
+      const aiState = await this.contract.getAIState(tokenId);
+      const interactionCount = Number(aiState.interactionCount);
+      
+      // Get metadata URI and retrieve full metadata
+      const metadataURI = await this.contract.tokenURI(tokenId);
+      
+      let metadata: INFTDAMetadata;
+      if (metadataURI.startsWith('0g-da://') && this.zgdaClient) {
+        const blobHash = metadataURI.replace('0g-da://', '');
+        metadata = await this.zgdaClient.retrieveMetadata(blobHash);
+      } else {
+        // Fallback for other formats
+        const hash = metadataURI.replace('ipfs://', '');
+        const storedData = localStorage.getItem(`ipfs_${hash}`);
+        if (storedData) {
+          metadata = JSON.parse(storedData) as INFTDAMetadata;
+        } else {
+          // Create default metadata structure
+          metadata = {
+            level: Math.floor(interactionCount / 10) + 1,
+            experience: interactionCount * 10,
+            evolution_history: []
+          } as INFTDAMetadata;
+        }
+      }
+      
+      const currentLevel = metadata.level || Math.floor(interactionCount / 10) + 1;
+      const experience = metadata.experience || interactionCount * 10;
+      const nextEvolutionAt = (currentLevel * 10) - (interactionCount % 10);
+      
+      return {
+        level: currentLevel,
+        experience,
+        nextEvolutionAt,
+        evolutionHistory: metadata.evolution_history || []
+      };
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      throw new Error(`Failed to get evolution status: ${errorMessage}`);
     }
   }
 
