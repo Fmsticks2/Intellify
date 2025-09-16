@@ -69,6 +69,8 @@ contract IntellifyINFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard, Pa
     event AIStateUpdated(uint256 indexed tokenId, uint256 interactionCount);
     event KnowledgeAdded(uint256 indexed tokenId, string knowledgeHash);
     event AIInteraction(uint256 indexed tokenId, address indexed user, string interactionType);
+    event INFTEvolved(uint256 indexed tokenId, uint256 newLevel, string newMetadataURI);
+    event MetadataURIUpdated(uint256 indexed tokenId, string newURI);
     
     // Modifiers
     modifier onlyTokenOwner(uint256 tokenId) {
@@ -189,6 +191,78 @@ contract IntellifyINFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard, Pa
         
         emit AIInteraction(tokenId, msg.sender, interactionType);
         emit AIStateUpdated(tokenId, aiStates[tokenId].interactionCount);
+    }
+
+    /**
+     * @dev Update token URI (for evolution metadata updates)
+     */
+    function updateTokenURI(
+        uint256 tokenId,
+        string memory newURI
+    ) public onlyTokenOwnerOrAuthorized(tokenId) validTokenId(tokenId) {
+        require(bytes(newURI).length > 0, "URI cannot be empty");
+        
+        _setTokenURI(tokenId, newURI);
+        
+        // Update private metadata URI for ERC-7857
+        _privateMetadata[tokenId].metadataURI = newURI;
+        _privateMetadata[tokenId].lastUpdate = block.timestamp;
+        
+        emit MetadataURIUpdated(tokenId, newURI);
+    }
+
+    /**
+     * @dev Update metadata with evolution (combines URI update with level tracking)
+     */
+    function evolveINFT(
+        uint256 tokenId,
+        string memory newMetadataURI,
+        uint256 newLevel
+    ) public onlyTokenOwnerOrAuthorized(tokenId) validTokenId(tokenId) {
+        require(bytes(newMetadataURI).length > 0, "Metadata URI cannot be empty");
+        require(newLevel > 0, "Level must be greater than 0");
+        
+        // Update token URI
+        _setTokenURI(tokenId, newMetadataURI);
+        
+        // Update private metadata for ERC-7857
+        _privateMetadata[tokenId].metadataURI = newMetadataURI;
+        _privateMetadata[tokenId].lastUpdate = block.timestamp;
+        
+        // Update AI state timestamp
+        aiStates[tokenId].lastUpdated = block.timestamp;
+        
+        emit INFTEvolved(tokenId, newLevel, newMetadataURI);
+        emit MetadataURIUpdated(tokenId, newMetadataURI);
+    }
+
+    /**
+     * @dev Batch update metadata URIs for multiple tokens (gas optimization)
+     */
+    function batchUpdateTokenURIs(
+        uint256[] memory tokenIds,
+        string[] memory newURIs
+    ) public {
+        require(tokenIds.length == newURIs.length, "Arrays length mismatch");
+        require(tokenIds.length > 0, "Empty arrays");
+        
+        for (uint256 i = 0; i < tokenIds.length; i++) {
+            require(_ownerOf(tokenIds[i]) != address(0), "Token does not exist");
+            require(
+                ownerOf(tokenIds[i]) == msg.sender || 
+                _authorizedUsers[tokenIds[i]][msg.sender],
+                "Not authorized for token"
+            );
+            require(bytes(newURIs[i]).length > 0, "URI cannot be empty");
+            
+            _setTokenURI(tokenIds[i], newURIs[i]);
+            
+            // Update private metadata
+            _privateMetadata[tokenIds[i]].metadataURI = newURIs[i];
+            _privateMetadata[tokenIds[i]].lastUpdate = block.timestamp;
+            
+            emit MetadataURIUpdated(tokenIds[i], newURIs[i]);
+        }
     }
     
     /**

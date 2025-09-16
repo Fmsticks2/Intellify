@@ -1,0 +1,63 @@
+{
+  "name": "@intellify/inft-sdk",
+  "version": "1.0.0",
+  "description": "SDK for creating and managing evolving Intelligent NFTs (INFTs) with 0G Data Availability integration",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "prepublishOnly": "npm run build",
+    "test": "jest",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write src/**/*.ts"
+  },
+  "keywords": [
+    "nft",
+    "inft",
+    "intelligent-nft",
+    "0g-network",
+    "data-availability",
+    "blockchain",
+    "ethereum",
+    "ai",
+    "evolution",
+    "sdk"
+  ],
+  "author": "Intellify Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/intellify/inft-sdk.git"
+  },
+  "bugs": {
+    "url": "https://github.com/intellify/inft-sdk/issues"
+  },
+  "homepage": "https://github.com/intellify/inft-sdk#readme",
+  "peerDependencies": {
+    "ethers": "^6.0.0"
+  },
+  "dependencies": {
+    "ethers": "^6.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "jest": "^29.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
