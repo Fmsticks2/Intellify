@@ -6,7 +6,7 @@
 import { ethers } from 'ethers';
 // import { Indexer, ZgFile } from '@0glabs/0g-ts-sdk'; // Commented out due to package issues
 import { appKit, ethersAdapter } from './reown-config';
-import CryptoJS from 'crypto-js';
+import * as CryptoJS from 'crypto-js';
 import { ZGDAClient, createZGDAClient, INFTDAMetadata, BlobSubmissionResult } from './0g-da-client';
 
 // Temporary type definitions for 0G SDK until package is available
@@ -197,7 +197,7 @@ export class IntellifyClient {
       const encryptionKey = this.generateUserKey(this.wallet.address);
       
       // Convert to base64 for encryption
-      const base64Data = btoa(String.fromCharCode(...fileData));
+      const base64Data = btoa(String.fromCharCode.apply(null, Array.from(fileData)));
       const encrypted = CryptoJS.AES.encrypt(base64Data, encryptionKey).toString();
       
       return {
@@ -567,10 +567,33 @@ export class IntellifyClient {
         } else {
           // Create default metadata structure
           metadata = {
+            name: `INFT #${tokenId}`,
+            description: `Intelligent NFT with ${interactionCount} interactions`,
+            image: `data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0MCIgZmlsbD0iIzQyODVmNCIvPjx0ZXh0IHg9IjUwIiB5PSI1NSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0id2hpdGUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiI+TGV2ZWwgJHtNYXRoLmZsb29yKGludGVyYWN0aW9uQ291bnQgLyAxMCkgKyAxfTwvdGV4dD48L3N2Zz4=`,
             level: Math.floor(interactionCount / 10) + 1,
             experience: interactionCount * 10,
+            attributes: [
+              {
+                trait_type: "Level",
+                value: Math.floor(interactionCount / 10) + 1
+              },
+              {
+                trait_type: "Experience",
+                value: interactionCount * 10
+              },
+              {
+                trait_type: "Interactions",
+                value: interactionCount
+              }
+            ],
+            ai_state: {
+              model_version: "v1.0",
+              training_data_hashes: [],
+              interaction_count: interactionCount,
+              last_updated: Date.now()
+            },
             evolution_history: []
-          } as INFTDAMetadata;
+          };
         }
       }
       

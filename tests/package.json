@@ -1,0 +1,41 @@
+{
+  "name": "@intellify/inft-tests",
+  "version": "1.0.0",
+  "description": "Integration tests for Intellify INFT with 0G DA integration",
+  "main": "integration-test.js",
+  "scripts": {
+    "test": "node ../test-runner.js",
+    "test:compile": "node ../test-runner.js --compile-only",
+    "test:run": "node ../test-runner.js --run-only",
+    "test:help": "node ../test-runner.js --help",
+    "build": "tsc integration-test.ts --target ES2020 --module commonjs --outDir ../dist/tests",
+    "clean": "rimraf ../dist/tests"
+  },
+  "dependencies": {
+    "ethers": "^6.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "rimraf": "^5.0.0"
+  },
+  "keywords": [
+    "intellify",
+    "inft",
+    "0g-da",
+    "blockchain",
+    "nft",
+    "evolution",
+    "tests",
+    "integration"
+  ],
+  "author": "Intellify Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/intellify/inft-core"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

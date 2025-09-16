@@ -21,10 +21,12 @@ async function basicExample() {
     signer: 'YOUR_PRIVATE_KEY_HERE', // Replace with your private key
     contractAddress: '0x1234567890123456789012345678901234567890', // Replace with deployed contract
     zgdaConfig: {
-      endpoint: 'https://da-testnet.0g.ai',
+      rpcEndpoint: 'https://evmrpc-testnet.0g.ai',
       privateKey: 'YOUR_PRIVATE_KEY_HERE',
-      chainId: 16600,
-      contractAddress: '0x857C0A28a8634614BB2C96039Cf1e5fb6402dF8B'
+      daEntranceContract: '0x857C0A28A8634614BB2C96039Cf1e5fb6402dF8B',
+      daSignersContract: '0x0000000000000000000000000000000000001000',
+      grpcEndpoint: 'localhost:51001',
+      gasLimit: 2000000
     }
   });
 
@@ -38,7 +40,7 @@ async function basicExample() {
       name: 'My AI Companion',
       description: 'An evolving AI companion that grows with interactions',
       image: 'https://example.com/genesis-image.png',
-      aiPersonality: 'Friendly, curious, and eager to learn',
+
       attributes: [
         { trait_type: 'Species', value: 'Digital Companion' },
         { trait_type: 'Rarity', value: 'Genesis' }
@@ -89,8 +91,7 @@ async function basicExample() {
     console.log({
       name: metadata.name,
       level: metadata.level,
-      experience: metadata.experience,
-      aiPersonality: metadata.ai_personality
+      experience: metadata.experience
     });
 
   } catch (error) {
@@ -149,10 +150,12 @@ async function readOnlyExample() {
     provider: 'https://evmrpc-testnet.0g.ai',
     contractAddress: '0x1234567890123456789012345678901234567890', // Replace with deployed contract
     zgdaConfig: {
-      endpoint: 'https://da-testnet.0g.ai',
+      rpcEndpoint: 'https://evmrpc-testnet.0g.ai',
       privateKey: '', // Empty for read-only
-      chainId: 16600,
-      contractAddress: '0x857C0A28a8634614BB2C96039Cf1e5fb6402dF8B'
+      daEntranceContract: '0x857C0A28A8634614BB2C96039Cf1e5fb6402dF8B',
+      daSignersContract: '0x0000000000000000000000000000000000001000',
+      grpcEndpoint: 'localhost:51001',
+      gasLimit: 2000000
     }
   });
 

@@ -12,7 +12,7 @@ import { ethers } from 'ethers';
 import { ZGDAClient, ZGDAConfig, INFTDAMetadata } from '../src/lib/0g-da-client';
 
 // Re-export core types for SDK users
-export { ZGDAConfig, INFTDAMetadata } from '../src/lib/0g-da-client';
+export type { ZGDAConfig, INFTDAMetadata } from '../src/lib/0g-da-client';
 
 /**
  * Configuration for the Intellify INFT SDK
@@ -145,7 +145,7 @@ export class IntellifySDK {
       // Initialize 0G DA client if config provided
       if (this.config.zgdaConfig) {
         this.zgdaClient = new ZGDAClient(this.config.zgdaConfig);
-        await this.zgdaClient.initialize();
+        // ZGDAClient is ready to use after construction
       }
 
       console.log('Intellify SDK initialized successfully');
@@ -175,18 +175,24 @@ export class IntellifySDK {
         image: params.image,
         level: 1,
         experience: 0,
-        ai_personality: params.aiPersonality || 'Friendly and helpful AI companion',
-        evolution_history: [{
-          level: 1,
-          timestamp: Date.now(),
-          trigger_event: 'initial_creation'
-        }],
         attributes: [
           { trait_type: 'Level', value: 1 },
           { trait_type: 'Experience', value: 0 },
           { trait_type: 'Evolution Stage', value: 'Genesis' },
           ...(params.attributes || [])
-        ]
+        ],
+        ai_state: {
+          model_version: 'v1.0',
+          training_data_hashes: [],
+          interaction_count: 0,
+          last_updated: Date.now()
+        },
+        evolution_history: [{
+          level: 1,
+          timestamp: Date.now(),
+          trigger_event: 'initial_creation',
+          metadata_hash: ''
+        }]
       };
 
       // Upload metadata to 0G DA or fallback storage
@@ -347,10 +353,23 @@ export class IntellifySDK {
       } else {
         // Create default metadata structure
         metadata = {
+          name: `INFT #${tokenId}`,
+          description: 'Default INFT metadata',
+          image: '',
           level: Math.floor(interactionCount / 10) + 1,
           experience: interactionCount * 10,
+          attributes: [
+            { trait_type: 'Level', value: Math.floor(interactionCount / 10) + 1 },
+            { trait_type: 'Experience', value: interactionCount * 10 }
+          ],
+          ai_state: {
+            model_version: 'v1.0',
+            training_data_hashes: [],
+            interaction_count: interactionCount,
+            last_updated: Date.now()
+          },
           evolution_history: []
-        } as INFTDAMetadata;
+        };
       }
       
       const currentLevel = metadata.level || Math.floor(interactionCount / 10) + 1;
@@ -428,10 +447,12 @@ export function createTestnetSDK(config: {
     signer: config.privateKey,
     contractAddress: config.contractAddress,
     zgdaConfig: {
-      endpoint: 'https://da-testnet.0g.ai',
+      rpcEndpoint: config.rpcUrl || 'https://evmrpc-testnet.0g.ai',
       privateKey: config.privateKey,
-      chainId: 16600,
-      contractAddress: '0x857C0A28a8634614BB2C96039Cf1e5fb6402dF8B'
+      daEntranceContract: '0x857C0A28A8634614BB2C96039Cf1e5fb6402dF8B',
+      daSignersContract: '0x0000000000000000000000000000000000001000',
+      grpcEndpoint: 'localhost:51001',
+      gasLimit: 2000000
     },
     network: {
       chainId: 16600,
