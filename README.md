@@ -50,6 +50,114 @@ Intellify Wave 2 is one of the first platforms to implement the **ERC-7857 stand
 - **Development Tools**: Foundry, Hardhat
 - **Blockchain**: 0G Network Testnet
 - **AI Integration**: Knowledge indexing, encrypted metadata, private AI states
+- **SDK**: TypeScript SDK with 0G DA integration
+- **Data Availability**: 0G Data Availability Layer for metadata storage
+
+## 📦 SDK & Integration Updates
+
+### Recent TypeScript Improvements (Latest Release)
+
+The Intellify SDK has been significantly enhanced with comprehensive TypeScript fixes and improvements:
+
+#### 🔧 Type Safety Enhancements
+- **Fixed Re-export Issues**: Resolved `isolatedModules` compatibility by using `export type` for interface re-exports
+- **Complete Type Definitions**: All interfaces now have proper type definitions with required properties
+- **Strict Type Checking**: Eliminated unsafe type assertions and improved type conversion safety
+- **Enhanced Metadata Validation**: Complete `INFTDAMetadata` objects with all required fields
+
+#### 🏗️ SDK Architecture Improvements
+- **0G DA Client Integration**: Full integration with 0G Data Availability layer for decentralized metadata storage
+- **ZGDAConfig Interface**: Proper configuration interface with all required properties:
+  - `rpcEndpoint`: 0G Network RPC endpoint
+  - `daEntranceContract`: Data Availability entrance contract address
+  - `daSignersContract`: DA signers contract address
+  - `grpcEndpoint`: gRPC endpoint for DA operations
+  - `gasLimit`: Transaction gas limit configuration
+- **Enhanced Error Handling**: Comprehensive error handling for DA operations and blockchain interactions
+
+#### 📋 Interface Standardization
+- **INFTDAMetadata Structure**: Complete metadata interface including:
+  ```typescript
+  interface INFTDAMetadata {
+    name: string;
+    description: string;
+    image: string;
+    level: number;
+    experience: number;
+    attributes: Array<{ trait_type: string; value: string | number }>;
+    ai_state: {
+      model_version: string;
+      training_data_hashes: string[];
+      interaction_count: number;
+      last_updated: number;
+    };
+    evolution_history: Array<{
+      level: number;
+      timestamp: number;
+      trigger_event: string;
+      metadata_hash: string;
+    }>;
+  }
+  ```
+
+#### 🔄 Migration & Compatibility
+- **Backward Compatibility**: Maintained compatibility with existing implementations
+- **Deprecated Property Removal**: Removed obsolete `ai_personality` references
+- **Updated Examples**: All SDK examples updated with correct interface usage
+- **Comprehensive Testing**: All TypeScript compilation errors resolved across the entire codebase
+
+#### 🚀 Performance Optimizations
+- **Efficient Type Checking**: Optimized TypeScript compilation with `skipLibCheck` support
+- **Reduced Bundle Size**: Eliminated unnecessary type assertions and improved tree-shaking
+- **Better Development Experience**: Enhanced IDE support with proper type definitions
+
+### SDK Usage Examples
+
+#### Basic INFT Creation
+```typescript
+import { IntellifySDK, ZGDAConfig } from '@intellify/sdk';
+
+const zgdaConfig: ZGDAConfig = {
+  rpcEndpoint: 'https://evmrpc-testnet.0g.ai',
+  privateKey: process.env.PRIVATE_KEY!,
+  daEntranceContract: '0x857C0A28A8634614BB2C96039Cf4a20AFF709Aa9',
+  daSignersContract: '0x0000000000000000000000000000000000001000',
+  grpcEndpoint: 'localhost:51001',
+  gasLimit: 2000000
+};
+
+const sdk = new IntellifySDK({
+  provider: 'https://evmrpc-testnet.0g.ai',
+  signer: process.env.PRIVATE_KEY!,
+  contractAddress: '0x37525E8B82C776F608eCA8A49C000b98a456fBdD',
+  zgdaConfig
+});
+
+const result = await sdk.createINFT({
+  name: 'My AI Companion',
+  description: 'An intelligent NFT with evolving capabilities',
+  image: 'https://example.com/image.png',
+  attributes: [
+    { trait_type: 'Intelligence', value: 85 },
+    { trait_type: 'Creativity', value: 92 }
+  ]
+});
+```
+
+#### Evolution Status Tracking
+```typescript
+const evolutionStatus = await sdk.getEvolutionStatus(tokenId);
+console.log(`Level: ${evolutionStatus.level}`);
+console.log(`Experience: ${evolutionStatus.experience}`);
+console.log(`Next Evolution: ${evolutionStatus.nextEvolutionAt}`);
+```
+
+### Testing & Validation
+- ✅ All TypeScript compilation errors resolved
+- ✅ SDK examples compile successfully
+- ✅ Integration tests pass with new type definitions
+- ✅ Backward compatibility maintained
+- ✅ 0G DA integration fully functional
 
 ## 📋 Core Functionality
 
