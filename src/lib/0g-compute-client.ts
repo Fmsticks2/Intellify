@@ -11,11 +11,13 @@ export interface ZGComputeConfig extends ZGDAConfig {
   computeContract: string;
   computeNodeEndpoint: string;
   maxComputeUnits: number;
+  apiKey?: string;
 }
 
 // Compute Job Types
 export enum ComputeJobType {
   INFERENCE = 'inference',
+  TEXT_INFERENCE = 'text_inference',
   TRAINING = 'training',
   FINE_TUNING = 'fine_tuning',
   EMBEDDING = 'embedding'
@@ -48,13 +50,15 @@ export interface ComputeJobResult {
   transactionHash: string;
   blockNumber: number;
   timestamp: number;
+  output?: string;
+  tokensUsed?: number;
 }
 
 export class ZGComputeClient {
   private config: ZGComputeConfig;
-  private provider: ethers.JsonRpcProvider;
-  private wallet: ethers.Wallet;
-  private computeContract: ethers.Contract;
+  protected provider: ethers.JsonRpcProvider;
+  protected wallet: ethers.Wallet;
+  public computeContract: ethers.Contract;
 
   // 0G Compute Contract ABI
   private static readonly COMPUTE_ABI = [
@@ -69,6 +73,12 @@ export class ZGComputeClient {
   constructor(config: ZGComputeConfig) {
     this.config = config;
     this.provider = new ethers.JsonRpcProvider(config.rpcEndpoint);
+    
+    // Handle undefined privateKey
+    if (!config.privateKey) {
+      throw new Error("Private key is required for ZGComputeClient");
+    }
+    
     this.wallet = new ethers.Wallet(config.privateKey, this.provider);
     this.computeContract = new ethers.Contract(
       config.computeContract,

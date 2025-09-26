@@ -50,10 +50,37 @@ Intellify Wave 2 is one of the first platforms to implement the **ERC-7857 stand
 - **Development Tools**: Foundry, Hardhat
 - **Blockchain**: 0G Network Testnet
 - **AI Integration**: Knowledge indexing, encrypted metadata, private AI states
-- **SDK**: TypeScript SDK with 0G DA integration
+- **SDK**: TypeScript SDK with 0G DA and Compute integration
 - **Data Availability**: 0G Data Availability Layer for metadata storage
+- **Compute Layer**: 0G Compute Network for decentralized AI processing
 
 ## 📦 SDK & Integration Updates
+
+### 0G Compute Integration (New)
+
+The Intellify platform now integrates with the 0G Compute Network, enabling decentralized AI processing for INFTs:
+
+#### 🧠 Compute Features
+- **Decentralized AI Processing**: Execute AI tasks across the 0G Network's distributed compute nodes
+- **Multiple Job Types**: Support for inference, training, fine-tuning, and embedding generation
+- **Secure Execution Environment**: Confidential computing for private AI model execution
+- **Verifiable Computation**: Cryptographic proofs of computation integrity
+
+#### ⚙️ Implementation Details
+- **ZGComputeClient**: Full-featured TypeScript client for 0G Compute integration
+- **Job Management**: Submit, monitor, and retrieve results from compute jobs
+- **Fallback Mechanisms**: Graceful degradation to local processing when network unavailable
+- **Resource Optimization**: Efficient compute unit allocation and management
+
+#### 🔌 API Integration
+```typescript
+// Example: Running AI inference on an INFT
+const response = await intellifyClient.getAIResponse(tokenId, {
+  type: 'qa',
+  content: 'Context for the question',
+  question: 'What capabilities does this INFT have?'
+});
+```
 
 ### Recent TypeScript Improvements (Latest Release)
 

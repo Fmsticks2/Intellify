@@ -8,7 +8,7 @@ import { ethers } from 'ethers';
 // 0G DA Configuration
 export interface ZGDAConfig {
   rpcEndpoint: string;
-  privateKey: string;
+  privateKey: string | undefined;
   daEntranceContract: string;
   daSignersContract: string;
   grpcEndpoint: string;

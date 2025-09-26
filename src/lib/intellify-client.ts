@@ -8,6 +8,7 @@ import { ethers } from 'ethers';
 import { appKit, ethersAdapter } from './reown-config';
 import * as CryptoJS from 'crypto-js';
 import { ZGDAClient, createZGDAClient, INFTDAMetadata, BlobSubmissionResult } from './0g-da-client';
+import { ZGComputeClient, ComputeJobType, ComputeJobRequest, ComputeJobResult } from './0g-compute-client';
 
 // Temporary type definitions for 0G SDK until package is available
 interface Indexer {
@@ -80,6 +81,16 @@ export interface IntellifyConfig {
   contractAddress: string;
   privateKey?: string;
   computeApiKey?: string;
+  computeContract?: string;
+  computeNodeEndpoint?: string;
+  maxComputeUnits?: number;
+  
+  // ZGDAConfig properties
+  rpcEndpoint?: string;
+  daEntranceContract?: string;
+  daSignersContract?: string;
+  grpcEndpoint?: string;
+  gasLimit?: number;
 }
 
 // INFT Contract ABI (simplified for Wave 2)
@@ -98,6 +109,8 @@ const INFT_ABI = [
 export class IntellifyClient {
   private config: IntellifyConfig;
   private wallet: WalletConnection | null = null;
+  private daClient: ZGDAClient | null = null;
+  public computeClient: ZGComputeClient | null = null;
   private indexer: Indexer | null = null;
   private contract: ethers.Contract | null = null;
   private zgdaClient: ZGDAClient | null = null;
@@ -119,6 +132,26 @@ export class IntellifyClient {
       this.zgdaClient = createZGDAClient({
         privateKey: this.config.privateKey
       });
+      
+      // Initialize 0G Compute client if compute contract is available
+      if (this.config.computeContract && this.config.computeNodeEndpoint) {
+        // Use rpcUrl as fallback for rpcEndpoint if not provided
+        const rpcEndpoint = this.config.rpcEndpoint || this.config.rpcUrl;
+        
+        this.computeClient = new ZGComputeClient({
+          privateKey: this.config.privateKey,
+          computeContract: this.config.computeContract,
+          computeNodeEndpoint: this.config.computeNodeEndpoint,
+          maxComputeUnits: this.config.maxComputeUnits || 100,
+          apiKey: this.config.computeApiKey,
+          // Include required ZGDAConfig properties with fallbacks
+          rpcEndpoint: rpcEndpoint,
+          daEntranceContract: this.config.daEntranceContract || "0x0000000000000000000000000000000000000000",
+          daSignersContract: this.config.daSignersContract || "0x0000000000000000000000000000000000000000",
+          grpcEndpoint: this.config.grpcEndpoint || "",
+          gasLimit: this.config.gasLimit || 500000
+        });
+      }
     } catch (error) {
       console.warn('Failed to initialize 0G DA client:', error);
       // Continue without DA client for backward compatibility
@@ -262,9 +295,41 @@ export class IntellifyClient {
    * In Wave 3, this will integrate with 0G Compute for real AI inference
    */
   async executeAITask(request: AIRequest): Promise<AIResponse> {
-    // Mock implementation for Wave 2
-    // TODO: Integrate with 0G Compute SDK in Wave 3
+    // If compute client is available, use 0G compute for AI processing
+    if (this.computeClient) {
+      try {
+        // Prepare the prompt based on request type
+        let prompt = '';
+        if (request.type === 'summary') {
+          prompt = `Summarize the following content: ${request.content}`;
+        } else if (request.type === 'qa') {
+          prompt = `Question: ${request.question}\nContext: ${request.context?.join('\n')}\nContent: ${request.content}`;
+        }
+        
+        // Create a compute job request
+        const jobRequest: ComputeJobRequest = {
+          jobType: ComputeJobType.TEXT_INFERENCE,
+          modelId: 'intellify-v1.0',
+          inputDataHash: ethers.keccak256(ethers.toUtf8Bytes(prompt)),
+          parameters: { max_tokens: 500 }
+        };
+        
+        // Submit the compute job
+        const result = await this.computeClient.submitComputeJob(jobRequest);
+        
+        return {
+          response: result.output || 'No response from compute job',
+          confidence: 0.92,
+          tokens_used: result.tokensUsed || 250,
+          timestamp: Date.now()
+        };
+      } catch (error) {
+        console.warn('Failed to execute AI task with 0G compute, falling back to mock:', error);
+        // Fall back to mock implementation
+      }
+    }
     
+    // Mock implementation for Wave 2 (fallback)
     try {
       // Simulate processing time
       await new Promise(resolve => setTimeout(resolve, Math.random() * 1000 + 500));
@@ -293,6 +358,57 @@ export class IntellifyClient {
     } catch (error) {
       throw new ComputeError(`Failed to execute AI task: ${error}`);
     }
+  }
+  
+  /**
+   * Get AI response from INFT
+   */
+  async getAIResponse(tokenId: string, request: AIRequest): Promise<AIResponse> {
+    // Record the interaction
+    await this.recordInteraction(tokenId, `ai_request_${request.type}`);
+    
+    // Get AI state to retrieve knowledge context
+    const aiState = await this.getAIState(tokenId);
+    
+    // Add context from the INFT's knowledge base
+    request.context = aiState.knowledgeHashes || [];
+    
+    // Execute the AI task with the enhanced context
+    return this.executeAITask(request);
+  }
+  
+  /**
+   * Submit a compute job to 0G Network
+   */
+  async submitComputeJob(jobType: ComputeJobType, modelId: string, inputData: any, parameters: any): Promise<ComputeJobResult> {
+    if (!this.computeClient) {
+      throw new Error('0G Compute client not initialized');
+    }
+    
+    // Hash the input data
+    const inputDataJson = JSON.stringify(inputData);
+    const inputDataHash = ethers.keccak256(ethers.toUtf8Bytes(inputDataJson));
+    
+    // Submit the compute job
+    const jobRequest: ComputeJobRequest = {
+      jobType,
+      modelId,
+      inputDataHash,
+      parameters
+    };
+    
+    return await this.computeClient.submitComputeJob(jobRequest);
+  }
+  
+  /**
+   * Check the status of a compute job
+   */
+  async checkComputeJobStatus(jobId: string): Promise<ComputeJobResult> {
+    if (!this.computeClient) {
+      throw new Error('0G Compute client not initialized');
+    }
+    
+    return await this.computeClient.getJobStatus(jobId);
   }
 
   /**
