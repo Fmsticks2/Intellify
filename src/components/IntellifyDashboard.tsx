@@ -11,6 +11,7 @@ import PrivacySettings from './PrivacySettings';
 import EnhancedEncryptionModal from './EnhancedEncryptionModal';
 import AnalyticsDashboard from './AnalyticsDashboard';
 import EnhancedAnalyticsDashboard from './EnhancedAnalyticsDashboard';
+import ZKPrivacyDashboard from './ZKPrivacyDashboard';
 import { encryptionService } from '../lib/enhanced-encryption';
 import { INFTPersistence } from '../utils/inftPersistence';
 
@@ -36,6 +37,7 @@ export default function IntellifyDashboard() {
   const [showEncryptionModal, setShowEncryptionModal] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false);
   const [showEnhancedAnalytics, setShowEnhancedAnalytics] = useState(false);
+  const [showZKPrivacy, setShowZKPrivacy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [encryptionStats, setEncryptionStats] = useState({
     totalEncrypted: 0,
@@ -499,6 +501,16 @@ export default function IntellifyDashboard() {
           <span>Enhanced Analytics</span>
         </motion.button>
         <motion.button
+          onClick={() => setShowZKPrivacy(true)}
+          className="flex items-center justify-center space-x-2 bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-medium py-3 px-6 rounded-xl border border-indigo-500 transition-colors"
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ duration: 0.2 }}
+        >
+          <Icon icon="mdi:shield-lock" className="w-5 h-5" />
+          <span>ZK Privacy</span>
+        </motion.button>
+        <motion.button
           onClick={() => setShowMintModal(true)}
           className="flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl border border-blue-600 transition-colors"
           whileHover={{ scale: 1.05, y: -2 }}
@@ -690,6 +702,12 @@ export default function IntellifyDashboard() {
              isOpen={showEnhancedAnalytics}
              onClose={() => setShowEnhancedAnalytics(false)}
              userINFTs={infts}
+           />
+         )}
+        {showZKPrivacy && (
+           <ZKPrivacyDashboard
+             isOpen={showZKPrivacy}
+             onClose={() => setShowZKPrivacy(false)}
            />
          )}
       </AnimatePresence>
