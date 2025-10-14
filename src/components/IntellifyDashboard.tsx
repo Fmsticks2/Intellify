@@ -10,6 +10,7 @@ import { useIntellifyContract } from '../hooks/useIntellifyContract';
 import PrivacySettings from './PrivacySettings';
 import EnhancedEncryptionModal from './EnhancedEncryptionModal';
 import AnalyticsDashboard from './AnalyticsDashboard';
+import EnhancedAnalyticsDashboard from './EnhancedAnalyticsDashboard';
 import { encryptionService } from '../lib/enhanced-encryption';
 import { INFTPersistence } from '../utils/inftPersistence';
 
@@ -34,6 +35,7 @@ export default function IntellifyDashboard() {
   const [showPrivacySettings, setShowPrivacySettings] = useState(false);
   const [showEncryptionModal, setShowEncryptionModal] = useState(false);
   const [showAnalytics, setShowAnalytics] = useState(false);
+  const [showEnhancedAnalytics, setShowEnhancedAnalytics] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [encryptionStats, setEncryptionStats] = useState({
     totalEncrypted: 0,
@@ -487,6 +489,16 @@ export default function IntellifyDashboard() {
           <span>Analytics Dashboard</span>
         </motion.button>
         <motion.button
+          onClick={() => setShowEnhancedAnalytics(true)}
+          className="flex items-center justify-center space-x-2 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-medium py-3 px-6 rounded-xl border border-purple-500 transition-colors"
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ duration: 0.2 }}
+        >
+          <Icon icon="mdi:chart-line" className="w-5 h-5" />
+          <span>Enhanced Analytics</span>
+        </motion.button>
+        <motion.button
           onClick={() => setShowMintModal(true)}
           className="flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl border border-blue-600 transition-colors"
           whileHover={{ scale: 1.05, y: -2 }}
@@ -670,6 +682,13 @@ export default function IntellifyDashboard() {
            <AnalyticsDashboard
              isOpen={showAnalytics}
              onClose={() => setShowAnalytics(false)}
+             userINFTs={infts}
+           />
+         )}
+        {showEnhancedAnalytics && (
+           <EnhancedAnalyticsDashboard
+             isOpen={showEnhancedAnalytics}
+             onClose={() => setShowEnhancedAnalytics(false)}
              userINFTs={infts}
            />
          )}
