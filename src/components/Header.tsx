@@ -56,6 +56,10 @@ export default function Header({ className = '' }: HeaderProps) {
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
             </a>
             <a href="#" className="relative text-black hover:text-blue-600 transition-all duration-300 font-medium group">
+              <span className="relative z-10">AI Marketplace</span>
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
+            </a>
+            <a href="#" className="relative text-black hover:text-blue-600 transition-all duration-300 font-medium group">
               <span className="relative z-10">Explore</span>
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
             </a>
