@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useAIMarketplace } from '../hooks/useAIMarketplace';
 import { useWallet } from './WalletProvider';
-import LoadingSpinner from './LoadingSpinner';
+import { LoadingSpinner } from './LoadingSpinner';
 
 interface ModelRegistrationProps {
   onClose: () => void;

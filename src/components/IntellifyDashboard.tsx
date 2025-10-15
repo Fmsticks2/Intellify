@@ -13,6 +13,9 @@ import AnalyticsDashboard from './AnalyticsDashboard';
 import EnhancedAnalyticsDashboard from './EnhancedAnalyticsDashboard';
 import ZKPrivacyDashboard from './ZKPrivacyDashboard';
 import RealTimeInference from './RealTimeInference';
+import SocialFeatures from './SocialFeatures';
+import KnowledgeMarketplace from './KnowledgeMarketplace';
+import Gamification from './Gamification';
 import { encryptionService } from '../lib/enhanced-encryption';
 import { INFTPersistence } from '../utils/inftPersistence';
 
@@ -40,6 +43,9 @@ export default function IntellifyDashboard() {
   const [showEnhancedAnalytics, setShowEnhancedAnalytics] = useState(false);
   const [showZKPrivacy, setShowZKPrivacy] = useState(false);
   const [showRealTimeInference, setShowRealTimeInference] = useState(false);
+  const [showSocialFeatures, setShowSocialFeatures] = useState(false);
+  const [showKnowledgeMarketplace, setShowKnowledgeMarketplace] = useState(false);
+  const [showGamification, setShowGamification] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [encryptionStats, setEncryptionStats] = useState({
     totalEncrypted: 0,
@@ -523,6 +529,36 @@ export default function IntellifyDashboard() {
           <span>Real-Time AI</span>
         </motion.button>
         <motion.button
+          onClick={() => setShowSocialFeatures(true)}
+          className="flex items-center justify-center space-x-2 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-medium py-3 px-6 rounded-xl border border-pink-500 transition-colors"
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ duration: 0.2 }}
+        >
+          <Icon icon="mdi:account-group" className="w-5 h-5" />
+          <span>Social Hub</span>
+        </motion.button>
+        <motion.button
+          onClick={() => setShowKnowledgeMarketplace(true)}
+          className="flex items-center justify-center space-x-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-medium py-3 px-6 rounded-xl border border-emerald-500 transition-colors"
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ duration: 0.2 }}
+        >
+          <Icon icon="mdi:store" className="w-5 h-5" />
+          <span>Marketplace</span>
+        </motion.button>
+        <motion.button
+          onClick={() => setShowGamification(true)}
+          className="flex items-center justify-center space-x-2 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-medium py-3 px-6 rounded-xl border border-yellow-500 transition-colors"
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.95 }}
+          transition={{ duration: 0.2 }}
+        >
+          <Icon icon="mdi:trophy" className="w-5 h-5" />
+          <span>Gamification</span>
+        </motion.button>
+        <motion.button
           onClick={() => setShowMintModal(true)}
           className="flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-xl border border-blue-600 transition-colors"
           whileHover={{ scale: 1.05, y: -2 }}
@@ -726,6 +762,24 @@ export default function IntellifyDashboard() {
             <RealTimeInference
               isOpen={showRealTimeInference}
               onClose={() => setShowRealTimeInference(false)}
+            />
+          )}
+         {showSocialFeatures && (
+            <SocialFeatures
+              isOpen={showSocialFeatures}
+              onClose={() => setShowSocialFeatures(false)}
+            />
+          )}
+         {showKnowledgeMarketplace && (
+            <KnowledgeMarketplace
+              isOpen={showKnowledgeMarketplace}
+              onClose={() => setShowKnowledgeMarketplace(false)}
+            />
+          )}
+         {showGamification && (
+            <Gamification
+              isOpen={showGamification}
+              onClose={() => setShowGamification(false)}
             />
           )}
         </AnimatePresence>

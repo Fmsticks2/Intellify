@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "analyze": "ANALYZE=true npm run build",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
@@ -38,6 +39,7 @@
     "viem": "^2.0.0"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^15.5.5",
     "@nomicfoundation/hardhat-chai-matchers": "^2.1.0",
     "@nomicfoundation/hardhat-ethers": "^4.0.0",
     "@nomicfoundation/hardhat-ignition-ethers": "^3.0.1",

@@ -367,6 +367,271 @@ contract IntellifyINFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard, Pa
         return _tokenAuthorizedUsers[tokenId];
     }
     
+    // Advanced INFT Features
+    
+    // Breeding system
+    struct BreedingInfo {
+        uint256 parent1;
+        uint256 parent2;
+        uint256 breedingFee;
+        uint256 cooldownPeriod;
+        bool isBreeding;
+    }
+    
+    // Evolution system
+    struct EvolutionRequirement {
+        uint256 minInteractions;
+        uint256 minKnowledge;
+        uint256 minAge; // in seconds
+        bool requiresSpecialItem;
+    }
+    
+    // Fusion system
+    struct FusionRecipe {
+        uint256[] requiredTokens;
+        string resultModelVersion;
+        uint256 fusionCost;
+        bool isActive;
+    }
+    
+    mapping(uint256 => BreedingInfo) public breedingInfo;
+    mapping(uint256 => uint256) public lastBreedingTime;
+    mapping(uint256 => uint256) public breedingCooldown;
+    mapping(uint256 => uint256) public evolutionLevel;
+    mapping(uint256 => FusionRecipe) public fusionRecipes;
+    mapping(uint256 => bool) public hasEvolved;
+    
+    uint256 public constant BREEDING_COOLDOWN = 7 days;
+    uint256 public constant BREEDING_FEE = 0.01 ether;
+    uint256 public constant FUSION_BASE_COST = 0.05 ether;
+    
+    event INFTBred(uint256 indexed parent1, uint256 indexed parent2, uint256 indexed offspring);
+    event INFTEvolutionTriggered(uint256 indexed tokenId, uint256 newLevel);
+    event INFTFused(uint256[] indexed sourceTokens, uint256 indexed resultToken);
+    event BreedingInitiated(uint256 indexed parent1, uint256 indexed parent2, uint256 cooldownEnd);
+    
+    /**
+     * @dev Breed two INFTs to create a new one
+     */
+    function breedINFTs(
+        uint256 parent1,
+        uint256 parent2,
+        string memory metadataURI
+    ) public payable onlyTokenOwner(parent1) returns (uint256) {
+        require(ownerOf(parent2) == msg.sender, "Must own both parents");
+        require(parent1 != parent2, "Cannot breed with itself");
+        require(msg.value >= BREEDING_FEE, "Insufficient breeding fee");
+        require(
+            block.timestamp >= lastBreedingTime[parent1] + BREEDING_COOLDOWN,
+            "Parent 1 in cooldown"
+        );
+        require(
+            block.timestamp >= lastBreedingTime[parent2] + BREEDING_COOLDOWN,
+            "Parent 2 in cooldown"
+        );
+        
+        // Get parent AI states
+        AIState memory state1 = aiStates[parent1];
+        AIState memory state2 = aiStates[parent2];
+        
+        require(state1.isActive && state2.isActive, "Parents must be active");
+        
+        // Create offspring
+        uint256 offspring = _tokenIdCounter;
+        _tokenIdCounter++;
+        
+        _safeMint(msg.sender, offspring);
+        _setTokenURI(offspring, metadataURI);
+        
+        // Combine knowledge from both parents
+        string[] memory combinedKnowledge = new string[](
+            state1.knowledgeHashes.length + state2.knowledgeHashes.length
+        );
+        
+        for (uint256 i = 0; i < state1.knowledgeHashes.length; i++) {
+            combinedKnowledge[i] = state1.knowledgeHashes[i];
+        }
+        for (uint256 i = 0; i < state2.knowledgeHashes.length; i++) {
+            combinedKnowledge[state1.knowledgeHashes.length + i] = state2.knowledgeHashes[i];
+        }
+        
+        // Initialize offspring AI state with enhanced capabilities
+        aiStates[offspring] = AIState({
+            modelVersion: string(abi.encodePacked("Bred-", state1.modelVersion, "-", state2.modelVersion)),
+            knowledgeHashes: combinedKnowledge,
+            interactionCount: (state1.interactionCount + state2.interactionCount) / 4, // 25% of combined
+            lastUpdated: block.timestamp,
+            isActive: true
+        });
+        
+        // Set breeding cooldowns
+        lastBreedingTime[parent1] = block.timestamp;
+        lastBreedingTime[parent2] = block.timestamp;
+        breedingCooldown[parent1] = block.timestamp + BREEDING_COOLDOWN;
+        breedingCooldown[parent2] = block.timestamp + BREEDING_COOLDOWN;
+        
+        // Add to user's INFT list
+        userINFTs[msg.sender].push(offspring);
+        
+        emit INFTBred(parent1, parent2, offspring);
+        emit INFTMinted(offspring, msg.sender, "bred-offspring");
+        
+        return offspring;
+    }
+    
+    /**
+     * @dev Evolve an INFT to the next level
+     */
+    function evolveINFT(
+        uint256 tokenId,
+        string memory newMetadataURI
+    ) public onlyTokenOwnerOrAuthorized(tokenId) validTokenId(tokenId) {
+        require(!hasEvolved[tokenId], "Already evolved");
+        require(_canEvolve(tokenId), "Evolution requirements not met");
+        
+        AIState storage state = aiStates[tokenId];
+        
+        // Enhance AI capabilities
+        state.modelVersion = string(abi.encodePacked("Evolved-", state.modelVersion));
+        state.lastUpdated = block.timestamp;
+        
+        // Increase evolution level
+        evolutionLevel[tokenId]++;
+        hasEvolved[tokenId] = true;
+        
+        // Update metadata
+        _setTokenURI(tokenId, newMetadataURI);
+        
+        emit INFTEvolutionTriggered(tokenId, evolutionLevel[tokenId]);
+        emit INFTEvolved(tokenId, evolutionLevel[tokenId], newMetadataURI);
+    }
+    
+    /**
+     * @dev Fuse multiple INFTs into a more powerful one
+     */
+    function fuseINFTs(
+        uint256[] memory sourceTokens,
+        string memory resultMetadataURI,
+        string memory resultModelVersion
+    ) public payable returns (uint256) {
+        require(sourceTokens.length >= 2, "Need at least 2 tokens to fuse");
+        require(sourceTokens.length <= 5, "Cannot fuse more than 5 tokens");
+        require(msg.value >= FUSION_BASE_COST * sourceTokens.length, "Insufficient fusion cost");
+        
+        // Verify ownership of all source tokens
+        for (uint256 i = 0; i < sourceTokens.length; i++) {
+            require(ownerOf(sourceTokens[i]) == msg.sender, "Must own all source tokens");
+            require(aiStates[sourceTokens[i]].isActive, "All tokens must be active");
+        }
+        
+        // Create result token
+        uint256 resultToken = _tokenIdCounter;
+        _tokenIdCounter++;
+        
+        _safeMint(msg.sender, resultToken);
+        _setTokenURI(resultToken, resultMetadataURI);
+        
+        // Combine all knowledge and interactions
+        uint256 totalKnowledge = 0;
+        uint256 totalInteractions = 0;
+        
+        for (uint256 i = 0; i < sourceTokens.length; i++) {
+            AIState memory sourceState = aiStates[sourceTokens[i]];
+            totalKnowledge += sourceState.knowledgeHashes.length;
+            totalInteractions += sourceState.interactionCount;
+        }
+        
+        // Create enhanced AI state
+        string[] memory fusedKnowledge = new string[](1);
+        fusedKnowledge[0] = string(abi.encodePacked("fused-knowledge-", block.timestamp));
+        
+        aiStates[resultToken] = AIState({
+            modelVersion: resultModelVersion,
+            knowledgeHashes: fusedKnowledge,
+            interactionCount: totalInteractions,
+            lastUpdated: block.timestamp,
+            isActive: true
+        });
+        
+        // Set high evolution level for fused token
+        evolutionLevel[resultToken] = sourceTokens.length;
+        
+        // Burn source tokens
+        for (uint256 i = 0; i < sourceTokens.length; i++) {
+            _burn(sourceTokens[i]);
+            delete aiStates[sourceTokens[i]];
+            delete knowledgeMetadata[sourceTokens[i]];
+        }
+        
+        // Add to user's INFT list
+        userINFTs[msg.sender].push(resultToken);
+        
+        emit INFTFused(sourceTokens, resultToken);
+        emit INFTMinted(resultToken, msg.sender, "fused-token");
+        
+        return resultToken;
+    }
+    
+    /**
+     * @dev Check if an INFT can evolve
+     */
+    function _canEvolve(uint256 tokenId) internal view returns (bool) {
+        AIState memory state = aiStates[tokenId];
+        
+        // Basic evolution requirements
+        bool hasMinInteractions = state.interactionCount >= 100;
+        bool hasMinKnowledge = state.knowledgeHashes.length >= 3;
+        bool hasMinAge = (block.timestamp - state.lastUpdated) >= 7 days;
+        
+        return hasMinInteractions && hasMinKnowledge && hasMinAge;
+    }
+    
+    /**
+     * @dev Get breeding status for a token
+     */
+    function getBreedingStatus(uint256 tokenId) public view validTokenId(tokenId) returns (
+        bool canBreed,
+        uint256 cooldownEnd,
+        uint256 timeRemaining
+    ) {
+        uint256 cooldownEndTime = lastBreedingTime[tokenId] + BREEDING_COOLDOWN;
+        bool breedingReady = block.timestamp >= cooldownEndTime;
+        uint256 remaining = breedingReady ? 0 : cooldownEndTime - block.timestamp;
+        
+        return (breedingReady, cooldownEndTime, remaining);
+    }
+    
+    /**
+     * @dev Get evolution status for a token
+     */
+    function getEvolutionStatus(uint256 tokenId) public view validTokenId(tokenId) returns (
+        bool canEvolve,
+        uint256 currentLevel,
+        bool alreadyEvolved,
+        uint256 interactions,
+        uint256 knowledgeCount,
+        uint256 age
+    ) {
+        AIState memory state = aiStates[tokenId];
+        
+        return (
+            _canEvolve(tokenId),
+            evolutionLevel[tokenId],
+            hasEvolved[tokenId],
+            state.interactionCount,
+            state.knowledgeHashes.length,
+            block.timestamp - state.lastUpdated
+        );
+    }
+    
+    /**
+     * @dev Get fusion cost for multiple tokens
+     */
+    function getFusionCost(uint256 tokenCount) public pure returns (uint256) {
+        require(tokenCount >= 2 && tokenCount <= 5, "Invalid token count");
+        return FUSION_BASE_COST * tokenCount;
+    }
+    
     // Override functions
     
     function _update(address to, uint256 tokenId, address auth) internal override returns (address) {

@@ -8,7 +8,7 @@ import { ethers } from 'ethers';
 // 0G DA Configuration
 export interface ZGDAConfig {
   rpcEndpoint: string;
-  privateKey: string | undefined;
+  privateKey?: string;
   daEntranceContract: string;
   daSignersContract: string;
   grpcEndpoint: string;
@@ -78,6 +78,11 @@ export class ZGDAClient {
   constructor(config: ZGDAConfig) {
     this.config = config;
     this.provider = new ethers.JsonRpcProvider(config.rpcEndpoint);
+    
+    if (!config.privateKey) {
+      throw new Error('Private key is required for 0G DA client initialization');
+    }
+    
     this.wallet = new ethers.Wallet(config.privateKey, this.provider);
     this.daEntranceContract = new ethers.Contract(
       config.daEntranceContract,

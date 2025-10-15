@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Icon } from '@iconify/react';
-import { useWallet } from '../hooks/useWallet';
+import { useWallet } from './WalletProvider';
 import { useSocialFeatures } from '../hooks/useSocialFeatures';
 
 interface SocialFeaturesProps {
@@ -51,7 +51,9 @@ interface CollaborativeProject {
 }
 
 const SocialFeatures: React.FC<SocialFeaturesProps> = ({ isOpen, onClose }) => {
-  const { isConnected, address } = useWallet();
+  const { wallet } = useWallet();
+  const isConnected = wallet.isConnected;
+  const address = wallet.address;
   const {
     sharedINFTs,
     challenges,

@@ -2,25 +2,23 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { ZGComputeClient } from '../lib/0g-compute-client';
+import { ZGComputeClient, ComputeJobStatus, ZGComputeConfig } from '../lib/0g-compute-client';
 
 interface AIModel {
-  modelId: number;
+  id: number;
   creator: string;
   name: string;
   description: string;
   category: string;
-  modelHash: string;
-  metadataHash: string;
   pricePerInference: string;
   totalInferences: number;
-  totalRevenue: string;
-  rating: number;
+  totalRating: number;
   ratingCount: number;
   isActive: boolean;
   isVerified: boolean;
-  createdAt: number;
-  updatedAt: number;
+  modelHash: string;
+  metadataURI: string;
+  averageRating: number;
 }
 
 interface ModelDeploymentProps {
@@ -66,13 +64,18 @@ const ModelDeployment: React.FC<ModelDeploymentProps> = ({ model, onClose }) => 
 
   useEffect(() => {
     // Initialize 0G Compute Client
-    const client = new ZGComputeClient({
-      rpcUrl: process.env.NEXT_PUBLIC_0G_NETWORK_RPC || '',
-      computeContract: process.env.NEXT_PUBLIC_0G_COMPUTE_CONTRACT || '',
-      computeNodeEndpoint: process.env.NEXT_PUBLIC_0G_COMPUTE_ENDPOINT || '',
-      maxComputeUnits: 1000,
-      apiKey: process.env.NEXT_PUBLIC_0G_API_KEY
-    });
+    const config: ZGComputeConfig = {
+      rpcEndpoint: process.env.NEXT_PUBLIC_0G_NETWORK_RPC || '',
+      privateKey: process.env.NEXT_PUBLIC_PRIVATE_KEY,
+      daEntranceContract: process.env.NEXT_PUBLIC_DA_ENTRANCE_CONTRACT || '',
+      daSignersContract: process.env.NEXT_PUBLIC_DA_SIGNERS_CONTRACT || '',
+      grpcEndpoint: process.env.NEXT_PUBLIC_GRPC_ENDPOINT || '',
+      gasLimit: 1000000,
+      computeContract: process.env.NEXT_PUBLIC_COMPUTE_CONTRACT || '',
+      computeNodeEndpoint: process.env.NEXT_PUBLIC_COMPUTE_NODE_ENDPOINT || '',
+      maxComputeUnits: 1000
+    };
+    const client = new ZGComputeClient(config);
     setZgClient(client);
   }, []);
 
@@ -99,10 +102,10 @@ const ModelDeployment: React.FC<ModelDeploymentProps> = ({ model, onClose }) => 
 
       // Step 2: Submit deployment job to 0G Network
       addLog('Submitting deployment job to 0G Network...');
-      const deploymentJob = await zgClient.submitJob({
-        jobType: 'DEPLOYMENT',
+      const deploymentJob = await zgClient.submitComputeJob({
+        jobType: 'DEPLOYMENT' as any,
         modelId: model.modelHash,
-        inputDataHash: model.metadataHash,
+        inputDataHash: model.metadataURI,
         parameters: {
           computeUnits: config.computeUnits,
           maxConcurrency: config.maxConcurrency,
@@ -125,7 +128,7 @@ const ModelDeployment: React.FC<ModelDeploymentProps> = ({ model, onClose }) => 
           const status = await zgClient.getJobStatus(deploymentJob.jobId);
           addLog(`Deployment status: ${status.status}`);
 
-          if (status.status === 'COMPLETED') {
+          if (status.status === ComputeJobStatus.COMPLETED) {
             const endpoint = `https://inference.0g.ai/models/${model.modelHash}`;
             setDeploymentStatus(prev => ({
               ...prev,
@@ -134,7 +137,7 @@ const ModelDeployment: React.FC<ModelDeploymentProps> = ({ model, onClose }) => 
             }));
             addLog(`Model deployed successfully! Endpoint: ${endpoint}`);
             return;
-          } else if (status.status === 'FAILED') {
+          } else if (status.status === ComputeJobStatus.FAILED) {
             throw new Error('Deployment failed');
           } else if (attempts < maxAttempts) {
             attempts++;
@@ -175,15 +178,23 @@ const ModelDeployment: React.FC<ModelDeploymentProps> = ({ model, onClose }) => 
     try {
       addLog('Running test inference...');
       
-      const result = await zgClient.runInference(model.modelHash, {
-        input: testInput,
-        parameters: {
-          max_tokens: 100,
-          temperature: 0.7
-        }
-      });
+      const result = await zgClient.runInference({
+        name: model.name,
+        description: model.description,
+        image: '',
+        level: 1,
+        experience: 0,
+        attributes: [],
+        ai_state: {
+          model_version: '1.0',
+          training_data_hashes: [model.modelHash],
+          interaction_count: 0,
+          last_updated: Date.now()
+        },
+        evolution_history: []
+      }, testInput);
 
-      setTestOutput(result.output || 'No output received');
+      setTestOutput(result || 'No output received');
       addLog('Test inference completed successfully');
     } catch (error) {
       console.error('Inference error:', error);

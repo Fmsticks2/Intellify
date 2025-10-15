@@ -7,7 +7,7 @@ import { useWallet } from './WalletProvider';
 import ModelCard from './ModelCard';
 import ModelDeployment from './ModelDeployment';
 import ModelRegistration from './ModelRegistration';
-import LoadingSpinner from './LoadingSpinner';
+import { LoadingSpinner } from './LoadingSpinner';
 
 const MODEL_CATEGORIES = [
   'all',
@@ -25,7 +25,15 @@ const MODEL_CATEGORIES = [
 
 export default function ModelMarketplace() {
   const { wallet } = useWallet();
-  const { models, loading, error, filterModels, loadModels } = useAIMarketplace();
+  const { 
+    models, 
+    loading, 
+    error, 
+    filterModels, 
+    loadModels, 
+    purchaseModelAccess, 
+    rateModel 
+  } = useAIMarketplace();
   
   const [filters, setFilters] = useState<ModelFilters>({
     category: 'all',
@@ -209,6 +217,8 @@ export default function ModelMarketplace() {
               <ModelCard
                 key={model.id}
                 model={model}
+                onPurchase={(modelId, inferences) => purchaseModelAccess(modelId, model.pricePerInference)}
+                onRate={(modelId, rating) => rateModel(modelId, rating)}
                 onDeploy={() => handleModelSelect(model)}
               />
             ))}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { ethers } from 'ethers';
+import { ethers, AbiCoder, parseEther, toUtf8String } from 'ethers';
 import { useWallet } from '../components/WalletProvider';
 
 // ZK Privacy contract ABI (simplified)
@@ -70,7 +70,7 @@ interface EncryptedData {
 }
 
 export function useZKPrivacy() {
-  const { wallet, provider } = useWallet();
+  const { wallet } = useWallet();
   const [contract, setContract] = useState<ethers.Contract | null>(null);
   const [loading, setLoading] = useState(false);
   const [privateINFTs, setPrivateINFTs] = useState<PrivateINFT[]>([]);
@@ -83,18 +83,20 @@ export function useZKPrivacy() {
 
   // Initialize contract
   useEffect(() => {
-    if (provider && wallet.isConnected) {
-      const signer = provider.getSigner();
-      const zkContract = new ethers.Contract(ZK_PRIVACY_CONTRACT_ADDRESS, ZK_PRIVACY_ABI, signer);
-      setContract(zkContract);
-      loadFees(zkContract);
-      loadUserData(zkContract);
+    if (wallet.isConnected && typeof window !== 'undefined' && window.ethereum) {
+      const provider = new ethers.BrowserProvider(window.ethereum as any);
+      provider.getSigner().then(signer => {
+        const zkContract = new ethers.Contract(ZK_PRIVACY_CONTRACT_ADDRESS, ZK_PRIVACY_ABI, signer);
+        setContract(zkContract);
+        loadFees(zkContract);
+        loadUserData(zkContract);
+      });
     } else {
       setContract(null);
       setPrivateINFTs([]);
       setPrivacySettings(null);
     }
-  }, [provider, wallet.isConnected]);
+  }, [wallet.isConnected]);
 
   const loadFees = async (zkContract: ethers.Contract) => {
     try {
@@ -105,9 +107,9 @@ export function useZKPrivacy() {
       ]);
 
       setFees({
-        privateINFTFee: ethers.utils.formatEther(privateINFTFee),
-        zkProofFee: ethers.utils.formatEther(zkProofFee),
-        dataEncryptionFee: ethers.utils.formatEther(dataEncryptionFee)
+        privateINFTFee: ethers.formatEther(privateINFTFee),
+        zkProofFee: ethers.formatEther(zkProofFee),
+        dataEncryptionFee: ethers.formatEther(dataEncryptionFee)
       });
     } catch (error) {
       console.error('Failed to load fees:', error);
@@ -193,7 +195,7 @@ export function useZKPrivacy() {
       const proof = await generateZKProof(secret, nullifier, commitment);
 
       // Encrypt metadata (simplified)
-      const encryptedMetadata = ethers.utils.toUtf8Bytes(metadata);
+      const encryptedMetadata = ethers.toUtf8Bytes(metadata);
 
       // Get fee
       const fee = await contract.privateINFTFee();
@@ -269,10 +271,10 @@ export function useZKPrivacy() {
       setLoading(true);
 
       // Generate data hash
-      const dataHash = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(data));
-
-      // Encrypt data (simplified - in practice would use proper encryption)
-      const encryptedContent = ethers.utils.toUtf8Bytes(data);
+      const dataHash = ethers.keccak256(ethers.toUtf8Bytes(data));
+      
+      // Encrypt data (simplified - in production, use proper encryption)
+      const encryptedContent = ethers.toUtf8Bytes(data);
 
       // Get fee
       const fee = await contract.dataEncryptionFee();
@@ -340,8 +342,9 @@ export function useZKPrivacy() {
       setLoading(true);
 
       // Generate transaction hash
-      const transactionHash = ethers.utils.keccak256(
-        ethers.utils.defaultAbiCoder.encode(
+      const abiCoder = AbiCoder.defaultAbiCoder();
+      const transactionHash = ethers.keccak256(
+        abiCoder.encode(
           ['uint256', 'uint256', 'uint256'],
           [amount, secret, nullifier]
         )
@@ -353,9 +356,9 @@ export function useZKPrivacy() {
       // Execute anonymous transaction
       const tx = await contract.executeAnonymousTransaction(
         transactionHash,
-        ethers.utils.parseEther(amount),
+        parseEther(amount),
         proof,
-        { value: ethers.utils.parseEther(amount) }
+        { value: parseEther(amount) }
       );
 
       await tx.wait();
@@ -404,7 +407,7 @@ export function useZKPrivacy() {
     try {
       const encryptedContent = await contract.getEncryptedData(dataHash);
       // In practice, would decrypt the content here
-      return ethers.utils.toUtf8String(encryptedContent);
+      return toUtf8String(encryptedContent);
     } catch (error) {
       console.error('Failed to get encrypted data:', error);
       throw error;

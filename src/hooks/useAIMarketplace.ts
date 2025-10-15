@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ethers } from 'ethers';
+import { ethers, parseEther, formatEther } from 'ethers';
 import { useWallet } from '../components/WalletProvider';
 
 // AI Model Marketplace ABI (simplified for key functions)
@@ -56,21 +56,23 @@ export function useAIMarketplace() {
 
   // Initialize contract
   useEffect(() => {
-    if (wallet.isConnected && wallet.provider) {
+    if (wallet.isConnected && typeof window !== 'undefined' && window.ethereum) {
       try {
-        const signer = wallet.provider.getSigner();
-        const marketplaceContract = new ethers.Contract(
-          MARKETPLACE_CONTRACT_ADDRESS,
-          AI_MARKETPLACE_ABI,
-          signer
-        );
-        setContract(marketplaceContract);
+        const provider = new ethers.BrowserProvider(window.ethereum as any);
+        provider.getSigner().then(signer => {
+          const marketplaceContract = new ethers.Contract(
+            MARKETPLACE_CONTRACT_ADDRESS,
+            AI_MARKETPLACE_ABI,
+            signer
+          );
+          setContract(marketplaceContract);
+        });
       } catch (err) {
         console.error('Failed to initialize marketplace contract:', err);
         setError('Failed to connect to marketplace contract');
       }
     }
-  }, [wallet.isConnected, wallet.provider]);
+  }, [wallet.isConnected]);
 
   // Load all models
   const loadModels = async () => {
@@ -94,7 +96,7 @@ export function useAIMarketplace() {
         name: model.name,
         description: model.description,
         category: model.category,
-        pricePerInference: ethers.utils.formatEther(model.pricePerInference),
+        pricePerInference: formatEther(model.pricePerInference),
         totalInferences: model.totalInferences.toNumber(),
         totalRating: model.totalRating.toNumber(),
         ratingCount: model.ratingCount.toNumber(),
@@ -129,7 +131,7 @@ export function useAIMarketplace() {
 
     setLoading(true);
     try {
-      const priceWei = ethers.utils.parseEther(pricePerInference);
+      const priceWei = parseEther(pricePerInference);
       const tx = await contract.registerModel(
         name,
         description,
@@ -155,7 +157,7 @@ export function useAIMarketplace() {
 
     setLoading(true);
     try {
-      const priceWei = ethers.utils.parseEther(price);
+      const priceWei = parseEther(price);
       const tx = await contract.purchaseModelAccess(modelId, { value: priceWei });
       await tx.wait();
       return tx.hash;
@@ -173,7 +175,7 @@ export function useAIMarketplace() {
 
     setLoading(true);
     try {
-      const priceWei = ethers.utils.parseEther(price);
+      const priceWei = parseEther(price);
       const tx = await contract.useInference(modelId, inputData, { value: priceWei });
       const receipt = await tx.wait();
       

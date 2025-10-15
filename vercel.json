@@ -4,7 +4,23 @@
   "installCommand": "npm install --legacy-peer-deps",
 
   "env": {
-    "NODE_ENV": "production"
+    "NODE_ENV": "production",
+    "NEXT_PUBLIC_0G_RPC_URL": "@0g_rpc_url",
+    "NEXT_PUBLIC_INTELLIFY_CONTRACT_ADDRESS": "@intellify_contract_address",
+    "NEXT_PUBLIC_INFT_CONTRACT_ADDRESS": "@inft_contract_address",
+    "NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID": "@walletconnect_project_id",
+    "NEXT_PUBLIC_0G_COMPUTE_ENDPOINT": "@0g_compute_endpoint",
+    "NEXT_PUBLIC_0G_COMPUTE_API_KEY": "@0g_compute_api_key",
+    "NEXT_PUBLIC_0G_DA_RPC_ENDPOINT": "@0g_da_rpc_endpoint",
+    "NEXT_PUBLIC_0G_DA_GRPC_ENDPOINT": "@0g_da_grpc_endpoint",
+    "NEXT_PUBLIC_0G_DA_ENTRANCE_CONTRACT": "@0g_da_entrance_contract",
+    "NEXT_PUBLIC_0G_DA_SIGNERS_CONTRACT": "@0g_da_signers_contract"
+  },
+
+  "functions": {
+    "app/api/**/*.ts": {
+      "maxDuration": 30
+    }
   },
 
   "headers": [

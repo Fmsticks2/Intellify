@@ -2,25 +2,24 @@
 
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { formatEther } from 'ethers/lib/utils';
+import { formatEther } from 'ethers';
+import { LoadingSpinner } from './LoadingSpinner';
 
 interface AIModel {
-  modelId: number;
+  id: number;
   creator: string;
   name: string;
   description: string;
   category: string;
-  modelHash: string;
-  metadataHash: string;
   pricePerInference: string;
   totalInferences: number;
-  totalRevenue: string;
-  rating: number;
+  totalRating: number;
   ratingCount: number;
   isActive: boolean;
   isVerified: boolean;
-  createdAt: number;
-  updatedAt: number;
+  modelHash: string;
+  metadataURI: string;
+  averageRating: number;
 }
 
 interface ModelAccess {
@@ -90,12 +89,12 @@ const ModelCard: React.FC<ModelCardProps> = ({
   };
 
   const handlePurchase = () => {
-    onPurchase(model.modelId, inferencesToPurchase);
+    onPurchase(model.id, inferencesToPurchase);
     setShowPurchaseModal(false);
   };
 
   const handleRate = () => {
-    onRate(model.modelId, selectedRating);
+    onRate(model.id, selectedRating);
     setShowRatingModal(false);
   };
 
@@ -138,7 +137,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
           </div>
           <div className="text-center">
             <div className="flex items-center justify-center gap-1">
-              {renderStars(Math.round(model.rating))}
+              {renderStars(Math.round(model.averageRating))}
               <span className="text-sm text-gray-300 ml-1">({model.ratingCount})</span>
             </div>
             <div className="text-xs text-gray-400">Rating</div>
@@ -194,7 +193,7 @@ const ModelCard: React.FC<ModelCardProps> = ({
         {/* Metadata */}
         <div className="mt-4 pt-4 border-t border-white/10">
           <div className="text-xs text-gray-400">
-            Created: {formatDate(model.createdAt)}
+            Model ID: {model.id}
           </div>
         </div>
       </motion.div>

@@ -2,12 +2,33 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 const webpack = require('webpack');
 
+// Bundle analyzer setup
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   pageExtensions: ['js', 'jsx', 'ts', 'tsx'],
   experimental: {
     serverComponentsExternalPackages: ['@0glabs/0g-ts-sdk']
   },
+  // Performance optimizations
+  swcMinify: true,
+  compress: true,
+  poweredByHeader: false,
+  generateEtags: false,
+  
+  // Image optimization
+  images: {
+    formats: ['image/webp', 'image/avif'],
+    minimumCacheTTL: 60,
+  },
+
+  // Bundle analyzer (uncomment for analysis)
+  // bundleAnalyzer: {
+  //   enabled: process.env.ANALYZE === 'true',
+  // },
   webpack: (config) => {
     // Fallbacks for Node core modules
     config.resolve.fallback = {
@@ -76,4 +97,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);
