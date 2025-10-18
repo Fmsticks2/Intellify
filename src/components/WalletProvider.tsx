@@ -21,7 +21,7 @@ const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
 // 0G Testnet configuration
 const TARGET_NETWORK = {
-  chainId: '0x40D9', // 16601 in hex
+  chainId: '0x40D9', // 16602 in hex
   chainName: '0G-Galileo-Testnet',
   nativeCurrency: {
     name: 'OG',

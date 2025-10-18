@@ -2,18 +2,15 @@
 pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 
 /**
  * @title AIModelMarketplace
  * @dev Decentralized marketplace for AI models on 0G Network
  */
 contract AIModelMarketplace is Ownable, ReentrancyGuard, Pausable {
-    using SafeMath for uint256;
-
     // Events
     event ModelRegistered(uint256 indexed modelId, address indexed creator, string name);
     event ModelPurchased(uint256 indexed modelId, address indexed buyer, uint256 amount);
@@ -87,7 +84,7 @@ contract AIModelMarketplace is Ownable, ReentrancyGuard, Pausable {
         _;
     }
 
-    constructor() {
+    constructor() Ownable(msg.sender) {
         // Initialize default categories
         _addCategory("Language Models");
         _addCategory("Computer Vision");
@@ -152,33 +149,33 @@ contract AIModelMarketplace is Ownable, ReentrancyGuard, Pausable {
         require(model.isActive, "Model is not active");
         require(inferencesAllowed > 0, "Must purchase at least 1 inference");
 
-        uint256 totalCost = model.pricePerInference.mul(inferencesAllowed);
+        uint256 totalCost = model.pricePerInference * inferencesAllowed;
         require(msg.value >= totalCost, "Insufficient payment");
 
         // Calculate platform fee
-        uint256 platformFee = totalCost.mul(platformFeePercentage).div(10000);
-        uint256 creatorRevenue = totalCost.sub(platformFee);
+        uint256 platformFee = (totalCost * platformFeePercentage) / 10000;
+        uint256 creatorRevenue = totalCost - platformFee;
 
         // Update model stats
-        model.totalInferences = model.totalInferences.add(inferencesAllowed);
-        model.totalRevenue = model.totalRevenue.add(creatorRevenue);
+        model.totalInferences = model.totalInferences + inferencesAllowed;
+        model.totalRevenue = model.totalRevenue + creatorRevenue;
 
         // Update creator stats
-        creatorStats[model.creator].totalRevenue = creatorStats[model.creator].totalRevenue.add(creatorRevenue);
-        creatorStats[model.creator].totalInferences = creatorStats[model.creator].totalInferences.add(inferencesAllowed);
+        creatorStats[model.creator].totalRevenue = creatorStats[model.creator].totalRevenue + creatorRevenue;
+        creatorStats[model.creator].totalInferences = creatorStats[model.creator].totalInferences + inferencesAllowed;
 
         // Grant access to buyer
         ModelAccess storage access = modelAccess[modelId][msg.sender];
         access.hasAccess = true;
         access.purchasedAt = block.timestamp;
-        access.inferencesAllowed = access.inferencesAllowed.add(inferencesAllowed);
+        access.inferencesAllowed = access.inferencesAllowed + inferencesAllowed;
 
         // Transfer payment to creator
         payable(model.creator).transfer(creatorRevenue);
 
         // Refund excess payment
         if (msg.value > totalCost) {
-            payable(msg.sender).transfer(msg.value.sub(totalCost));
+            payable(msg.sender).transfer(msg.value - totalCost);
         }
 
         emit ModelPurchased(modelId, msg.sender, totalCost);
@@ -211,9 +208,9 @@ contract AIModelMarketplace is Ownable, ReentrancyGuard, Pausable {
         userRatings[modelId][msg.sender] = rating;
 
         // Update average rating
-        uint256 totalRating = model.rating.mul(model.ratingCount).add(uint256(rating).mul(100));
+        uint256 totalRating = (model.rating * model.ratingCount) + (uint256(rating) * 100);
         model.ratingCount++;
-        model.rating = totalRating.div(model.ratingCount);
+        model.rating = totalRating / model.ratingCount;
 
         // Update creator average rating
         _updateCreatorRating(model.creator);
@@ -356,13 +353,13 @@ contract AIModelMarketplace is Ownable, ReentrancyGuard, Pausable {
         for (uint256 i = 0; i < modelIds.length; i++) {
             AIModel memory model = models[modelIds[i]];
             if (model.ratingCount > 0) {
-                totalRating = totalRating.add(model.rating.mul(model.ratingCount));
-                totalCount = totalCount.add(model.ratingCount);
+                totalRating = totalRating + (model.rating * model.ratingCount);
+                totalCount = totalCount + model.ratingCount;
             }
         }
 
         if (totalCount > 0) {
-            creatorStats[creator].averageRating = totalRating.div(totalCount);
+            creatorStats[creator].averageRating = totalRating / totalCount;
         }
     }
 }

@@ -2,7 +2,7 @@ import { NetworkConfig } from '../types/index';
 
 // 0G Network Configuration
 export const ZERO_G_TESTNET: NetworkConfig = {
-  chainId: 16601,
+  chainId: 16602,
   name: '0G-Galileo-Testnet',
   rpcUrl: 'https://evmrpc-testnet.0g.ai',
   blockExplorerUrl: 'https://chainscan-galileo.0g.ai',
@@ -14,7 +14,10 @@ export const ZERO_G_TESTNET: NetworkConfig = {
 };
 
 // Contract Configuration
-export const CONTRACT_ADDRESS = '0x37525E8B82C776F608eCA8A49C000b98a456fBdD'; // Deployed INFT contract address
+export const CONTRACT_ADDRESS =
+  process.env.NEXT_PUBLIC_INFT_CONTRACT_ADDRESS ||
+  process.env.NEXT_PUBLIC_INTELLIFY_CONTRACT_ADDRESS ||
+  '0x0000000000000000000000000000000000000000';
 
 // Contract ABI (from IntellifyINFT.sol)
 export const CONTRACT_ABI = [

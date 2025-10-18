@@ -51,16 +51,24 @@ export default function Header({ className = '' }: HeaderProps) {
               <span className="relative z-10">Dashboard</span>
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
             </a>
-            <a href="#" className="relative text-black hover:text-blue-600 transition-all duration-300 font-medium group">
+            <a href="#infts" className="relative text-black hover:text-blue-600 transition-all duration-300 font-medium group">
               <span className="relative z-10">My INFTs</span>
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
             </a>
-            <a href="#" className="relative text-black hover:text-blue-600 transition-all duration-300 font-medium group">
-              <span className="relative z-10">AI Marketplace</span>
+            <a href="#marketplace" className="relative text-black hover:text-blue-600 transition-all duration-300 font-medium group">
+              <span className="relative z-10">Marketplace</span>
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
             </a>
-            <a href="#" className="relative text-black hover:text-blue-600 transition-all duration-300 font-medium group">
-              <span className="relative z-10">Explore</span>
+            <a href="#social" className="relative text-black hover:text-blue-600 transition-all duration-300 font-medium group">
+              <span className="relative z-10">Social Hub</span>
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
+            </a>
+            <a href="#gamification" className="relative text-black hover:text-blue-600 transition-all duration-300 font-medium group">
+              <span className="relative z-10">Gamification</span>
+              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
+            </a>
+            <a href="#analytics" className="relative text-black hover:text-blue-600 transition-all duration-300 font-medium group">
+              <span className="relative z-10">Analytics</span>
               <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
             </a>
           </nav>

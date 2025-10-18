@@ -480,6 +480,7 @@ export default function IntellifyDashboard() {
           <span>Privacy Settings</span>
         </motion.button>
         <motion.button
+          id="analytics"
           onClick={() => setShowAnalytics(true)}
           className="flex items-center justify-center space-x-2 bg-gray-100 hover:bg-gray-200 text-black font-medium py-3 px-6 rounded-xl border border-gray-200 transition-colors"
           whileHover={{ scale: 1.05, y: -2 }}
@@ -529,6 +530,7 @@ export default function IntellifyDashboard() {
           <span>Real-Time AI</span>
         </motion.button>
         <motion.button
+          id="social"
           onClick={() => setShowSocialFeatures(true)}
           className="flex items-center justify-center space-x-2 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-medium py-3 px-6 rounded-xl border border-pink-500 transition-colors"
           whileHover={{ scale: 1.05, y: -2 }}
@@ -539,6 +541,7 @@ export default function IntellifyDashboard() {
           <span>Social Hub</span>
         </motion.button>
         <motion.button
+          id="marketplace"
           onClick={() => setShowKnowledgeMarketplace(true)}
           className="flex items-center justify-center space-x-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-medium py-3 px-6 rounded-xl border border-emerald-500 transition-colors"
           whileHover={{ scale: 1.05, y: -2 }}
@@ -549,6 +552,7 @@ export default function IntellifyDashboard() {
           <span>Marketplace</span>
         </motion.button>
         <motion.button
+          id="gamification"
           onClick={() => setShowGamification(true)}
           className="flex items-center justify-center space-x-2 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-medium py-3 px-6 rounded-xl border border-yellow-500 transition-colors"
           whileHover={{ scale: 1.05, y: -2 }}
@@ -687,6 +691,7 @@ export default function IntellifyDashboard() {
           </motion.div>
         ) : (
           <motion.div 
+            id="infts"
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
             variants={containerVariants}
             initial="hidden"

@@ -9,7 +9,7 @@ const projectId = process.env.NEXT_PUBLIC_REOWN_PROJECT_ID || '2f05a7cac472eca57
 
 // 2. Define 0G Network
 const ogNetwork: AppKitNetwork = {
-  id: 16601,
+  id: 16602,
   name: '0G-Galileo-Testnet',
   nativeCurrency: {
     decimals: 18,

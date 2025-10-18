@@ -33,7 +33,7 @@ const ZK_PRIVACY_ABI = [
 ];
 
 // Contract address (would be set after deployment)
-const ZK_PRIVACY_CONTRACT_ADDRESS = "0x1234567890123456789012345678901234567890"; // Placeholder
+const ZK_PRIVACY_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_ZK_PRIVACY_CONTRACT_ADDRESS || "0x0000000000000000000000000000000000000000";
 
 interface ZKProof {
   a: [string, string];

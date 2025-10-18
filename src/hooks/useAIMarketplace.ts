@@ -20,7 +20,7 @@ const AI_MARKETPLACE_ABI = [
   "event ModelRated(uint256 indexed modelId, address indexed user, uint8 rating)"
 ];
 
-const MARKETPLACE_CONTRACT_ADDRESS = "0x1234567890123456789012345678901234567890"; // Replace with actual deployed address
+const MARKETPLACE_CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_MARKETPLACE_CONTRACT_ADDRESS || "0x0000000000000000000000000000000000000000";
 
 export interface AIModel {
   id: number;

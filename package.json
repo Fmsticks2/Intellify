@@ -67,6 +67,7 @@
     "hardhat-gas-reporter": "^2.3.0",
     "jest": "^29.7.0",
     "postcss": "^8.4.31",
+    "solc": "^0.8.20",
     "solidity-coverage": "^0.8.16",
     "tailwindcss": "^3.3.5",
     "ts-node": "^10.9.2",

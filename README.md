@@ -20,7 +20,7 @@ A cutting-edge decentralized application that combines AI and blockchain technol
 ## 🚀 Deployed Contract
 
 **Contract Address**: `0x37525E8B82C776F608eCA8A49C000b98a456fBdD`  
-**Network**: 0G Testnet (Chain ID: 16601)  
+**Network**: 0G Testnet (Chain ID: 16602)  
 **Transaction Hash**: `0xa1ef336432e58008a952d4009d8e95eff6bc1d9bb27dcc3037203f01e5cd7d48`  
 **Block**: 5888073  
 

@@ -59,7 +59,7 @@ import { CONTRACT_ADDRESS } from '../constants';
 // Contract address imported from constants
 
 // 0G Testnet chain ID
-const TARGET_CHAIN_ID = 16601;
+const TARGET_CHAIN_ID = 16602;
 
 export function useIntellifyContract() {
   const { wallet } = useWallet();

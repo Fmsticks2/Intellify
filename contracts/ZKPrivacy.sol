@@ -2,8 +2,8 @@
 pragma solidity ^0.8.19;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
 import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 /**
@@ -77,7 +77,7 @@ contract ZKPrivacy is Ownable, ReentrancyGuard, Pausable {
     uint256 public zkProofFee = 0.0005 ether;
     uint256 public dataEncryptionFee = 0.0002 ether;
     
-    constructor(bytes32 _verificationKey) {
+    constructor(bytes32 _verificationKey) Ownable(msg.sender) {
         verificationKey = _verificationKey;
     }
     
@@ -271,7 +271,7 @@ contract ZKPrivacy is Ownable, ReentrancyGuard, Pausable {
     /**
      * @dev Check if user is authorized to access encrypted data
      */
-    function isAuthorizedForData(bytes32 _dataHash, address _user) external view returns (bool) {
+    function isAuthorizedForData(bytes32 _dataHash, address _user) public view returns (bool) {
         EncryptedData memory data = encryptedDataStore[_dataHash];
         if (data.owner == _user) return true;
         
