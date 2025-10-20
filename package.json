@@ -1,7 +1,7 @@
 {
-  "name": "intellify-wave2",
+  "name": "intellify",
   "version": "0.1.0",
-  "description": "Intellify Wave 2 - Decentralized AI Knowledge Companion Prototype",
+  "description": "Intellify - Decentralized AI Knowledge Companion Prototype",
   "private": true,
   "scripts": {
     "dev": "next dev",
