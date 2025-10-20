@@ -1,0 +1,59 @@
+# Netlify configuration for Next.js (SSR) deployment
+
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "20"
+  NPM_FLAGS = "--legacy-peer-deps"
+  NEXT_TELEMETRY_DISABLED = "1"
+  
+  # Public env vars (mirrored from .env/.env.local)
+  NEXT_PUBLIC_0G_RPC_URL = "https://evmrpc-testnet.0g.ai"
+  NEXT_PUBLIC_0G_INDEXER_URL = "https://indexer-testnet.0g.ai"
+  NEXT_PUBLIC_0G_STORAGE_URL = "https://rpc-storage-testnet.0g.ai"
+
+  NEXT_PUBLIC_INTELLIFY_CONTRACT_ADDRESS = "0xc8B88707f598CAFd3816aaB9A10f65380D6AA6a7"
+  NEXT_PUBLIC_INFT_CONTRACT_ADDRESS = "0xc8B88707f598CAFd3816aaB9A10f65380D6AA6a7"
+  NEXT_PUBLIC_MARKETPLACE_CONTRACT_ADDRESS = "0x7185B4A280E6CFE98c40B0b3f66B45c24E25F0aC"
+  NEXT_PUBLIC_ZK_PRIVACY_CONTRACT_ADDRESS = "0x05E5b83984612A99f0089BC921D12b113bc7DED2"
+  NEXT_PUBLIC_INTELLIFY_TOKEN_ADDRESS = "0x975fFE050A82de1a6122EE8AE96d86b51E606603"
+  NEXT_PUBLIC_INTELLIFY_GOVERNANCE_ADDRESS = "0x870F24343fCbf42b56C7844250e5590B7C012b87"
+  NEXT_PUBLIC_INTELLIFY_STAKING_ADDRESS = "0xb12D40A8c0ae4B80A49B113Ff1E16839222B6a5d"
+
+  NEXT_PUBLIC_CHAIN_ID = "16602"
+  NEXT_PUBLIC_0G_CHAIN_ID = "16602"
+  NEXT_PUBLIC_CHAIN_NAME = "0G-Galileo-Testnet"
+  NEXT_PUBLIC_NATIVE_CURRENCY_NAME = "OG Token"
+  NEXT_PUBLIC_NATIVE_CURRENCY_SYMBOL = "OG"
+  NEXT_PUBLIC_NATIVE_CURRENCY_DECIMALS = "18"
+  NEXT_PUBLIC_BLOCK_EXPLORER_URL = "https://chainscan-galileo.0g.ai"
+  NEXT_PUBLIC_DEBUG = "false"
+
+  NEXT_PUBLIC_0G_COMPUTE_ENDPOINT = "https://compute-testnet.0g.ai"
+  NEXT_PUBLIC_0G_DA_RPC_ENDPOINT = "https://rpc-testnet.0g.ai"
+  NEXT_PUBLIC_0G_DA_GRPC_ENDPOINT = "https://grpc-testnet.0g.ai"
+  NEXT_PUBLIC_0G_DA_ENTRANCE_CONTRACT = "0x37525E8B82C776F608eCA8A49C000b98a456fBdD"
+  NEXT_PUBLIC_0G_DA_SIGNERS_CONTRACT = "0x37525E8B82C776F608eCA8A49C000b98a456fBdD"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Security and caching headers (ported from vercel.json)
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[headers]]
+  for = "/icons/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/logo.svg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
