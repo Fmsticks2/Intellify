@@ -55,6 +55,62 @@ NEXT_PUBLIC_BLOCK_EXPLORER_URL=https://chainscan-galileo.0g.ai
 NEXT_PUBLIC_DEBUG=false
 ```
 
+## 🔗 Smart Contracts (0G Mainnet)
+
+### Configure Deployment Keys
+
+Set the following variables in `.env` or your CI/CD secrets:
+
+```bash
+# Private key for the deployer (never commit this)
+PRIVATE_KEY=0xYOUR_PRIVATE_KEY
+
+# 0G mainnet RPC and explorer
+OG_MAINNET_RPC_URL=https://evmrpc.0g.ai
+ETHERSCAN_API_KEY=your_etherscan_or_chainscan_api_key
+OG_MAINNET_EXPLORER_URL=https://chainscan.0g.ai
+OG_MAINNET_EXPLORER_API_URL=https://chainscan.0g.ai/api
+```
+
+### Deploy All Contracts to 0G Mainnet (Chain ID 16661)
+
+```bash
+# Compile and deploy contracts to 0G mainnet
+npm run contracts:deploy:mainnet
+
+# Artifacts
+# - Saved addresses: addresses/16661.json
+# - Frontend env updated: .env.production (and .env/.env.local)
+```
+
+The deployment script waits for confirmations and attempts on-chain verification using the configured explorer API. If verification fails, the deploy continues and logs the error.
+
+### Update Frontend for Production
+
+After deployment, verify `.env.production` contains the newly deployed addresses:
+
+```env
+NEXT_PUBLIC_INTELLIFY_CONTRACT_ADDRESS=0x...
+NEXT_PUBLIC_INFT_CONTRACT_ADDRESS=0x...
+NEXT_PUBLIC_MARKETPLACE_CONTRACT_ADDRESS=0x...
+NEXT_PUBLIC_ZK_PRIVACY_CONTRACT_ADDRESS=0x...
+NEXT_PUBLIC_INTELLIFY_TOKEN_ADDRESS=0x...
+NEXT_PUBLIC_INTELLIFY_GOVERNANCE_ADDRESS=0x...
+NEXT_PUBLIC_INTELLIFY_STAKING_ADDRESS=0x...
+```
+
+## 🏭 Production Build
+
+Build the Next.js app using production configuration:
+
+```bash
+# Ensure .env.production is populated
+npm run build
+
+# Optionally start locally for validation
+npm start
+```
+
 ## 🚀 Vercel Deployment (Recommended)
 
 ### Automatic Deployment

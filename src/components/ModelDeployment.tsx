@@ -59,24 +59,99 @@ const ModelDeployment: React.FC<ModelDeploymentProps> = ({ model, onClose }) => 
   const [testInput, setTestInput] = useState('');
   const [testOutput, setTestOutput] = useState('');
   const [isTestingInference, setIsTestingInference] = useState(false);
+  const [brokerBalance, setBrokerBalance] = useState<string | null>(null);
+  const [isBalanceLoading, setIsBalanceLoading] = useState<boolean>(false);
+  const [depositAmount, setDepositAmount] = useState<string>('');
+  const [isDepositing, setIsDepositing] = useState<boolean>(false);
+  const [depositError, setDepositError] = useState<string | null>(null);
+  const [depositSuccess, setDepositSuccess] = useState<string | null>(null);
+  const [services, setServices] = useState<{ provider: string; model: string }[]>([]);
+  const [selectedProvider, setSelectedProvider] = useState<string>('');
+  const [selectedModel, setSelectedModel] = useState<string>('');
+  const [streamEnabled, setStreamEnabled] = useState<boolean>(false);
 
   const [zgClient, setZgClient] = useState<ZGComputeClient | null>(null);
 
   useEffect(() => {
-    // Initialize 0G Compute Client
-    const config: ZGComputeConfig = {
-      rpcEndpoint: process.env.NEXT_PUBLIC_0G_NETWORK_RPC || '',
-      privateKey: process.env.NEXT_PUBLIC_PRIVATE_KEY,
-      daEntranceContract: process.env.NEXT_PUBLIC_DA_ENTRANCE_CONTRACT || '',
-      daSignersContract: process.env.NEXT_PUBLIC_DA_SIGNERS_CONTRACT || '',
-      grpcEndpoint: process.env.NEXT_PUBLIC_GRPC_ENDPOINT || '',
-      gasLimit: 1000000,
-      computeContract: process.env.NEXT_PUBLIC_COMPUTE_CONTRACT || '',
-      computeNodeEndpoint: process.env.NEXT_PUBLIC_COMPUTE_NODE_ENDPOINT || '',
-      maxComputeUnits: 1000
+    // Initialize 0G Compute Client safely (no client-side private key)
+    const init = async () => {
+      const privateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY;
+      if (!privateKey) {
+        setDeploymentStatus(prev => ({
+          ...prev,
+          logs: [
+            ...prev.logs,
+            `[${new Date().toLocaleTimeString()}] 0G Compute client not configured: missing NEXT_PUBLIC_PRIVATE_KEY. Use server-side orchestration.`
+          ]
+        }));
+        return;
+      }
+
+      try {
+        const config: ZGComputeConfig = {
+          rpcEndpoint: process.env.NEXT_PUBLIC_0G_NETWORK_RPC || '',
+          privateKey,
+          daEntranceContract: process.env.NEXT_PUBLIC_DA_ENTRANCE_CONTRACT || '',
+          daSignersContract: process.env.NEXT_PUBLIC_DA_SIGNERS_CONTRACT || '',
+          grpcEndpoint: process.env.NEXT_PUBLIC_GRPC_ENDPOINT || '',
+          gasLimit: 1000000,
+          computeContract: process.env.NEXT_PUBLIC_COMPUTE_CONTRACT || '',
+          computeNodeEndpoint: process.env.NEXT_PUBLIC_COMPUTE_NODE_ENDPOINT || '',
+          maxComputeUnits: 1000
+        };
+        const client = new ZGComputeClient(config);
+        setZgClient(client);
+      } catch (err) {
+        setDeploymentStatus(prev => ({
+          ...prev,
+          logs: [
+            ...prev.logs,
+            `[${new Date().toLocaleTimeString()}] Failed to initialize 0G Compute client: ${err instanceof Error ? err.message : 'Unknown error'}`
+          ]
+        }));
+      }
     };
-    const client = new ZGComputeClient(config);
-    setZgClient(client);
+    init();
+  }, []);
+
+  // Load broker balance
+  const loadBrokerBalance = async () => {
+    try {
+      setIsBalanceLoading(true);
+      const res = await fetch('/api/compute/balance');
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to load balance');
+      setBrokerBalance(data.totalBalance || null);
+    } catch (e) {
+      setBrokerBalance(null);
+    } finally {
+      setIsBalanceLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadBrokerBalance();
+  }, []);
+
+  // Load available providers for simple selection UI
+  useEffect(() => {
+    const loadServices = async () => {
+      try {
+        const res = await fetch('/api/compute/services');
+        const data = await res.json();
+        if (res.ok && Array.isArray(data.services)) {
+          const list = data.services.map((s: any) => ({ provider: s.provider, model: s.model }));
+          setServices(list);
+          if (list.length > 0) {
+            setSelectedProvider(list[0].provider);
+            setSelectedModel(list[0].model);
+          }
+        }
+      } catch (e) {
+        // silently ignore in UI
+      }
+    };
+    loadServices();
   }, []);
 
   const addLog = (message: string) => {
@@ -84,6 +159,35 @@ const ModelDeployment: React.FC<ModelDeploymentProps> = ({ model, onClose }) => 
       ...prev,
       logs: [...prev.logs, `[${new Date().toLocaleTimeString()}] ${message}`]
     }));
+  };
+
+  const handleDeposit = async () => {
+    setDepositError(null);
+    setDepositSuccess(null);
+    const amt = parseFloat(depositAmount);
+    if (isNaN(amt) || amt <= 0) {
+      setDepositError('Enter a positive amount of 0G');
+      return;
+    }
+    setIsDepositing(true);
+    try {
+      const res = await fetch('/api/compute/deposit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: amt })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Deposit failed');
+      setDepositSuccess(`Deposited successfully. New balance: ${data.totalBalance} 0G`);
+      setBrokerBalance(data.totalBalance || null);
+      setDepositAmount('');
+      addLog(`Broker deposit successful. Balance: ${data.totalBalance} 0G`);
+    } catch (e) {
+      setDepositError(e instanceof Error ? e.message : 'Unknown error');
+      addLog(`Broker deposit error: ${e instanceof Error ? e.message : 'Unknown error'}`);
+    } finally {
+      setIsDepositing(false);
+    }
   };
 
   const handleDeploy = async () => {
@@ -170,14 +274,78 @@ const ModelDeployment: React.FC<ModelDeploymentProps> = ({ model, onClose }) => 
   };
 
   const handleTestInference = async () => {
-    if (!zgClient || !deploymentStatus.endpoint || !testInput.trim()) return;
+    if (!deploymentStatus.endpoint || !testInput.trim()) return;
 
     setIsTestingInference(true);
     setTestOutput('');
 
     try {
+      if (!zgClient) {
+        if (streamEnabled) {
+          addLog('Streaming inference via server API...');
+          const res = await fetch('/api/compute/infer/stream', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              prompt: testInput,
+              providerAddress: selectedProvider || undefined,
+              model: selectedModel || undefined,
+              parameters: { messages: [{ role: 'user', content: testInput }] }
+            })
+          });
+          if (!res.body) {
+            const data = await res.json();
+            throw new Error(data.error || 'No stream body');
+          }
+          const reader = res.body.getReader();
+          const decoder = new TextDecoder('utf-8');
+          let done = false;
+          setTestOutput('');
+          while (!done) {
+            const { value, done: d } = await reader.read();
+            done = d;
+            if (value) {
+              const chunk = decoder.decode(value, { stream: true });
+              const lines = chunk.split('\n');
+              for (const line of lines) {
+                if (line.startsWith('data: ')) {
+                  const payload = line.slice(6).trim();
+                  if (payload === '[DONE]') continue;
+                  try {
+                    const j = JSON.parse(payload);
+                    const delta = j?.choices?.[0]?.delta?.content ?? j?.choices?.[0]?.message?.content ?? j?.choices?.[0]?.text;
+                    if (delta) setTestOutput(prev => prev + delta);
+                  } catch {
+                    setTestOutput(prev => prev + payload);
+                  }
+                }
+              }
+            }
+          }
+          addLog('Streaming inference completed');
+          return;
+        } else {
+          addLog('Running test inference via server API...');
+          const res = await fetch('/api/compute/infer', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              modelId: model.modelHash,
+              prompt: testInput,
+              providerAddress: selectedProvider || undefined,
+              model: selectedModel || undefined,
+              parameters: { messages: [{ role: 'user', content: testInput }], max_tokens: 1000 }
+            })
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Server error');
+          setTestOutput(data.answer || data.response || 'No output received');
+          addLog('Test inference via server API completed successfully');
+          return;
+        }
+      }
+
       addLog('Running test inference...');
-      
       const result = await zgClient.runInference({
         name: model.name,
         description: model.description,
@@ -389,6 +557,50 @@ const ModelDeployment: React.FC<ModelDeploymentProps> = ({ model, onClose }) => 
 
             {/* Logs and Testing Panel */}
             <div className="space-y-6">
+              {/* Broker Balance & Deposit */}
+              <div>
+                <h3 className="text-lg font-semibold text-white mb-4">Broker Balance</h3>
+                <div className="bg-black/50 rounded-lg p-4 border border-white/20">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="text-sm text-gray-300">Total Balance</div>
+                    <button
+                      onClick={loadBrokerBalance}
+                      className="px-3 py-1 text-xs bg-white/10 hover:bg-white/20 rounded-md text-gray-200"
+                      disabled={isBalanceLoading}
+                    >
+                      {isBalanceLoading ? 'Refreshing…' : 'Refresh'}
+                    </button>
+                  </div>
+                  <div className="text-2xl font-bold text-white mb-4">{brokerBalance ? `${brokerBalance} 0G` : '—'}</div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 items-end">
+                    <div className="md:col-span-2">
+                      <label className="block text-xs font-medium text-gray-300 mb-2">Deposit Amount (0G)</label>
+                      <input
+                        type="number"
+                        step="0.0001"
+                        min="0"
+                        value={depositAmount}
+                        onChange={(e) => setDepositAmount(e.target.value)}
+                        placeholder="e.g., 10"
+                        className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <button
+                      onClick={handleDeposit}
+                      disabled={isDepositing || !depositAmount}
+                      className="w-full px-4 py-2 bg-purple-600 hover:bg-purple-700 disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors"
+                    >
+                      {isDepositing ? 'Depositing…' : 'Deposit'}
+                    </button>
+                  </div>
+                  {depositError && (
+                    <div className="mt-3 text-sm text-red-400">{depositError}</div>
+                  )}
+                  {depositSuccess && (
+                    <div className="mt-3 text-sm text-green-400">{depositSuccess}</div>
+                  )}
+                </div>
+              </div>
               {/* Deployment Logs */}
               <div>
                 <h3 className="text-lg font-semibold text-white mb-4">Deployment Logs</h3>
@@ -411,6 +623,39 @@ const ModelDeployment: React.FC<ModelDeploymentProps> = ({ model, onClose }) => 
                   <h3 className="text-lg font-semibold text-white mb-4">Test Inference</h3>
                   
                   <div className="space-y-4">
+                    {services.length > 0 && (
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-300 mb-2">Provider</label>
+                          <select
+                            value={selectedProvider}
+                            onChange={(e) => {
+                              const p = e.target.value;
+                              setSelectedProvider(p);
+                              const s = services.find(s => s.provider === p);
+                              setSelectedModel(s?.model || '');
+                            }}
+                            className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            {services.map((s, idx) => (
+                              <option key={idx} value={s.provider} className="bg-gray-800">
+                                {s.provider.slice(0, 6)}...{s.provider.slice(-4)} ({s.model})
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex items-center gap-2 mt-6 md:mt-0">
+                          <input
+                            type="checkbox"
+                            id="streamToggle"
+                            checked={streamEnabled}
+                            onChange={(e) => setStreamEnabled(e.target.checked)}
+                            className="mr-2 rounded"
+                          />
+                          <label htmlFor="streamToggle" className="text-sm text-gray-300">Stream response</label>
+                        </div>
+                      </div>
+                    )}
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-2">
                         Test Input

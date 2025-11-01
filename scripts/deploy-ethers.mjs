@@ -3,7 +3,7 @@ import path from "path";
 import solc from "solc";
 import { ethers } from "ethers";
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({ override: true });
 
 const root = process.cwd();
 const contractsDir = path.join(root, "contracts");
@@ -58,7 +58,10 @@ function compileAll() {
       },
     },
   };
+  console.log("Compiling contracts with solc 0.8.20...");
+  console.time("solc_compile");
   const output = JSON.parse(solc.compile(JSON.stringify(input), { import: findImports }));
+  console.timeEnd("solc_compile");
   if (output.errors) {
     const fatal = output.errors.filter((e) => e.severity === "error");
     fatal.forEach((e) => console.error(e.formattedMessage || e.message));
@@ -98,7 +101,7 @@ function getArtifact(contracts, sourcePath, name) {
 }
 
 async function main() {
-  const rpc = process.env.NEXT_PUBLIC_0G_RPC_URL || "https://evmrpc-testnet.0g.ai";
+  const rpc = process.env.OG_MAINNET_RPC_URL || process.env.NEXT_PUBLIC_0G_RPC_URL || "https://evmrpc-testnet.0g.ai";
   const provider = new ethers.JsonRpcProvider(rpc);
   const network = await provider.getNetwork();
   console.log("Network:", network.chainId);
@@ -158,7 +161,9 @@ async function main() {
 
   await upsertEnv(path.join(root, ".env.local"), envEntries);
   await upsertEnv(path.join(root, ".env"), envEntries);
+  await upsertEnv(path.join(root, ".env.production"), envEntries);
   console.log("Updated .env.local and .env");
+  console.log("Updated .env.production");
 
   console.log("Deployment completed.");
   console.log(JSON.stringify(info, null, 2));

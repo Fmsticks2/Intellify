@@ -402,3 +402,104 @@ $ forge --help
 $ anvil --help
 $ cast --help
 ```
+
+## 🟢 Mainet deployment addition
+
+This release adds full 0G Compute Network mainnet orchestration to Intellify using the official Broker SDK, along with streaming chat responses, provider selection in the UI, and server-side broker fund management.
+
+### What’s Included
+- Server orchestration via 0G Broker SDK for authenticated provider access
+- Streaming chat completions endpoint (SSE) and non-streaming fallback
+- Provider discovery endpoint for building a selector UI
+- Broker ledger endpoints to view balance and deposit funds
+- Frontend updates: provider selector, stream toggle, and a Broker Balance card with a simple deposit form
+
+### New Server Endpoints
+- `GET /api/compute/services` — Lists available providers and models
+- `GET /api/compute/balance` — Returns broker ledger balance
+- `POST /api/compute/deposit` — Funds the broker ledger (expects `{ amount: string }` in 0G units)
+- `POST /api/compute/infer` — Non-streaming chat completion
+- `POST /api/compute/infer/stream` — Streaming chat completion via `text/event-stream`
+
+### Environment Variables (Server)
+Add these to `.env.local` (server-side only; do not prefix with `NEXT_PUBLIC_`):
+
+```env
+OG_MAINNET_RPC_URL="https://<your-0g-mainnet-rpc>"
+PRIVATE_KEY="<server_signer_private_key>"
+```
+
+Notes:
+- `PRIVATE_KEY` is used only on the server to initialize the Broker. Never expose it to the client.
+- Ensure the server signer has sufficient funds to cover Broker fees.
+
+### Funding the Broker Ledger
+- Check balance: `GET /api/compute/balance`
+- Deposit funds: `POST /api/compute/deposit` with `{ amount: "0.1" }` (amount in `0G` units)
+- If the broker balance is zero, inference endpoints may return `402` (insufficient funds).
+
+### Frontend UI Updates
+- `ModelDeployment.tsx` now includes:
+  - Provider selector bound to `GET /api/compute/services`
+  - Stream toggle that selects between `/api/compute/infer` and `/api/compute/infer/stream`
+  - "Broker Balance" card showing total balance with a Refresh button
+  - Simple deposit form that calls `POST /api/compute/deposit`
+
+### Usage Examples (Local Dev)
+Run `npm run dev` and use `http://localhost:3000/`.
+
+List services:
+```bash
+curl -s http://localhost:3000/api/compute/services | jq
+```
+
+Check balance:
+```bash
+curl -s http://localhost:3000/api/compute/balance | jq
+```
+
+Deposit funds (amount in 0G):
+```bash
+curl -s -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"amount":"0.1"}' \
+  http://localhost:3000/api/compute/deposit | jq
+```
+
+Non-streaming inference:
+```bash
+curl -s -X POST \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt":"Hello!",
+    "parameters": {"temperature": 0.7},
+    "model": "zerog-llama-3.1-8b-instruct",
+    "providerAddress": "0x<optional_provider_address>"
+  }' \
+  http://localhost:3000/api/compute/infer | jq
+```
+
+Streaming inference (SSE):
+```bash
+curl -N -X POST \
+  -H "Accept: text/event-stream" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "prompt":"Stream this response",
+    "parameters": {"temperature": 0.7},
+    "model": "zerog-llama-3.1-8b-instruct",
+    "providerAddress": "0x<optional_provider_address>"
+  }' \
+  http://localhost:3000/api/compute/infer/stream
+```
+
+### Security & Operational Notes
+- Secrets remain server-side; the frontend never has access to `PRIVATE_KEY`.
+- Provider authentication headers are generated per-request using the Broker SDK.
+- The streaming route proxies the provider’s SSE stream directly to the client.
+- Mainnet DA contract addresses can be added when published; testnet addresses currently in use remain valid for test networks.
+
+### Next Steps
+- Set default `model`/`providerAddress` for your preferred service.
+- Update mainnet DA addresses in config when they are available.
+- Expand the UI with pricing and per-provider metadata from the services endpoint.

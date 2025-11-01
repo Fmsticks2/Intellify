@@ -1,4 +1,5 @@
 const { ethers } = require("hardhat");
+const hre = require("hardhat");
 const fs = require("fs");
 const path = require("path");
 
@@ -24,7 +25,7 @@ async function upsertEnv(filePath, entries) {
 }
 
 async function main() {
-  console.log("Deploying all contracts to:", (await ethers.provider.getNetwork()).name || "custom network");
+  console.log("Deploying all contracts to:", hre.network.name || (await ethers.provider.getNetwork()).name || "custom network");
 
   const [deployer] = await ethers.getSigners();
   console.log("Deployer:", deployer.address);
@@ -35,6 +36,7 @@ async function main() {
   await token.waitForDeployment();
   const tokenAddress = await token.getAddress();
   console.log("IntellifyToken:", tokenAddress);
+  await maybeConfirmAndVerify(token, [], "IntellifyToken");
 
   // Deploy IntellifyINFT
   const IntellifyINFT = await ethers.getContractFactory("IntellifyINFT");
@@ -42,6 +44,7 @@ async function main() {
   await inft.waitForDeployment();
   const inftAddress = await inft.getAddress();
   console.log("IntellifyINFT:", inftAddress);
+  await maybeConfirmAndVerify(inft, [], "IntellifyINFT");
 
   // Deploy IntellifyGovernance
   const IntellifyGovernance = await ethers.getContractFactory("IntellifyGovernance");
@@ -49,6 +52,7 @@ async function main() {
   await gov.waitForDeployment();
   const govAddress = await gov.getAddress();
   console.log("IntellifyGovernance:", govAddress);
+  await maybeConfirmAndVerify(gov, [inftAddress], "IntellifyGovernance");
 
   // Deploy IntellifyStaking
   const IntellifyStaking = await ethers.getContractFactory("IntellifyStaking");
@@ -56,6 +60,7 @@ async function main() {
   await staking.waitForDeployment();
   const stakingAddress = await staking.getAddress();
   console.log("IntellifyStaking:", stakingAddress);
+  await maybeConfirmAndVerify(staking, [inftAddress, tokenAddress], "IntellifyStaking");
 
   // Deploy AIModelMarketplace
   const AIModelMarketplace = await ethers.getContractFactory("AIModelMarketplace");
@@ -63,6 +68,7 @@ async function main() {
   await market.waitForDeployment();
   const marketAddress = await market.getAddress();
   console.log("AIModelMarketplace:", marketAddress);
+  await maybeConfirmAndVerify(market, [], "AIModelMarketplace");
 
   // Deploy ZKPrivacy (verification key from env or zero)
   const ZKPrivacy = await ethers.getContractFactory("ZKPrivacy");
@@ -71,6 +77,7 @@ async function main() {
   await zk.waitForDeployment();
   const zkAddress = await zk.getAddress();
   console.log("ZKPrivacy:", zkAddress);
+  await maybeConfirmAndVerify(zk, [vk], "ZKPrivacy");
 
   // Write addresses JSON
   const { chainId } = await ethers.provider.getNetwork();
@@ -110,7 +117,33 @@ async function main() {
   await upsertEnv(envPath, envEntries);
   console.log("Updated .env");
 
+  const envProdPath = path.join(process.cwd(), ".env.production");
+  await upsertEnv(envProdPath, envEntries);
+  console.log("Updated .env.production");
+
   return info;
+}
+
+async function maybeConfirmAndVerify(contract, constructorArgs, name) {
+  try {
+    const networkName = hre.network.name;
+    const tx = contract.deploymentTransaction && contract.deploymentTransaction();
+    if (tx && tx.hash) {
+      const confirmations = networkName === "0g-mainnet" ? 5 : 2;
+      await ethers.provider.waitForTransaction(tx.hash, confirmations);
+    }
+    // Only attempt verification on known explorers
+    if (["0g-mainnet", "0g-testnet", "0g-galileo"].includes(networkName)) {
+      console.log(`Verifying ${name}...`);
+      await hre.run("verify:verify", {
+        address: await contract.getAddress(),
+        constructorArguments: constructorArgs,
+      });
+      console.log(`Verified ${name}`);
+    }
+  } catch (err) {
+    console.warn(`Verification skipped/failed for ${name}:`, err.message || err);
+  }
 }
 
 main()

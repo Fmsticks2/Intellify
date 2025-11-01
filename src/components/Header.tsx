@@ -1,153 +1,250 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Icon } from '@iconify/react';
 import { useWallet } from './WalletProvider';
 
-interface HeaderProps {
-  className?: string;
-}
-
-export default function Header({ className = '' }: HeaderProps) {
+export default function Header() {
   const { wallet, connectWallet, disconnectWallet, isConnecting } = useWallet();
   const [copied, setCopied] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const copyAddress = async () => {
     if (wallet.address) {
-      try {
-        await navigator.clipboard.writeText(wallet.address);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
-      } catch (err) {
-        console.error('Failed to copy address:', err);
-      }
+      await navigator.clipboard.writeText(wallet.address);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     }
   };
 
-  const formatAddress = (address: string) => {
+  const formatAddress = (address: string | null) => {
+    if (!address) return 'Not connected';
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   };
 
-  return (
-    <header className={`bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm ${className}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <div className="flex items-center space-x-3">
-            <div className="relative group">
-              <Icon 
-                icon="mdi:brain" 
-                className="h-11 w-11 text-blue-600 relative z-10 transition-all duration-300 group-hover:scale-110" 
-              />
-            </div>
-            <h1 className="text-2xl font-bold text-gray-900 transition-all duration-300">
-              Intellify
-            </h1>
-          </div>
+  const formatBalance = (balance: string | null) => {
+    if (!balance) return '0';
+    const num = parseFloat(balance);
+    if (num === 0) return '0';
+    if (num < 0.001) return '<0.001';
+    return num.toFixed(3);
+  };
 
-          {/* Navigation */}
+  const navigation = [
+    { name: 'Dashboard', href: '#dashboard', icon: 'mdi:view-dashboard' },
+    { name: 'Features', href: '#features', icon: 'mdi:star' },
+    { name: 'Docs', href: '#', icon: 'mdi:book-open' },
+  ];
+
+  return (
+    <motion.header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200/50' 
+          : 'bg-transparent'
+      }`}
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 lg:h-20">
+          {/* Logo */}
+          <motion.div 
+            className="flex items-center space-x-3"
+            whileHover={{ scale: 1.05 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center">
+              <Icon icon="mdi:brain" className="w-6 h-6 text-white" />
+            </div>
+            <div className="font-bold text-xl text-gray-900">
+              Intellify
+            </div>
+          </motion.div>
+
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#" className="relative text-black hover:text-blue-600 transition-all duration-300 font-medium group">
-              <span className="relative z-10">Dashboard</span>
-              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
-            </a>
-            <a href="#infts" className="relative text-black hover:text-blue-600 transition-all duration-300 font-medium group">
-              <span className="relative z-10">My INFTs</span>
-              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
-            </a>
-            <a href="#marketplace" className="relative text-black hover:text-blue-600 transition-all duration-300 font-medium group">
-              <span className="relative z-10">Marketplace</span>
-              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
-            </a>
-            <a href="#social" className="relative text-black hover:text-blue-600 transition-all duration-300 font-medium group">
-              <span className="relative z-10">Social Hub</span>
-              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
-            </a>
-            <a href="#gamification" className="relative text-black hover:text-blue-600 transition-all duration-300 font-medium group">
-              <span className="relative z-10">Gamification</span>
-              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
-            </a>
-            <a href="#analytics" className="relative text-black hover:text-blue-600 transition-all duration-300 font-medium group">
-              <span className="relative z-10">Analytics</span>
-              <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300" />
-            </a>
+            {navigation.map((item) => (
+              <motion.a
+                key={item.name}
+                href={item.href}
+                className="flex items-center space-x-2 text-gray-600 hover:text-blue-600 font-medium transition-colors duration-200"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Icon icon={item.icon} className="w-4 h-4" />
+                <span>{item.name}</span>
+              </motion.a>
+            ))}
           </nav>
 
-          {/* Wallet Connection */}
+          {/* Wallet Section */}
           <div className="flex items-center space-x-4">
             {wallet.isConnected ? (
               <div className="flex items-center space-x-3">
-                {/* Wallet Info */}
-                <div className="relative flex items-center space-x-2 bg-gray-50 px-4 py-2 rounded-lg border border-gray-200 group">
-                  <div className="relative z-10 flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    <Icon icon="mdi:wallet" className="w-5 h-5 text-blue-600" />
-                    <span className="text-sm font-medium text-black font-mono">
-                      {formatAddress(wallet.address!)}
-                    </span>
-                    <button
-                      onClick={copyAddress}
-                      className="p-1 hover:bg-green-500/20 rounded transition-all duration-300 hover:scale-110 group/copy"
-                      title="Copy address"
-                    >
-                      <Icon 
-                        icon={copied ? "mdi:check" : "mdi:content-copy"} 
-                        className="w-4 h-4 text-blue-600 group-hover/copy:scale-110 transition-all duration-200"
-                      />
-                    </button>
-                  </div>
-                </div>
+                {/* Balance Display */}
+                <motion.div 
+                  className="hidden sm:flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  <Icon icon="mdi:wallet" className="w-4 h-4 text-green-600" />
+                  <span className="text-sm font-semibold text-green-700">
+                    {formatBalance(wallet.balance)} ETH
+                  </span>
+                </motion.div>
 
-                {/* Balance */}
-                {wallet.balance && (
-                  <div className="relative text-sm text-black font-mono px-3 py-2 rounded-lg bg-gray-50 border border-gray-200 group">
-                    <span className="relative z-10 font-medium">
-                      {parseFloat(wallet.balance).toFixed(4)} 0G
-                    </span>
-                  </div>
-                )}
+                {/* Address Display */}
+                <motion.button
+                  onClick={copyAddress}
+                  className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl hover:from-blue-100 hover:to-indigo-100 transition-all duration-200"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <Icon 
+                    icon={copied ? "mdi:check" : "mdi:content-copy"} 
+                    className={`w-4 h-4 ${copied ? 'text-green-600' : 'text-blue-600'}`} 
+                  />
+                  <span className="text-sm font-medium text-blue-700">
+                    {formatAddress(wallet.address)}
+                  </span>
+                </motion.button>
 
                 {/* Disconnect Button */}
-                <button
+                <motion.button
                   onClick={disconnectWallet}
-                  className="relative p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-300 hover:scale-110 border border-gray-200 group"
-                  title="Disconnect wallet"
+                  className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  title="Disconnect Wallet"
                 >
-                  <Icon icon="mdi:logout" className="w-5 h-5 text-red-600 relative z-10 group-hover:scale-110 transition-transform duration-200" />
-                </button>
+                  <Icon icon="mdi:logout" className="w-5 h-5" />
+                </motion.button>
               </div>
             ) : (
-              <button
+              <motion.button
                 onClick={connectWallet}
                 disabled={isConnecting}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 flex items-center space-x-2 relative group"
+                className="group relative inline-flex items-center px-6 py-3 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4 }}
               >
-                <div className="relative z-10 flex items-center space-x-2">
-                  <Icon icon="mdi:wallet" className="w-5 h-5 text-white group-hover:scale-110 transition-transform duration-200" />
-                  <span className="font-semibold">{isConnecting ? 'Connecting...' : 'Connect Wallet'}</span>
-                  {isConnecting && <div className="loading-spinner ml-2"></div>}
-                </div>
-              </button>
+                <Icon icon="mdi:wallet" className="w-4 h-4 mr-2" />
+                {isConnecting ? (
+                  <>
+                    <Icon icon="mdi:loading" className="w-4 h-4 mr-2 animate-spin" />
+                    Connecting...
+                  </>
+                ) : (
+                  <>
+                    Connect Wallet
+                    <Icon icon="mdi:arrow-right" className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </>
+                )}
+              </motion.button>
             )}
+
+            {/* Mobile Menu Button */}
+            <motion.button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-xl transition-colors duration-200"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <Icon 
+                icon={isMobileMenuOpen ? "mdi:close" : "mdi:menu"} 
+                className="w-6 h-6" 
+              />
+            </motion.button>
           </div>
         </div>
+
+        {/* Mobile Navigation */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              className="md:hidden border-t border-gray-200 bg-white/95 backdrop-blur-md"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="px-4 py-6 space-y-4">
+                {navigation.map((item) => (
+                  <motion.a
+                    key={item.name}
+                    href={item.href}
+                    className="flex items-center space-x-3 text-gray-600 hover:text-blue-600 font-medium py-2"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    whileHover={{ x: 5 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Icon icon={item.icon} className="w-5 h-5" />
+                    <span>{item.name}</span>
+                  </motion.a>
+                ))}
+                
+                {wallet.isConnected && (
+                  <div className="pt-4 border-t border-gray-200">
+                    <div className="flex items-center justify-between py-2">
+                      <span className="text-sm text-gray-500">Balance:</span>
+                      <span className="text-sm font-semibold text-green-600">
+                        {formatBalance(wallet.balance)} ETH
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between py-2">
+                      <span className="text-sm text-gray-500">Address:</span>
+                      <button
+                        onClick={copyAddress}
+                        className="text-sm font-medium text-blue-600 hover:text-blue-700"
+                      >
+                        {formatAddress(wallet.address)}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Copy Success Toast */}
-      {copied && (
-        <div className="fixed top-20 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50 animate-fade-in">
-          Address copied to clipboard!
-        </div>
-      )}
-    </header>
+      <AnimatePresence>
+        {copied && (
+          <motion.div
+            className="fixed top-24 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg z-50"
+            initial={{ opacity: 0, y: -20, scale: 0.8 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.8 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="flex items-center space-x-2">
+              <Icon icon="mdi:check-circle" className="w-4 h-4" />
+              <span className="text-sm font-medium">Address copied!</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.header>
   );
 }
-
-// Add fade-in animation to globals.css
-// @keyframes fade-in {
-//   from { opacity: 0; transform: translateY(-10px); }
-//   to { opacity: 1; transform: translateY(0); }
-// }
-// .animate-fade-in {
-//   animation: fade-in 0.3s ease-out;
-// }
