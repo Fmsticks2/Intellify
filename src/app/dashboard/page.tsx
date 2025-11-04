@@ -2,6 +2,7 @@
 
 import React from 'react';
 import IntellifyDashboard from '../../components/IntellifyDashboard';
+import OwnerControls from '../../components/OwnerControls';
 
 export default function DashboardPage() {
   return (
@@ -10,6 +11,7 @@ export default function DashboardPage() {
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900">Dashboard</h1>
         <p className="text-gray-600 mt-2">Manage your AI Knowledge INFTs, privacy, analytics, and more.</p>
       </div>
+      <OwnerControls />
       <IntellifyDashboard />
     </div>
   );

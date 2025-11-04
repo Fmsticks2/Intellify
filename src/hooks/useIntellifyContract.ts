@@ -344,6 +344,37 @@ export function useIntellifyContract() {
     return await contract.updateEncryptionVersion(tokenId);
   };
 
+  // Admin functions (owner-only)
+  const setPublicMint = async (enabled: boolean): Promise<ethers.ContractTransactionResponse> => {
+    if (!contract) throw new Error('Contract not initialized');
+    const tx = await contract.setPublicMintEnabled(enabled);
+    try {
+      await tx.wait();
+      setIsPublicMintEnabled(enabled);
+    } catch {}
+    return tx;
+  };
+
+  const pauseContract = async (): Promise<ethers.ContractTransactionResponse> => {
+    if (!contract) throw new Error('Contract not initialized');
+    const tx = await contract.pause();
+    try {
+      await tx.wait();
+      setIsPaused(true);
+    } catch {}
+    return tx;
+  };
+
+  const unpauseContract = async (): Promise<ethers.ContractTransactionResponse> => {
+    if (!contract) throw new Error('Contract not initialized');
+    const tx = await contract.unpause();
+    try {
+      await tx.wait();
+      setIsPaused(false);
+    } catch {}
+    return tx;
+  };
+
   // Utility functions
   const waitForTransaction = async (txHash: string) => {
     if (!provider) throw new Error('Provider not initialized');
@@ -401,6 +432,11 @@ export function useIntellifyContract() {
     grantUserAccessKey,
     revokeUserAccessKey,
     updateEncryptionVersion,
+    
+    // Admin functions
+    setPublicMint,
+    pauseContract,
+    unpauseContract,
     
     // Utility functions
     waitForTransaction,
