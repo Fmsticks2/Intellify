@@ -845,8 +845,12 @@ export const createIntellifyClient = (config: IntellifyConfig): IntellifyClient 
 
 // Default configuration using 0G testnet endpoints
 export const defaultConfig: IntellifyConfig = {
-  rpcUrl: process.env.NEXT_PUBLIC_0G_RPC_URL || 'https://evmrpc-testnet.0g.ai',
-  indexerRpc: process.env.NEXT_PUBLIC_0G_INDEXER_RPC_URL || 'https://indexer-storage-testnet-turbo.0g.ai',
+  rpcUrl:
+    process.env.NEXT_PUBLIC_0G_RPC_URL ||
+    process.env.NEXT_PUBLIC_0G_NETWORK_RPC ||
+    process.env.OG_MAINNET_RPC_URL ||
+    'https://evmrpc.0g.ai',
+  indexerRpc: process.env.NEXT_PUBLIC_0G_INDEXER_RPC_URL || '',
   contractAddress: process.env.NEXT_PUBLIC_INFT_CONTRACT_ADDRESS || '0x0000000000000000000000000000000000000000',
   privateKey: process.env.PRIVATE_KEY,
   computeApiKey: process.env.COMPUTE_API_KEY
@@ -854,8 +858,12 @@ export const defaultConfig: IntellifyConfig = {
 
 // 0G Network configuration
 export const ZG_CONFIG = {
-  evmRpc: 'https://evmrpc-testnet.0g.ai',
-  indexerRpc: 'https://indexer-storage-testnet-turbo.0g.ai'
+  evmRpc:
+    process.env.NEXT_PUBLIC_0G_RPC_URL ||
+    process.env.NEXT_PUBLIC_0G_NETWORK_RPC ||
+    process.env.OG_MAINNET_RPC_URL ||
+    'https://evmrpc.0g.ai',
+  indexerRpc: process.env.NEXT_PUBLIC_0G_INDEXER_RPC_URL || ''
 };
 
 // Error classes

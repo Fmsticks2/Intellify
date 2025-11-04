@@ -312,12 +312,17 @@ export class ZGDAClient {
 
 // Default 0G DA configuration for testnet
 export const DEFAULT_ZGDA_CONFIG: ZGDAConfig = {
-  rpcEndpoint: 'https://evmrpc-testnet.0g.ai',
+  rpcEndpoint:
+    process.env.OG_MAINNET_RPC_URL ||
+    process.env.NEXT_PUBLIC_0G_RPC_URL ||
+    process.env.NEXT_PUBLIC_0G_NETWORK_RPC ||
+    process.env.OG_TESTNET_RPC_URL ||
+    'https://evmrpc.0g.ai',
   privateKey: process.env.PRIVATE_KEY || '',
-  daEntranceContract: '0x857C0A28A8634614BB2C96039Cf4a20AFF709Aa9', // 0G DA testnet contract
-  daSignersContract: '0x0000000000000000000000000000000000001000',
-  grpcEndpoint: 'localhost:51001', // Local 0G DA client gRPC endpoint
-  gasLimit: 2000000
+  daEntranceContract: process.env.DA_ENTRANCE_CONTRACT || '0x0000000000000000000000000000000000000000',
+  daSignersContract: process.env.DA_SIGNERS_CONTRACT || '0x0000000000000000000000000000000000000000',
+  grpcEndpoint: process.env.DA_GRPC_ENDPOINT || 'localhost:51001',
+  gasLimit: Number(process.env.DA_GAS_LIMIT || 2000000)
 };
 
 /**

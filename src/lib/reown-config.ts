@@ -2,39 +2,46 @@
 
 import { createAppKit } from '@reown/appkit/react';
 import { EthersAdapter } from '@reown/appkit-adapter-ethers';
-import { mainnet, arbitrum, polygon, base, sepolia, type AppKitNetwork } from '@reown/appkit/networks';
+import { mainnet, sepolia, type AppKitNetwork } from '@reown/appkit/networks';
 
 // 1. Get projectId from https://cloud.reown.com
 const projectId = process.env.NEXT_PUBLIC_REOWN_PROJECT_ID || '2f05a7cac472eca57b2ddc64525093d8';
 
-// 2. Define 0G Network
-const ogNetwork: AppKitNetwork = {
-  id: 16602,
-  name: '0G-Galileo-Testnet',
+// 2. Define 0G Network from environment (optional)
+const envChainId = process.env.NEXT_PUBLIC_CHAIN_ID ? Number(process.env.NEXT_PUBLIC_CHAIN_ID) : undefined;
+const envChainName = process.env.NEXT_PUBLIC_CHAIN_NAME;
+const envRpcUrl = process.env.NEXT_PUBLIC_0G_RPC_URL || process.env.NEXT_PUBLIC_0G_NETWORK_RPC;
+const envExplorerUrl = process.env.NEXT_PUBLIC_BLOCK_EXPLORER_URL;
+const isTestnet = String(process.env.NEXT_PUBLIC_IS_TESTNET || '').toLowerCase() === 'true';
+
+const ogNetwork: AppKitNetwork | null = (envChainId && envRpcUrl && envChainName) ? {
+  id: envChainId,
+  name: envChainName,
   nativeCurrency: {
     decimals: 18,
-    name: 'OG',
-    symbol: 'OG',
+    name: process.env.NEXT_PUBLIC_NATIVE_CURRENCY_NAME || 'OG',
+    symbol: process.env.NEXT_PUBLIC_NATIVE_CURRENCY_SYMBOL || 'OG',
   },
   rpcUrls: {
     default: {
-      http: ['https://evmrpc-testnet.0g.ai'],
+      http: [envRpcUrl],
     },
     public: {
-      http: ['https://evmrpc-testnet.0g.ai'],
+      http: [envRpcUrl],
     },
   },
-  blockExplorers: {
+  blockExplorers: envExplorerUrl ? {
     default: {
-      name: '0G Explorer',
-      url: 'https://chainscan-galileo.0g.ai',
+      name: envChainName + ' Explorer',
+      url: envExplorerUrl,
     },
-  },
-  testnet: true,
-};
+  } : undefined,
+  testnet: isTestnet,
+} : null;
 
 // 3. Set the networks
-const networks: [AppKitNetwork, ...AppKitNetwork[]] = [ogNetwork, sepolia, mainnet];
+const baseNetworks: AppKitNetwork[] = [sepolia, mainnet];
+const networks: [AppKitNetwork, ...AppKitNetwork[]] = ogNetwork ? [ogNetwork, ...baseNetworks] : [mainnet, sepolia];
 
 // 4. Create a metadata object - optional
 const metadata = {
