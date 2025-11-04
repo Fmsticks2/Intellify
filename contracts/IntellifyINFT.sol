@@ -93,6 +93,18 @@ contract IntellifyINFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard, Pa
     }
     
     constructor() ERC721("Intellify INFT", "IINFT") Ownable(msg.sender) {}
+
+    // Public mint controls
+    bool public publicMintEnabled = true;
+
+    event PublicMintToggled(bool enabled);
+    function setPublicMintEnabled(bool enabled) external onlyOwner {
+        publicMintEnabled = enabled;
+        emit PublicMintToggled(enabled);
+    }
+
+    function pause() external onlyOwner { _pause(); }
+    function unpause() external onlyOwner { _unpause(); }
     
     /**
      * @dev Mint a new INFT with initial AI state
@@ -102,7 +114,8 @@ contract IntellifyINFT is ERC721, ERC721URIStorage, Ownable, ReentrancyGuard, Pa
         string memory metadataURI,
         string memory knowledgeHash,
         string memory modelVersion
-    ) public onlyOwner returns (uint256) {
+    ) public whenNotPaused returns (uint256) {
+        require(publicMintEnabled, "Public mint disabled");
         require(bytes(knowledgeHash).length > 0, "Knowledge hash required");
         require(!usedKnowledgeHashes[knowledgeHash], "Knowledge hash already used");
         

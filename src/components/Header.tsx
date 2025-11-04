@@ -42,7 +42,7 @@ export default function Header() {
   };
 
   const navigation = [
-    { name: 'Dashboard', href: '#dashboard', icon: 'mdi:view-dashboard' },
+    { name: 'Dashboard', href: '/dashboard', icon: 'mdi:view-dashboard' },
     { name: 'Features', href: '#features', icon: 'mdi:star' },
     { name: 'Docs', href: '#', icon: 'mdi:book-open' },
   ];

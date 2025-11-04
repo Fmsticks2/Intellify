@@ -138,7 +138,7 @@ export default function HomePage() {
                 </button>
               ) : (
                 <a
-                  href="#dashboard"
+                  href="/dashboard"
                   className="group relative inline-flex items-center px-8 py-4 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
                 >
                   <Icon icon="mdi:view-dashboard" className="w-6 h-6 mr-3" />
@@ -215,32 +215,7 @@ export default function HomePage() {
         </div>
       </motion.section>
 
-      {/* Dashboard Section */}
-      {wallet.isConnected && (
-        <motion.section 
-          id="dashboard"
-          className="py-20 bg-gradient-to-br from-slate-50 to-blue-50"
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-        >
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div variants={itemVariants} className="text-center mb-12">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Your Dashboard
-              </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Manage your AI companions, track analytics, and explore the marketplace.
-              </p>
-            </motion.div>
-
-            <motion.div variants={itemVariants}>
-              <IntellifyDashboard />
-            </motion.div>
-          </div>
-        </motion.section>
-      )}
+      {/* Dashboard moved to standalone /dashboard page */}
 
       {/* CTA Section */}
       {!wallet.isConnected && (

@@ -17,12 +17,18 @@ A cutting-edge decentralized application that combines AI and blockchain technol
 - 📊 **Analytics Dashboard**: Comprehensive analytics for AI performance and user engagement
 - 🤝 **Social Features**: Community interactions, ratings, and collaborative AI development
 
-## 🚀 Deployed Contract
+## 🚀 Deployed Contract Addresses on mainet
 
-**Contract Address**: `0x37525E8B82C776F608eCA8A49C000b98a456fBdD`  
-**Network**: 0G Testnet (Chain ID: 16602)  
-**Transaction Hash**: `0xa1ef336432e58008a952d4009d8e95eff6bc1d9bb27dcc3037203f01e5cd7d48`  
-**Block**: 5888073  
+Network: 16661n
+Deployer: 0xC5A684F1B9863FC198078FC114Cb924129c4c5e5
+Compiling contracts with solc 0.8.20...
+solc_compile: 2:46.060 (m:ss.mmm)
+IntellifyToken: 0xa7F1eA129F49eD9Cb9C8Fc8858325d1d668dAF87
+IntellifyINFT: 0xb9bbFCe33475685AF6F0DD6Ee8851eE19e9091d2
+IntellifyGovernance: 0x3c55dF59Ae1d764b8aA2b3850Ff657d35CdDE91D
+IntellifyStaking: 0xa5B496B0897924252dE1329D0E8fE52d1B384905
+AIModelMarketplace: 0x86Ed9A70CE1358faF0547a669fA007A11f3c62bA
+ZKPrivacy: 0xA8fF904c539668c88B330D4ab135d8090a21F72a
 
 ## 🔬 ERC-7857 Implementation
 
