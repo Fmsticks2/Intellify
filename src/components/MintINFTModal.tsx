@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useWallet } from './WalletProvider';
 import { useIntellifyContract } from '../hooks/useIntellifyContract';
+import { parseContractError } from '../utils';
 import EnhancedEncryptionModal from './EnhancedEncryptionModal';
 import { encryptionService, EncryptedDataPackage } from '../lib/enhanced-encryption';
 
@@ -21,7 +22,7 @@ interface FormData {
 
 export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps) {
   const { wallet } = useWallet();
-  const { mintINFT, isKnowledgeHashUsed } = useIntellifyContract();
+  const { mintINFT, isKnowledgeHashUsed, getPublicMintEnabled, getPaused } = useIntellifyContract();
   const [formData, setFormData] = useState<FormData>({
     modelVersion: 'gpt-4',
     knowledgeHash: '',
@@ -107,6 +108,20 @@ export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps
     setError(null);
 
     try {
+      // Pre-mint contract state checks to avoid revert during gas estimation
+      const [pausedFlag, publicMintFlag] = await Promise.all([
+        getPaused(),
+        getPublicMintEnabled(),
+      ]);
+      if (pausedFlag) {
+        setError('Minting is currently paused by the contract owner. Please try again later.');
+        return;
+      }
+      if (!publicMintFlag) {
+        setError('Public minting is disabled. Please contact the contract owner to enable it.');
+        return;
+      }
+
       // Use encrypted data if available
       const finalDescription = encryptedData ? encryptedData.encryptedData : formData.description;
       
@@ -153,7 +168,8 @@ export default function MintINFTModal({ onClose, onSuccess }: MintINFTModalProps
 
     } catch (err: any) {
       console.error('Error minting INFT:', err);
-      setError(err.message || 'Failed to mint INFT. Please try again.');
+      const friendly = parseContractError(err);
+      setError(friendly || 'Failed to mint INFT. Please try again.');
     } finally {
       setLoading(false);
       setIsMinting(false);

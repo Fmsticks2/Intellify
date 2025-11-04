@@ -15,6 +15,9 @@ const INTELLIFY_ABI = [
   'function tokenURI(uint256 tokenId) view returns (string)',
   'function ownerOf(uint256 tokenId) view returns (address)',
   'function isKnowledgeHashUsed(string knowledgeHash) view returns (bool)',
+  'function publicMintEnabled() view returns (bool)',
+  'function paused() view returns (bool)',
+  'function owner() view returns (address)',
   
   // Enhanced encryption view functions
   'function getEncryptedKnowledgeIndex(uint256 tokenId) view returns (tuple(string[] contentHashes, string[] semanticHashes, string indexStructure, string encryptionKey))',
@@ -33,6 +36,9 @@ const INTELLIFY_ABI = [
   'function deactivateINFT(uint256 tokenId)',
   'function reactivateINFT(uint256 tokenId)',
   'function burn(uint256 tokenId)',
+  'function setPublicMintEnabled(bool enabled)',
+  'function pause()',
+  'function unpause()',
   
   // Enhanced encryption write functions
   'function addEncryptedKnowledgeChunk(uint256 tokenId, string contentHash, string semanticHash)',
@@ -67,6 +73,9 @@ export function useIntellifyContract() {
   const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
   const [signer, setSigner] = useState<ethers.JsonRpcSigner | null>(null);
   const [isCorrectNetwork, setIsCorrectNetwork] = useState(false);
+  const [contractOwner, setContractOwner] = useState<string | null>(null);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
+  const [isPublicMintEnabled, setIsPublicMintEnabled] = useState<boolean>(false);
 
   useEffect(() => {
     initializeContract();
@@ -85,6 +94,19 @@ export function useIntellifyContract() {
         if (wallet.chainId === TARGET_CHAIN_ID) {
           const contractInstance = new ethers.Contract(CONTRACT_ADDRESS, INTELLIFY_ABI, signer);
           setContract(contractInstance);
+          try {
+            const [ownerAddr, pausedFlag, mintFlag] = await Promise.all([
+              contractInstance.owner?.() ?? signer.getAddress(),
+              contractInstance.paused?.() ?? false,
+              contractInstance.publicMintEnabled?.() ?? false,
+            ]);
+            setContractOwner(typeof ownerAddr === 'string' ? ownerAddr : await signer.getAddress());
+            setIsPaused(Boolean(pausedFlag));
+            setIsPublicMintEnabled(Boolean(mintFlag));
+          } catch (e) {
+            // Non-critical: state reads may fail on older ABIs; ignore.
+            setContractOwner(null);
+          }
         } else {
           setContract(null);
         }
@@ -143,6 +165,39 @@ export function useIntellifyContract() {
     return await contract.isKnowledgeHashUsed(knowledgeHash);
   };
 
+  const getPaused = async (): Promise<boolean> => {
+    if (!contract) throw new Error('Contract not initialized');
+    try {
+      const flag = await contract.paused();
+      setIsPaused(Boolean(flag));
+      return Boolean(flag);
+    } catch {
+      return isPaused;
+    }
+  };
+
+  const getPublicMintEnabled = async (): Promise<boolean> => {
+    if (!contract) throw new Error('Contract not initialized');
+    try {
+      const flag = await contract.publicMintEnabled();
+      setIsPublicMintEnabled(Boolean(flag));
+      return Boolean(flag);
+    } catch {
+      return isPublicMintEnabled;
+    }
+  };
+
+  const getOwner = async (): Promise<string | null> => {
+    if (!contract) throw new Error('Contract not initialized');
+    try {
+      const addr: string = await contract.owner();
+      setContractOwner(addr);
+      return addr;
+    } catch {
+      return contractOwner;
+    }
+  };
+
   // Enhanced encryption read functions
   const getEncryptedKnowledgeIndex = async (tokenId: number | bigint) => {
     if (!contract) throw new Error('Contract not initialized');
@@ -187,6 +242,15 @@ export function useIntellifyContract() {
     modelVersion: string
   ): Promise<ethers.ContractTransactionResponse> => {
     if (!contract) throw new Error('Contract not initialized');
+    // Preflight checks to avoid estimateGas reverts
+    const [pausedFlag, publicMintFlag, hashUsed] = await Promise.all([
+      getPaused(),
+      getPublicMintEnabled(),
+      isKnowledgeHashUsed(knowledgeHash)
+    ]);
+    if (pausedFlag) throw new Error('Contract is paused. Minting is temporarily disabled.');
+    if (!publicMintFlag) throw new Error('Public minting is disabled by the contract owner.');
+    if (hashUsed) throw new Error('Knowledge hash already used. Please use a unique hash.');
     return await contract.mintINFT(to, metadataURI, knowledgeHash, modelVersion);
   };
 
@@ -296,6 +360,9 @@ export function useIntellifyContract() {
     provider,
     signer,
     isCorrectNetwork,
+    contractOwner,
+    isPaused,
+    isPublicMintEnabled,
     
     // Read functions
     getUserINFTs,
@@ -306,6 +373,9 @@ export function useIntellifyContract() {
     getTokenURI,
     getOwnerOf,
     isKnowledgeHashUsed,
+    getPaused,
+    getPublicMintEnabled,
+    getOwner,
     
     // Enhanced encryption read functions
     getEncryptedKnowledgeIndex,
