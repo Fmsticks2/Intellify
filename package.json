@@ -13,6 +13,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "enable:mint": "node scripts/enablePublicMint.mjs",
+    "check:code": "node scripts/checkCode.mjs",
     "contracts:deploy:mainnet": "hardhat run --network 0g-mainnet scripts/deploy-all.js",
     "contracts:deploy:galileo": "hardhat run --network 0g-galileo scripts/deploy-all.js",
     "contracts:deploy:testnet": "hardhat run --network 0g-testnet scripts/deploy-all.js"
