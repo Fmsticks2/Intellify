@@ -10,7 +10,12 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Invalid deposit amount' }, { status: 400 });
     }
 
-    const rpcEndpoint = process.env.OG_MAINNET_RPC_URL || process.env.NEXT_PUBLIC_0G_NETWORK_RPC || 'https://evmrpc.0g.ai';
+    const rpcEndpoint =
+      process.env.OG_TESTNET_RPC_URL ||
+      process.env.OG_MAINNET_RPC_URL ||
+      process.env.NEXT_PUBLIC_0G_RPC_URL ||
+      process.env.NEXT_PUBLIC_0G_NETWORK_RPC ||
+      'https://evmrpc-testnet.0g.ai';
     const privateKey = process.env.PRIVATE_KEY;
     if (!privateKey) {
       return NextResponse.json({ error: 'Server PRIVATE_KEY not configured' }, { status: 500 });

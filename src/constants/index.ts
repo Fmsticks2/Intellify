@@ -1,6 +1,22 @@
 import { NetworkConfig } from '../types/index';
 
-// 0G Network Configuration
+// 0G Network Configuration from environment variables
+export const ZERO_G_NETWORK: NetworkConfig = {
+  chainId: parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || '16661'),
+  name: process.env.NEXT_PUBLIC_CHAIN_NAME || '0G Mainnet',
+  rpcUrl:
+    process.env.NEXT_PUBLIC_0G_RPC_URL ||
+    process.env.NEXT_PUBLIC_0G_NETWORK_RPC ||
+    'https://evmrpc.0g.ai',
+  blockExplorerUrl: process.env.NEXT_PUBLIC_BLOCK_EXPLORER_URL || 'https://chainscan.0g.ai',
+  nativeCurrency: {
+    name: process.env.NEXT_PUBLIC_NATIVE_CURRENCY_NAME || 'OG Token',
+    symbol: process.env.NEXT_PUBLIC_NATIVE_CURRENCY_SYMBOL || 'OG',
+    decimals: parseInt(process.env.NEXT_PUBLIC_NATIVE_CURRENCY_DECIMALS || '18'),
+  },
+};
+
+// Legacy testnet config for backwards compatibility
 export const ZERO_G_TESTNET: NetworkConfig = {
   chainId: 16602,
   name: '0G-Galileo-Testnet',
@@ -223,7 +239,7 @@ export const POLLING_INTERVAL = 2000; // 2 seconds
 // Error Messages
 export const ERROR_MESSAGES = {
   WALLET_NOT_CONNECTED: 'Please connect your wallet first',
-  WRONG_NETWORK: 'Please switch to 0G-Galileo-Testnet',
+  WRONG_NETWORK: `Please switch to ${process.env.NEXT_PUBLIC_CHAIN_NAME || '0G Mainnet'}`,
   INSUFFICIENT_BALANCE: 'Insufficient balance for transaction',
   TRANSACTION_FAILED: 'Transaction failed. Please try again.',
   CONTRACT_ERROR: 'Smart contract error occurred',

@@ -54,12 +54,12 @@ const INTELLIFY_ABI = [
   'event ContentHashVerified(string indexed contentHash, address indexed verifier)',
 ];
 
-import { CONTRACT_ADDRESS } from '../constants';
+import { CONTRACT_ADDRESS, ZERO_G_NETWORK } from '../constants';
 
 // Contract address imported from constants
 
-// 0G Testnet chain ID
-const TARGET_CHAIN_ID = 16602;
+// Target chain ID from environment-configured network
+const TARGET_CHAIN_ID = ZERO_G_NETWORK.chainId;
 
 export function useIntellifyContract() {
   const { wallet } = useWallet();

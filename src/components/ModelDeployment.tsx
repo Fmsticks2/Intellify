@@ -73,43 +73,20 @@ const ModelDeployment: React.FC<ModelDeploymentProps> = ({ model, onClose }) => 
   const [zgClient, setZgClient] = useState<ZGComputeClient | null>(null);
 
   useEffect(() => {
-    // Initialize 0G Compute Client safely (no client-side private key)
+    // Initialize 0G Compute Client safely (server-side orchestration only)
     const init = async () => {
-      const privateKey = process.env.NEXT_PUBLIC_PRIVATE_KEY;
-      if (!privateKey) {
-        setDeploymentStatus(prev => ({
-          ...prev,
-          logs: [
-            ...prev.logs,
-            `[${new Date().toLocaleTimeString()}] 0G Compute client not configured: missing NEXT_PUBLIC_PRIVATE_KEY. Use server-side orchestration.`
-          ]
-        }));
-        return;
-      }
-
-      try {
-        const config: ZGComputeConfig = {
-          rpcEndpoint: process.env.NEXT_PUBLIC_0G_NETWORK_RPC || '',
-          privateKey,
-          daEntranceContract: process.env.NEXT_PUBLIC_DA_ENTRANCE_CONTRACT || '',
-          daSignersContract: process.env.NEXT_PUBLIC_DA_SIGNERS_CONTRACT || '',
-          grpcEndpoint: process.env.NEXT_PUBLIC_GRPC_ENDPOINT || '',
-          gasLimit: 1000000,
-          computeContract: process.env.NEXT_PUBLIC_COMPUTE_CONTRACT || '',
-          computeNodeEndpoint: process.env.NEXT_PUBLIC_COMPUTE_NODE_ENDPOINT || '',
-          maxComputeUnits: 1000
-        };
-        const client = new ZGComputeClient(config);
-        setZgClient(client);
-      } catch (err) {
-        setDeploymentStatus(prev => ({
-          ...prev,
-          logs: [
-            ...prev.logs,
-            `[${new Date().toLocaleTimeString()}] Failed to initialize 0G Compute client: ${err instanceof Error ? err.message : 'Unknown error'}`
-          ]
-        }));
-      }
+      // Security: Never use private keys on client-side
+      // All compute operations should go through server-side API routes
+      setDeploymentStatus(prev => ({
+        ...prev,
+        logs: [
+          ...prev.logs,
+          `[${new Date().toLocaleTimeString()}] Using secure server-side orchestration for 0G Compute operations.`
+        ]
+      }));
+      // Client-side compute initialization is intentionally disabled.
+      // All compute actions are proxied via secure server routes.
+      return;
     };
     init();
   }, []);

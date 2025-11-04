@@ -19,17 +19,25 @@ interface WalletContextType {
 
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
-// 0G Testnet configuration
+// Network configuration from environment variables
+// Compute hex chainId from decimal env for wallet_switchEthereumChain
+const targetChainIdDecimal = parseInt(process.env.NEXT_PUBLIC_CHAIN_ID || '16661', 10);
+const targetChainIdHex = '0x' + targetChainIdDecimal.toString(16);
+
 const TARGET_NETWORK = {
-  chainId: '0x40D9', // 16602 in hex
-  chainName: '0G-Galileo-Testnet',
+  chainId: targetChainIdHex,
+  chainName: process.env.NEXT_PUBLIC_CHAIN_NAME || '0G Mainnet',
   nativeCurrency: {
-    name: 'OG',
-    symbol: 'OG',
-    decimals: 18,
+    name: process.env.NEXT_PUBLIC_NATIVE_CURRENCY_NAME || 'OG',
+    symbol: process.env.NEXT_PUBLIC_NATIVE_CURRENCY_SYMBOL || 'OG',
+    decimals: parseInt(process.env.NEXT_PUBLIC_NATIVE_CURRENCY_DECIMALS || '18'),
   },
-  rpcUrls: ['https://evmrpc-testnet.0g.ai'],
-  blockExplorerUrls: ['https://chainscan-galileo.0g.ai'],
+  rpcUrls: [
+    process.env.NEXT_PUBLIC_0G_RPC_URL ||
+      process.env.NEXT_PUBLIC_0G_NETWORK_RPC ||
+      'https://evmrpc.0g.ai',
+  ],
+  blockExplorerUrls: [process.env.NEXT_PUBLIC_BLOCK_EXPLORER_URL || 'https://chainscan.0g.ai'],
 };
 
 export function WalletProvider({ children }: { children: ReactNode }) {
